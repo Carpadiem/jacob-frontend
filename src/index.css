@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Montserrat */
+@font-face {
+  src: url('./../fonts/Montserrat/Montserrat-Thin.woff') format('woff');
+  font-family: 'Montserrat';
+  font-weight: 200;
+}
+@font-face {
+  src: url('./../fonts/Montserrat/Montserrat-Light.woff') format('woff');
+  font-family: 'Montserrat';
+  font-weight: 300;
+}
+@font-face {
+  src: url('./../fonts/Montserrat/Montserrat-Regular.woff') format('woff');
+  font-family: 'Montserrat';
+  font-weight: 400;
+}
+@font-face {
+  src: url('./../fonts/Montserrat/Montserrat-Medium.woff') format('woff');
+  font-family: 'Montserrat';
+  font-weight: 500;
+}
+@font-face {
+  src: url('./../fonts/Montserrat/Montserrat-SemiBold.woff') format('woff');
+  font-family: 'Montserrat';
+  font-weight: 600;
+}
+@font-face {
+  src: url('./../fonts/Montserrat/Montserrat-Bold.woff') format('woff');
+  font-family: 'Montserrat';
+  font-weight: 700;
+}
+@font-face {
+  src: url('./../fonts/Montserrat/Montserrat-Black.woff') format('woff');
+  font-family: 'Montserrat';
+  font-weight: 800;
+}
+
+
+/* Tektur */
+@font-face {
+  src: url('./../fonts/Tektur/Tektur-Regular.woff') format('woff');
+  font-family: 'Tektur';
+  font-weight: 400;
+}
+@font-face {
+  src: url('./../fonts/Tektur/Tektur-Medium.woff') format('woff');
+  font-family: 'Tektur';
+  font-weight: 500;
+}
+@font-face {
+  src: url('./../fonts/Tektur/Tektur-SemiBold.woff') format('woff');
+  font-family: 'Tektur';
+  font-weight: 600;
+}
+@font-face {
+  src: url('./../fonts/Tektur/Tektur-Bold.woff') format('woff');
+  font-family: 'Tektur';
+  font-weight: 700;
+}
+@font-face {
+  src: url('./../fonts/Tektur/Tektur-ExtraBold.woff') format('woff');
+  font-family: 'Tektur';
+  font-weight: 800;
+}
+@font-face {
+  src: url('./../fonts/Tektur/Tektur-Black.woff') format('woff');
+  font-family: 'Tektur';
+  font-weight: 900;
+}

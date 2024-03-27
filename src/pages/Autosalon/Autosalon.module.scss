@@ -1,0 +1,535 @@
+
+
+.container {
+    background-color: #141414;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+.frame_autosalon {
+    background-color: #181818;
+    width: 100%;
+    min-height: 270px;
+    border-top: 1px solid #414141;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.frame_brands {
+    background-color: #1C1C1C;
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #414141;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.brand {
+    height: 100%;
+    cursor: pointer;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-right: 1px solid #414141;
+    background-color: transparent;
+}
+
+.brand_name {
+    user-select: none;
+    color: #9B9B9B;
+    font-family: 'Tektur';
+    font-size: 16px;
+    font-weight: 500;
+
+    transition: all .1s ease;
+}
+
+.brand svg path {
+    transition: all .1s ease;
+}
+
+.frame_previews {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    align-content: center;
+    gap: 10px;
+    overflow-x: scroll;
+    z-index: 1;
+}
+
+
+
+
+.preview {
+    user-select: none;
+
+    min-width: 400px;
+    background-color: #232323;
+    border-radius: 4px;
+    position: relative;
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-origin: center center;
+    background-position: center center;
+
+    // padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    cursor: pointer;
+    overflow: hidden;
+
+    // animation: movement_degrees_lines .2s linear infinite;
+    // animation-play-state: paused;
+    // transition: all .2s cubic-bezier(0.520, 0.255, 0.385, 0.965);
+}
+
+// .preview:hover {
+//     animation-play-state: running;
+//     transform: translateY(-4px);
+// }
+
+// @keyframes movement_degrees_lines {
+//     to { background-position: 54.4% 50%; }
+// }
+
+
+
+
+.preview_info {
+    backdrop-filter: blur(5px) saturate(0);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .25);
+    opacity: 0;
+}
+.preview_info:hover {
+    opacity: 1;
+}
+.preview_info_car_name {
+    font-family: 'Tektur';
+    font-size: 22px;
+    font-weight: 500;
+    color: white;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .8))
+}
+.preview_info_car_price {
+    font-family: 'Tektur';
+    font-size: 20px;
+    font-weight: 500;
+    color: #1FE362;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .8))
+}
+
+.label_is_selected {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.label_is_selected_text {
+    font-family: 'Tektur';
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+
+
+
+.layout_preview {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.preview_text_wrapper {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.preview_car_name {
+    font-family: 'Tektur';
+    font-size: 22px;
+    font-weight: 500;
+    color: white;
+}
+.preview_car_price {
+    font-family: 'Tektur';
+    font-size: 20px;
+    font-weight: 500;
+    color: #1FE362;
+}
+
+
+
+.general_area {
+    display: flex;
+    height: 100%;
+    justify-content: flex-end;
+}
+
+.frame_purchase {
+    z-index: 2;
+    min-width: 320px;
+    height: 100%;
+    border-left: 1px solid #414141;
+
+    background-color: #181818;
+    background-repeat: no-repeat;
+    background-origin: center center;
+    background-position: center center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.purchase_text_wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+}
+.purchase_car_name {
+    font-family: 'Tektur';
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+}
+.purchase_car_price {
+    font-family: 'Tektur';
+    font-size: 22px;
+    font-weight: 700;
+    color: #1FE362;
+}
+
+
+
+
+.frame_player_money {
+    position: absolute;
+    right: 10px;
+    top: 90px;
+
+    background-color: #181818;
+    border: 1px solid #414141;
+    border-radius: 3px;
+    padding: 10px 16px;
+
+    display: flex;
+    gap: 10px;
+}
+
+svg.player_money_icon {
+    width: 20px;
+    height: 20px;
+}
+
+.player_money_text {
+    font-family: 'Tektur';
+    font-size: 16px;
+    font-weight: 600;
+    color: #2CD97C;
+}
+
+
+
+
+.frame_car_specs {
+    position: absolute;
+    right: 10px;
+    bottom: 280px;
+
+    background-color: #181818;
+    border: 1px solid #414141;
+    border-radius: 3px;
+    padding: 15px;
+}
+
+.specs_car_name {
+    font-family: 'Tektur';
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+
+
+.specs_content_group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+}
+
+.specs_content_group_header {
+    font-family: 'Tektur';
+    font-size: 14px;
+    font-weight: 500;
+    color: #9B9B9B;
+}
+
+.specs_content_group_specifications {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.specification {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+
+%extend_specification_text {
+    font-family: 'Tektur';
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.specification_text {
+    @extend %extend_specification_text;
+}
+
+.specification_text span {
+    @extend %extend_specification_text;
+    font-weight: 500;
+    color: #FB4040;
+}
+
+
+
+
+
+
+// settings
+
+.frame_scene_settings {
+    background-color: #181818;
+    border: 1px solid #414141;
+    border-radius: 4px;
+    position: absolute;
+    top: 90px;
+    left: 10px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.frame_scene_settings svg {
+    display: block;
+}
+
+.svg_settings {
+    .frame_scene_settings:hover & {
+        fill: #d8d8d8;
+    }
+    fill: #414141;
+}
+
+.frame_settings {
+    background-color: #181818;
+    border: 1px solid #414141;
+    border-radius: 4px;
+    padding: 10px;
+
+    position: absolute;
+
+    left: 10px;
+    top: 130px;
+}
+
+// settings items
+.settings_btn_isUIVisible {
+    background: transparent;
+    border: 1px solid #414141;
+}
+
+
+
+
+
+
+
+
+
+
+// .block {
+//     height: 100vh;
+//     width: 100vw;
+//     position: relative;
+//     display: flex;
+//     flex-direction: column;
+// }
+
+// .UICanvas {
+//     width: 100vw;
+//     height: 100vh;
+//     position: absolute;
+//     margin: 0;
+    
+//     flex-grow: 1;
+//     padding: 0 20px;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+// }
+
+// .frame {
+//     /* position: absolute; */
+//     background-color: rgba(20, 20, 20, .6);
+//     border-radius: 6px;
+//     width: 260px;
+//     height: auto;
+//     overflow: hidden;
+
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+// }
+
+// .headFrame {
+//     background: linear-gradient(90deg, rgba(52,52,52,1), rgba(20,20,20,1));
+//     width: 100%;
+//     height: 80px;
+//     display: flex;
+//     justify-content: flex-start;
+//     align-items: center;
+//     gap: 15px;
+//     padding: 20px;
+// }
+
+// h2.headTitle {
+//     font-family: Montserrat;
+//     font-size: 16px;
+//     font-weight: 600;
+//     color: white;
+// }
+
+// p.headSubtitle {
+//     font-family: Montserrat;
+//     font-size: 12px;
+//     font-weight: 500;
+//     color: white;
+//     opacity: .5;
+// }
+
+// .carTiles {
+//     width: 100%;
+//     min-height: 340px;
+//     max-height: 340px;
+//     margin-top: 2px;
+// }
+
+// .carTileFrame {
+//     width: 100%;
+//     height: 50px;
+//     display: flex;
+//     align-items: center;
+//     padding: 0 20px;
+//     cursor: pointer;
+// }
+// .carTileFrame:hover() {
+//     background: rgba(255, 255, 255, .05);
+// }
+
+// h3.carTileText {
+//     width: 100%;
+//     font-family: Montserrat;
+//     font-size: 14px;
+//     font-weight: 400;
+//     color: white;
+// }
+
+
+
+// /* right side */
+// .carStats {
+//     margin-top: 2px;
+//     width: 100%;
+//     /* min-height: 340px;
+//     max-height: 340px; */
+//     display: flex;
+//     flex-direction: column;
+//     gap: 2px;
+// }
+
+// .statFrame {
+//     background: linear-gradient(90deg, rgba(52,52,52,1), rgba(20,20,20,1));
+//     padding: 0 20px;
+//     height: 50px;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+// }
+
+// p.statTitle {
+//     font-family: Montserrat;
+//     font-size: 14px;
+//     font-weight: 400;
+//     color: white;
+// }
+// p.statValue {
+//     font-family: Montserrat;
+//     font-size: 14px;
+//     font-weight: 500;
+//     color: white;
+// }
+
+
+
+
+// .carBuyFrame {
+//     width: 260px;
+// }
+
+// .priceFrame {
+//     margin-top: 10px;
+//     height: 40px;
+//     display: flex;
+//     align-items: center;
+// }
+
+// p.priceText {
+//     font-family: Montserrat;
+//     font-size: 16px;
+//     font-weight: 500;
+//     color: white;
+// }
+
+// .buyBtnFrame {
+//     /* background-color: red; */
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     margin-top: 10px;
+// }

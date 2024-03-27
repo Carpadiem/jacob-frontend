@@ -1,0 +1,189 @@
+
+%no_user_select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+
+
+
+.general_container {
+    min-height: 270px;
+    width: 100%;
+    border: 1px solid #414141;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.tabs_frame {
+    background-color: #1C1C1C;
+    width: 100%;
+    min-height: 50px;
+    border-bottom: 1px solid #414141;
+    display: flex;
+}
+
+.tab {
+    font-family: 'Tektur';
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    cursor: pointer;
+
+    background-color: #1C1C1C;
+    color: #9B9B9B;
+}
+.tab_active {
+    background-color: white;
+    color: #212121;
+}
+.tab_previous {
+    background-color: #212121;
+    color: #7C7C7C;
+}
+
+
+
+
+.workspace_frame {
+    flex-grow: 1;
+    display: flex;
+}
+
+.workspace_no_details_frame {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+p.no_details_text {
+    color: #9b9b9b;
+    font-family: 'Tektur';
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.tiles_frame {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    overflow-x: scroll;
+}
+
+.tile {
+    @extend %no_user_select;
+    min-width: 300px;
+    height: 100%;
+    background-color: #202020;
+    border-radius: 4px;
+    padding: 15px 20px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+
+    transition: all .15s ease;
+}
+.tile_active {
+    background-color: #282828;
+}
+.tile:hover {
+    &:not(.tile_active) {
+        background-color: #242424;
+    }
+}
+.tile_id {
+    @extend %no_user_select;
+    font-family: 'Tektur';
+    font-size: 16px;
+    font-weight: 500;
+    color: #7C7C7C;
+    text-align: center;
+}
+.tile_title {
+    @extend %no_user_select;
+    font-family: 'Tektur';
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+    text-align: center;
+}
+.tile_price {
+    @extend %no_user_select;
+    font-family: 'Tektur';
+    font-size: 18px;
+    font-weight: 500;
+    color: #1FE362;
+    text-align: center;
+}
+
+
+.purchase_frame {
+    // background-color: #181818;
+    min-width: 330px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-left: 1px solid #414141;
+}
+
+h2.purchase_title {
+    font-family: 'Tektur';
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+
+    max-width: 240px;
+    text-align: center;
+}
+
+p.purchase_price {
+    font-family: 'Tektur';
+    font-size: 22px;
+    font-weight: 600;
+    color: #1FE362;
+}
+
+
+
+
+.movement_filler {
+    background-color: #181818;
+    width: 100%;
+    height: 100%;
+    // background-image: url('./images/frame_lines.png');
+    background-position: center center;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.movement_filler_text {
+    font-family: 'Tektur';
+    font-size: 14px;
+    font-weight: 500;
+    color: #8d8d8d;
+    line-height: 140%;
+    max-width: 400px;
+    text-align: center;
+}

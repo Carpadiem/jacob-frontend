@@ -1,0 +1,1 @@
+export { default as StylingBar } from './StylingBar'

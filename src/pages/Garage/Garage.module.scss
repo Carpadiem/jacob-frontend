@@ -1,0 +1,384 @@
+.container {
+    background-color: #141414;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+
+.general_frame {
+    background-color: #181818;
+    width: 100%;
+    min-height: 250px;
+    border-top: 1px solid #414141;
+    display: flex;
+    flex-direction: column;
+}
+
+.tabs_frame {
+    border-bottom: 1px solid #414141;
+    min-height: 50px;
+    width: 100%;
+    background-color: #1C1C1C;
+    display: flex;
+}
+
+.slots_frame {
+    display: flex;
+    height: 100%;
+    width: auto;
+}
+.slots_button {
+    border-right: 1px solid #414141;
+    width: 50px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.slots_info {
+    border-right: 1px solid #414141;
+    width: 200px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+p.slots_info_text {
+    font-family: 'Tektur';
+    font-size: 16px;
+    font-weight: 500;
+    color: #9B9B9B;
+    text-align: center;
+}
+
+p.slots_available {
+    font-family: 'Tektur';
+    font-size: 12px;
+    font-weight: 500;
+    color: #646464;
+}
+
+.all_tabs_frame {
+    height: 100%;
+    width: 100%;
+}
+
+
+
+
+// by active tab areas (frames)
+
+.common_frame {
+    // background-color: red;
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+.common_car_info_frame {
+    // background-color: blue;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.common_car_info_top {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.tag_brand_frame {
+    padding: 10px 14px;
+    background-color: #1A4334;
+    width: auto;
+    border-radius: 2px;
+}
+p.tag_brand_name {
+    font-family: 'Tektur';
+    font-size: 12px;
+    font-weight: 600;
+    color: #1EFFAD;
+    letter-spacing: 1px;
+}
+h2.car_name {
+    font-family: 'Rany';
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+}
+p.car_description {
+    font-family: 'Montserrat';
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 130%;
+    color: #9B9B9B;
+    max-width: 280px;
+}
+
+
+.common_car_specs_frame {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.spec_frame {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+p.spec_text {
+    font-family: 'Tektur';
+    font-size: 16px;
+    font-weight: 500;
+    color: #636363;
+}
+p.spec_text span {
+    font-family: 'Tektur';
+    color: white;
+}
+
+
+
+.common_general {
+    padding: 45px 50px;
+    display: flex;
+    gap: 100px;
+    align-items: center;
+    flex-grow: 1;
+}
+.common_actions {
+    width: 320px;
+    // background-image: url('./images/lines_angle.png');
+    background-position: center center;
+    border-left: 1px solid #414141;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+
+
+
+
+.no_cars_frame {
+    background-color: #181818;
+    width: 100%;
+    min-height: calc(100% - 80px);
+    display: flex;
+    flex-direction: column;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // background-image: url('./images/frame_lines.png');
+    background-position: center center;
+}
+
+.no_cars_text {
+    text-align: center;
+    font-family: 'Tektur';
+    font-size: 18px;
+    font-weight: 400;
+    color: #9b9b9b;
+}
+
+.no_cars_text a {
+    font-family: 'Tektur';
+    text-decoration: none;
+    font-weight: 500;
+    color: #FF2231;
+}
+
+
+
+.frame_player_money {
+    position: absolute;
+    right: 10px;
+    top: 90px;
+
+    background-color: #181818;
+    border: 1px solid #414141;
+    border-radius: 3px;
+    padding: 10px 16px;
+
+    display: flex;
+    gap: 10px;
+}
+
+svg.player_money_icon {
+    width: 20px;
+    height: 20px;
+}
+
+.player_money_text {
+    font-family: 'Tektur';
+    font-size: 16px;
+    font-weight: 600;
+    color: #2CD97C;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// .block {
+//     height: 100vh;
+//     width: 100vw;
+//     position: relative;
+//     display: flex;
+//     flex-direction: column;
+// }
+
+// .UICanvas {
+//     width: 100vw;
+//     height: 100vh;
+//     position: absolute;
+//     margin: 0;
+    
+//     flex-grow: 1;
+//     padding: 0 20px;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+// }
+
+// .frame {
+//     /* position: absolute; */
+//     background-color: rgba(20, 20, 20, .6);
+//     border-radius: 6px;
+//     width: 340px;
+//     height: auto;
+//     overflow: hidden;
+
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+// }
+
+// .headFrame {
+//     background: linear-gradient(90deg, rgba(52,52,52,1), rgba(20,20,20,1));
+//     width: 100%;
+//     height: 70px;
+//     display: flex;
+//     justify-content: flex-start;
+//     align-items: center;
+//     gap: 15px;
+//     padding: 25px;
+// }
+
+// h2.headTitle {
+//     font-family: Montserrat;
+//     font-size: 16px;
+//     font-weight: 500;
+//     color: white;
+// }
+
+// .sliderWrapper {
+//     height: 50px;
+//     width: 100%;
+//     display: flex;
+//     justify-content: space-between;
+//     gap: 5px;
+//     padding: 0 10px;
+//     margin: 10px 0;
+// }
+
+// .sliderArrowFrame {
+//     width: 50px;
+//     height: 100%;
+//     /* background-color: rgba(100, 100, 100, .3); */
+//     background: linear-gradient(90deg, rgba(52,52,52,1), rgba(20,20,20,1));
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     cursor: pointer;
+//     border-radius: 3px;
+// }
+
+// .sliderNameFrame {
+//     width: auto;
+//     height: 100%;
+//     background-color: rgba(100, 100, 100, .3);
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     flex-grow: 1;
+//     border-radius: 3px;
+// }
+
+// h2.nameText {
+//     font-family: Montserrat;
+//     font-size: 14px;
+//     font-weight: 600;
+//     color: white;
+// }
+
+
+
+// .carStats {
+//     width: 100%;
+//     padding: 0 20px;
+//     display: flex;
+//     flex-direction: column;
+// }
+
+// .statWrapper {
+//     height: 50px;
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     border-bottom: 1px solid #686868;
+// }
+
+// .statWrapper:nth-child(3) {
+//     border-bottom: none;
+// }
+
+// p.statTitle {
+//     font-family: Montserrat;
+//     font-size: 14px;
+//     font-weight: 400;
+//     color: white;
+// }
+// p.statValue {
+//     font-family: Montserrat;
+//     font-size: 14px;
+//     font-weight: 500;
+//     color: white;
+// }
+
+
+// .btnsWrapper {
+//     width: 100%;
+//     padding: 20px;
+//     padding-top: 10px;
+//     display: flex;
+//     flex-direction: column;
+//     gap: 10px;
+// }

@@ -1,0 +1,2 @@
+export const ThousandComma = (value: number | undefined) => value && value.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+export const Capitalize = (word: string | undefined) => word && word.charAt(0).toUpperCase() + word.slice(1)
