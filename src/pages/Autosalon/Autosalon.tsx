@@ -102,9 +102,7 @@ function Autosalon() {
           <Stats />
           <EnvExotic intensity={1} path='assets/3d/hdri/metro_vijzelgracht_1k.hdr' />
           <EffectsExotic />
-
           <OrbitControls />
-
           <Autosalone />
           {activeCar?.id === 401 && <AudiA8 />}
           {activeCar?.id === 402 && <AudiR8 />}
