@@ -132,11 +132,8 @@ function Header({ bg_color = '#060606' }: { bg_color?: string }) {
 
             {/* socials */}
             <div className={styles.container_socials}>
-              <img src='assets/svg/socials/telegram.svg' alt='' />
-              <img src='assets/svg/socials/vkontakte.svg' alt='' />
-
-              <SvgVkontakte fill='white' className={styles.social_btn} />
-              <SvgTelegram fill='white' className={styles.social_btn} />
+              <SvgVkontakte style={{ fill: '#ffffff' } as React.CSSProperties} className={styles.social_btn} />
+              <SvgTelegram style={{ fill: '#ffffff' } as React.CSSProperties} className={styles.social_btn} />
             </div>
           </div>
         </div>

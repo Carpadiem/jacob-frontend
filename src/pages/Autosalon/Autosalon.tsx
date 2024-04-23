@@ -159,10 +159,7 @@ function Autosalon() {
                 })}
             </div>
 
-            <div
-              className={styles.frame_purchase}
-              style={{ backgroundImage: `url(${'assets/images/page_autosalon/degree_lines.png'})` } as React.CSSProperties}
-            >
+            <div className={styles.frame_purchase}>
               <div className={styles.purchase_text_wrapper}>
                 <p className={styles.purchase_car_name}>{Capitalize(activeCar?.model_name)}</p>
                 <p className={styles.purchase_car_price}>${ThousandComma(activeCar?.price)}</p>
