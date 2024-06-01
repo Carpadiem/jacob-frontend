@@ -11,6 +11,8 @@ import { GLTF } from 'three-stdlib'
 import { degToRad } from 'three/src/math/MathUtils'
 import { Euler, Vector3 } from '@react-three/fiber'
 
+import { useVehicleLoader } from 'src/hooks/useVehicleLoader'
+
 type GLTFResult = GLTF & {
   nodes: {
     door_rf001: THREE.Mesh
@@ -199,32 +201,9 @@ type GLTFResult = GLTF & {
 }
 
 export default function Model(props: JSX.IntrinsicElements['group']) {
-  const [defaultCarProps] = React.useState({
-    position: [0, 1.1, 0] as Vector3,
-    rotation: [degToRad(0), degToRad(-135), degToRad(0)] as Euler,
-    scale: 1,
-    materials: {
-      primary: {
-        color: new THREE.Color('#7f7f7f'),
-        metalness: 0.3,
-        roughness: 1,
-        clearcoat: 0.05,
-        specularIntensity: 0,
-      },
-    },
-  })
-
-  React.useEffect(() => {
-    materials.primary.color = defaultCarProps.materials['primary'].color
-    materials.primary.metalness = defaultCarProps.materials['primary'].metalness
-    materials.primary.roughness = defaultCarProps.materials['primary'].roughness
-    materials.primary.clearcoat = defaultCarProps.materials['primary'].clearcoat
-    materials.primary.specularIntensity = defaultCarProps.materials['primary'].specularIntensity
-  }, [])
-
   const { nodes, materials } = useGLTF('assets/3d/transformed_gltf/cars/audi/A8/audi_a8-transformed.glb') as GLTFResult
   return (
-    <group {...props} dispose={null} position={defaultCarProps.position} rotation={defaultCarProps.rotation} scale={defaultCarProps.scale}>
+    <group {...props} dispose={null}>
       <group name='door_front_right_1' position={[1.021, -0.217, -1.041]}>
         <mesh name='door_rf001' castShadow receiveShadow geometry={nodes.door_rf001.geometry} material={materials.primary} />
         <mesh name='door_rf001_1' castShadow receiveShadow geometry={nodes.door_rf001_1.geometry} material={materials['door_rf.004']} />

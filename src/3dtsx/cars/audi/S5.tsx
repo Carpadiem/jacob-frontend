@@ -14,6 +14,7 @@ import storeStyling from '@stores/storeStyling'
 // models
 import IDeclaredBodypartData from '@models/styling/IDeclaredBodypartData'
 import IDemonstrativeBodyparts from '@models/styling/IDemonstrativeBodyparts'
+import useLoaderGLB from 'src/hooks/useLoaderGLB'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -342,580 +343,582 @@ export const declaredBodypartsData: IDeclaredBodypartData[] = [
 ]
 
 function Model(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('assets/3d/transformed_gltf/cars/audi/S5/s5-transformed.glb') as GLTFResult
-
-  React.useEffect(() => {
-    materials.primary.envMapIntensity = 1
-    materials.primary.roughness = 0.2
-    materials.primary.metalness = 0.1
-    materials.primary.clearcoat = 1
-    materials.primary.clearcoatRoughness = 0
-  }, [])
+  // const { nodes, materials } = useGLTF('assets/3d/transformed_gltf/cars/audi/S5/s5-transformed.glb') as GLTFResult
+  const { nodes, materials } = useLoaderGLB('http://localhost:3001/api/3d/glb/vehicles/audi_s5') as unknown as GLTFResult
 
   return (
     <group {...props} dispose={null}>
-      <group name='body_shell' position={[-0.002, 0.163, 0.313]}>
-        <mesh name='body_shell_1' castShadow receiveShadow geometry={nodes.body_shell_1.geometry} material={materials.dark_plastic} />
-        <mesh name='body_shell_2' castShadow receiveShadow geometry={nodes.body_shell_2.geometry} material={materials.radiator_grille} />
-        <mesh name='body_shell_3' castShadow receiveShadow geometry={nodes.body_shell_3.geometry} material={materials.primary} />
-        <mesh name='body_shell_4' castShadow receiveShadow geometry={nodes.body_shell_4.geometry} material={materials.interior} />
-        <mesh name='body_shell_5' castShadow receiveShadow geometry={nodes.body_shell_5.geometry} material={materials.glass} />
-        <mesh name='body_shell_6' castShadow receiveShadow geometry={nodes.body_shell_6.geometry} material={materials.glass_frame} />
-        <mesh name='body_shell_7' castShadow receiveShadow geometry={nodes.body_shell_7.geometry} material={materials.seats_secondary} />
-        <mesh name='body_shell_8' castShadow receiveShadow geometry={nodes.body_shell_8.geometry} material={materials.mirror_reflection} />
-        <mesh name='body_shell_9' castShadow receiveShadow geometry={nodes.body_shell_9.geometry} material={materials.nopaint} />
-        <mesh name='body_shell_10' castShadow receiveShadow geometry={nodes.body_shell_10.geometry} material={materials.wheel_stand} />
-      </group>
-      <group name='radiator_grille' position={[0, -0.143, -2.146]}>
-        <mesh name='radiator_grille_1' castShadow receiveShadow geometry={nodes.radiator_grille_1.geometry} material={materials.diffuser_primary} />
-        <mesh name='radiator_grille_2' castShadow receiveShadow geometry={nodes.radiator_grille_2.geometry} material={materials.dark_plastic} />
-        <mesh name='radiator_grille_3' castShadow receiveShadow geometry={nodes.radiator_grille_3.geometry} material={materials.radiator_grille} />
-        <mesh name='radiator_grille_4' castShadow receiveShadow geometry={nodes.radiator_grille_4.geometry} material={materials.plate_model} />
-      </group>
-      <group name='tail_lights' position={[0, 0.232, 2.539]}>
-        <mesh name='tail_lights_1' castShadow receiveShadow geometry={nodes.tail_lights_1.geometry} material={materials.lights_primary} />
-        <mesh name='tail_lights_2' castShadow receiveShadow geometry={nodes.tail_lights_2.geometry} material={materials.glass} />
-        <mesh name='tail_lights_3' castShadow receiveShadow geometry={nodes.tail_lights_3.geometry} material={materials.tail_lights_lamp_1} />
-      </group>
-      <group name='head_lights' position={[0, 0.053, -1.786]}>
-        <mesh name='head_lights_1' castShadow receiveShadow geometry={nodes.head_lights_1.geometry} material={materials.lights_primary} />
-        <mesh name='head_lights_2' castShadow receiveShadow geometry={nodes.head_lights_2.geometry} material={materials.glass} />
-        <mesh name='head_lights_3' castShadow receiveShadow geometry={nodes.head_lights_3.geometry} material={materials.head_lights_main_lamps} />
-        <mesh name='head_lights_4' castShadow receiveShadow geometry={nodes.head_lights_4.geometry} material={materials.head_lights_day_lamps} />
-      </group>
-      <mesh
-        name='head_lights_glass'
-        castShadow
-        receiveShadow
-        geometry={nodes.head_lights_glass.geometry}
-        material={materials.glass}
-        position={[0, 0.062, -1.847]}
-      />
-      <group name='trunk' position={[-0.002, 0.734, 1.624]}>
-        <mesh name='trunk_1' castShadow receiveShadow geometry={nodes.trunk_1.geometry} material={materials.dark_plastic} />
-        <mesh name='trunk_2' castShadow receiveShadow geometry={nodes.trunk_2.geometry} material={materials.radiator_grille} />
-        <mesh name='trunk_3' castShadow receiveShadow geometry={nodes.trunk_3.geometry} material={materials.primary} />
-        <mesh name='trunk_4' castShadow receiveShadow geometry={nodes.trunk_4.geometry} material={materials.glass} />
-        <mesh name='trunk_5' castShadow receiveShadow geometry={nodes.trunk_5.geometry} material={materials.glass_frame} />
-        <mesh name='trunk_6' castShadow receiveShadow geometry={nodes.trunk_6.geometry} material={materials.plate_model} />
-        <mesh name='trunk_7' castShadow receiveShadow geometry={nodes.trunk_7.geometry} material={materials.lights_primary} />
-        <mesh name='trunk_8' castShadow receiveShadow geometry={nodes.trunk_8.geometry} material={materials.tail_lights_lamp_1} />
-        <mesh name='trunk_9' castShadow receiveShadow geometry={nodes.trunk_9.geometry} material={materials.numberplate_canvas} />
-        <mesh name='trunk_10' castShadow receiveShadow geometry={nodes.trunk_10.geometry} material={materials.numberplate_frame} />
-      </group>
-      <mesh
-        name='tail_lights_glass'
-        castShadow
-        receiveShadow
-        geometry={nodes.tail_lights_glass.geometry}
-        material={materials.tail_lights_glass}
-        position={[-0.002, 0.734, 1.624]}
-      />
-      <mesh name='glass_front' castShadow receiveShadow geometry={nodes.glass_front.geometry} material={materials.glass} position={[-0.002, 0.567, -0.398]} />
-      <group name='numberplate_front' position={[0, -1.175, -2.211]} rotation={[0.138, 0, 0]}>
-        <mesh name='numberplate_front_1' castShadow receiveShadow geometry={nodes.numberplate_front_1.geometry} material={materials.numberplate_canvas} />
-        <mesh name='numberplate_front_2' castShadow receiveShadow geometry={nodes.numberplate_front_2.geometry} material={materials.numberplate_frame} />
-      </group>
+      {nodes && materials && (
+        <>
+          <group name='body_shell' position={[-0.002, 0.163, 0.313]}>
+            <mesh name='body_shell_1' castShadow receiveShadow geometry={nodes.body_shell_1.geometry} material={materials.dark_plastic} />
+            <mesh name='body_shell_2' castShadow receiveShadow geometry={nodes.body_shell_2.geometry} material={materials.radiator_grille} />
+            <mesh name='body_shell_3' castShadow receiveShadow geometry={nodes.body_shell_3.geometry} material={materials.primary} />
+            <mesh name='body_shell_4' castShadow receiveShadow geometry={nodes.body_shell_4.geometry} material={materials.interior} />
+            <mesh name='body_shell_5' castShadow receiveShadow geometry={nodes.body_shell_5.geometry} material={materials.glass} />
+            <mesh name='body_shell_6' castShadow receiveShadow geometry={nodes.body_shell_6.geometry} material={materials.glass_frame} />
+            <mesh name='body_shell_7' castShadow receiveShadow geometry={nodes.body_shell_7.geometry} material={materials.seats_secondary} />
+            <mesh name='body_shell_8' castShadow receiveShadow geometry={nodes.body_shell_8.geometry} material={materials.mirror_reflection} />
+            <mesh name='body_shell_9' castShadow receiveShadow geometry={nodes.body_shell_9.geometry} material={materials.nopaint} />
+            <mesh name='body_shell_10' castShadow receiveShadow geometry={nodes.body_shell_10.geometry} material={materials.wheel_stand} />
+          </group>
+          <group name='radiator_grille' position={[0, -0.143, -2.146]}>
+            <mesh name='radiator_grille_1' castShadow receiveShadow geometry={nodes.radiator_grille_1.geometry} material={materials.diffuser_primary} />
+            <mesh name='radiator_grille_2' castShadow receiveShadow geometry={nodes.radiator_grille_2.geometry} material={materials.dark_plastic} />
+            <mesh name='radiator_grille_3' castShadow receiveShadow geometry={nodes.radiator_grille_3.geometry} material={materials.radiator_grille} />
+            <mesh name='radiator_grille_4' castShadow receiveShadow geometry={nodes.radiator_grille_4.geometry} material={materials.plate_model} />
+          </group>
+          <group name='tail_lights' position={[0, 0.232, 2.539]}>
+            <mesh name='tail_lights_1' castShadow receiveShadow geometry={nodes.tail_lights_1.geometry} material={materials.lights_primary} />
+            <mesh name='tail_lights_2' castShadow receiveShadow geometry={nodes.tail_lights_2.geometry} material={materials.glass} />
+            <mesh name='tail_lights_3' castShadow receiveShadow geometry={nodes.tail_lights_3.geometry} material={materials.tail_lights_lamp_1} />
+          </group>
+          <group name='head_lights' position={[0, 0.053, -1.786]}>
+            <mesh name='head_lights_1' castShadow receiveShadow geometry={nodes.head_lights_1.geometry} material={materials.lights_primary} />
+            <mesh name='head_lights_2' castShadow receiveShadow geometry={nodes.head_lights_2.geometry} material={materials.glass} />
+            <mesh name='head_lights_3' castShadow receiveShadow geometry={nodes.head_lights_3.geometry} material={materials.head_lights_main_lamps} />
+            <mesh name='head_lights_4' castShadow receiveShadow geometry={nodes.head_lights_4.geometry} material={materials.head_lights_day_lamps} />
+          </group>
+          <mesh
+            name='head_lights_glass'
+            castShadow
+            receiveShadow
+            geometry={nodes.head_lights_glass.geometry}
+            material={materials.glass}
+            position={[0, 0.062, -1.847]}
+          />
+          <group name='trunk' position={[-0.002, 0.734, 1.624]}>
+            <mesh name='trunk_1' castShadow receiveShadow geometry={nodes.trunk_1.geometry} material={materials.dark_plastic} />
+            <mesh name='trunk_2' castShadow receiveShadow geometry={nodes.trunk_2.geometry} material={materials.radiator_grille} />
+            <mesh name='trunk_3' castShadow receiveShadow geometry={nodes.trunk_3.geometry} material={materials.primary} />
+            <mesh name='trunk_4' castShadow receiveShadow geometry={nodes.trunk_4.geometry} material={materials.glass} />
+            <mesh name='trunk_5' castShadow receiveShadow geometry={nodes.trunk_5.geometry} material={materials.glass_frame} />
+            <mesh name='trunk_6' castShadow receiveShadow geometry={nodes.trunk_6.geometry} material={materials.plate_model} />
+            <mesh name='trunk_7' castShadow receiveShadow geometry={nodes.trunk_7.geometry} material={materials.lights_primary} />
+            <mesh name='trunk_8' castShadow receiveShadow geometry={nodes.trunk_8.geometry} material={materials.tail_lights_lamp_1} />
+            <mesh name='trunk_9' castShadow receiveShadow geometry={nodes.trunk_9.geometry} material={materials.numberplate_canvas} />
+            <mesh name='trunk_10' castShadow receiveShadow geometry={nodes.trunk_10.geometry} material={materials.numberplate_frame} />
+          </group>
+          <mesh
+            name='tail_lights_glass'
+            castShadow
+            receiveShadow
+            geometry={nodes.tail_lights_glass.geometry}
+            material={materials.tail_lights_glass}
+            position={[-0.002, 0.734, 1.624]}
+          />
+          <mesh
+            name='glass_front'
+            castShadow
+            receiveShadow
+            geometry={nodes.glass_front.geometry}
+            material={materials.glass}
+            position={[-0.002, 0.567, -0.398]}
+          />
+          <group name='numberplate_front' position={[0, -1.175, -2.211]} rotation={[0.138, 0, 0]}>
+            <mesh name='numberplate_front_1' castShadow receiveShadow geometry={nodes.numberplate_front_1.geometry} material={materials.numberplate_canvas} />
+            <mesh name='numberplate_front_2' castShadow receiveShadow geometry={nodes.numberplate_front_2.geometry} material={materials.numberplate_frame} />
+          </group>
 
-      {/* bumpers_front */}
-      {/* <group name="bumper_front_1" position={[0, -0.218, -1.903]}> */}
-      <group name='bumper_front_1' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 1}>
-        <mesh name='bumper_front_1_1' castShadow receiveShadow geometry={nodes.bumper_front_1_1.geometry} material={materials.dark_plastic} />
-        <mesh name='bumper_front_1_2' castShadow receiveShadow geometry={nodes.bumper_front_1_2.geometry} material={materials.primary} />
-        <mesh name='bumper_front_1_3' castShadow receiveShadow geometry={nodes.bumper_front_1_3.geometry} material={materials.grille} />
-        <mesh name='bumper_front_1_4' castShadow receiveShadow geometry={nodes.bumper_front_1_4.geometry} material={materials.dark_mate_plastic} />
-      </group>
-      {/* <group name="bumper_front_2" position={[0, -24.218, -1.903]}> */}
-      <group name='bumper_front_2' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 2}>
-        <mesh name='bumper_front_2_1' castShadow receiveShadow geometry={nodes.bumper_front_2_1.geometry} material={materials.dark_plastic} />
-        <mesh name='bumper_front_2_2' castShadow receiveShadow geometry={nodes.bumper_front_2_2.geometry} material={materials.primary} />
-        <mesh name='bumper_front_2_3' castShadow receiveShadow geometry={nodes.bumper_front_2_3.geometry} material={materials.grille} />
-        <mesh name='bumper_front_2_4' castShadow receiveShadow geometry={nodes.bumper_front_2_4.geometry} material={materials.dark_mate_plastic} />
-      </group>
-      {/* <group name="bumper_front_3" position={[0, -25.218, -1.903]}> */}
-      <group name='bumper_front_3' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 3}>
-        <mesh name='bumper_front_3_1' castShadow receiveShadow geometry={nodes.bumper_front_3_1.geometry} material={materials.dark_plastic} />
-        <mesh name='bumper_front_3_2' castShadow receiveShadow geometry={nodes.bumper_front_3_2.geometry} material={materials.radiator_grille} />
-        <mesh name='bumper_front_3_3' castShadow receiveShadow geometry={nodes.bumper_front_3_3.geometry} material={materials.primary} />
-        <mesh name='bumper_front_3_4' castShadow receiveShadow geometry={nodes.bumper_front_3_4.geometry} material={materials.grille} />
-      </group>
-      {/* <group name="bumper_front_4" position={[0, -26.218, -1.903]}> */}
-      <group name='bumper_front_4' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 4}>
-        <mesh name='bumper_front_4_1' castShadow receiveShadow geometry={nodes.bumper_front_4_1.geometry} material={materials.glass} />
-        <mesh name='bumper_front_4_2' castShadow receiveShadow geometry={nodes.bumper_front_4_2.geometry} material={materials.primary} />
-        <mesh name='bumper_front_4_3' castShadow receiveShadow geometry={nodes.bumper_front_4_3.geometry} material={materials.lights_primary} />
-        <mesh name='bumper_front_4_4' castShadow receiveShadow geometry={nodes.bumper_front_4_4.geometry} material={materials.grille} />
-        <mesh name='bumper_front_4_5' castShadow receiveShadow geometry={nodes.bumper_front_4_5.geometry} material={materials.dark_mate_plastic} />
-      </group>
+          {/* bumpers_front */}
+          {/* <group name="bumper_front_1" position={[0, -0.218, -1.903]}> */}
+          <group name='bumper_front_1' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 1}>
+            <mesh name='bumper_front_1_1' castShadow receiveShadow geometry={nodes.bumper_front_1_1.geometry} material={materials.dark_plastic} />
+            <mesh name='bumper_front_1_2' castShadow receiveShadow geometry={nodes.bumper_front_1_2.geometry} material={materials.primary} />
+            <mesh name='bumper_front_1_3' castShadow receiveShadow geometry={nodes.bumper_front_1_3.geometry} material={materials.grille} />
+            <mesh name='bumper_front_1_4' castShadow receiveShadow geometry={nodes.bumper_front_1_4.geometry} material={materials.dark_mate_plastic} />
+          </group>
+          {/* <group name="bumper_front_2" position={[0, -24.218, -1.903]}> */}
+          <group name='bumper_front_2' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 2}>
+            <mesh name='bumper_front_2_1' castShadow receiveShadow geometry={nodes.bumper_front_2_1.geometry} material={materials.dark_plastic} />
+            <mesh name='bumper_front_2_2' castShadow receiveShadow geometry={nodes.bumper_front_2_2.geometry} material={materials.primary} />
+            <mesh name='bumper_front_2_3' castShadow receiveShadow geometry={nodes.bumper_front_2_3.geometry} material={materials.grille} />
+            <mesh name='bumper_front_2_4' castShadow receiveShadow geometry={nodes.bumper_front_2_4.geometry} material={materials.dark_mate_plastic} />
+          </group>
+          {/* <group name="bumper_front_3" position={[0, -25.218, -1.903]}> */}
+          <group name='bumper_front_3' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 3}>
+            <mesh name='bumper_front_3_1' castShadow receiveShadow geometry={nodes.bumper_front_3_1.geometry} material={materials.dark_plastic} />
+            <mesh name='bumper_front_3_2' castShadow receiveShadow geometry={nodes.bumper_front_3_2.geometry} material={materials.radiator_grille} />
+            <mesh name='bumper_front_3_3' castShadow receiveShadow geometry={nodes.bumper_front_3_3.geometry} material={materials.primary} />
+            <mesh name='bumper_front_3_4' castShadow receiveShadow geometry={nodes.bumper_front_3_4.geometry} material={materials.grille} />
+          </group>
+          {/* <group name="bumper_front_4" position={[0, -26.218, -1.903]}> */}
+          <group name='bumper_front_4' position={nodes.origin_bumper_front.position} visible={storeStyling.demonstrativeBodyparts.bumper_front_id === 4}>
+            <mesh name='bumper_front_4_1' castShadow receiveShadow geometry={nodes.bumper_front_4_1.geometry} material={materials.glass} />
+            <mesh name='bumper_front_4_2' castShadow receiveShadow geometry={nodes.bumper_front_4_2.geometry} material={materials.primary} />
+            <mesh name='bumper_front_4_3' castShadow receiveShadow geometry={nodes.bumper_front_4_3.geometry} material={materials.lights_primary} />
+            <mesh name='bumper_front_4_4' castShadow receiveShadow geometry={nodes.bumper_front_4_4.geometry} material={materials.grille} />
+            <mesh name='bumper_front_4_5' castShadow receiveShadow geometry={nodes.bumper_front_4_5.geometry} material={materials.dark_mate_plastic} />
+          </group>
 
-      {/* bumpers_rear */}
-      {/* <group name="bumper_rear_1" position={[0, -0.124, 2.45]}> */}
-      <group name='bumper_rear_1' position={nodes.origin_bumper_rear.position} visible={storeStyling.demonstrativeBodyparts.bumper_rear_id === 1}>
-        <mesh name='bumper_rear_1_1' castShadow receiveShadow geometry={nodes.bumper_rear_1_1.geometry} material={materials.primary} />
-        <mesh name='bumper_rear_1_2' castShadow receiveShadow geometry={nodes.bumper_rear_1_2.geometry} material={materials.lights_primary} />
-        <mesh name='bumper_rear_1_3' castShadow receiveShadow geometry={nodes.bumper_rear_1_3.geometry} material={materials.tail_lights_glass} />
-      </group>
-      {/* <group name="bumper_rear_2" position={[0, -25.124, 2.45]}> */}
-      <group name='bumper_rear_2' position={nodes.origin_bumper_rear.position} visible={storeStyling.demonstrativeBodyparts.bumper_rear_id === 2}>
-        <mesh name='bumper_rear_2_1' castShadow receiveShadow geometry={nodes.bumper_rear_2_1.geometry} material={materials.primary} />
-        <mesh name='bumper_rear_2_2' castShadow receiveShadow geometry={nodes.bumper_rear_2_2.geometry} material={materials.lights_primary} />
-        <mesh name='bumper_rear_2_3' castShadow receiveShadow geometry={nodes.bumper_rear_2_3.geometry} material={materials.tail_lights_glass} />
-        <mesh name='bumper_rear_2_4' castShadow receiveShadow geometry={nodes.bumper_rear_2_4.geometry} material={materials.grille} />
-      </group>
-      {/* <group name="bumper_rear_3" position={[0, -26.124, 2.45]}> */}
-      <group name='bumper_rear_3' position={nodes.origin_bumper_rear.position} visible={storeStyling.demonstrativeBodyparts.bumper_rear_id === 2}>
-        <mesh name='bumper_rear_3_1' castShadow receiveShadow geometry={nodes.bumper_rear_3_1.geometry} material={materials.primary} />
-        <mesh name='bumper_rear_3_2' castShadow receiveShadow geometry={nodes.bumper_rear_3_2.geometry} material={materials.grille} />
-      </group>
+          {/* bumpers_rear */}
+          {/* <group name="bumper_rear_1" position={[0, -0.124, 2.45]}> */}
+          <group name='bumper_rear_1' position={nodes.origin_bumper_rear.position} visible={storeStyling.demonstrativeBodyparts.bumper_rear_id === 1}>
+            <mesh name='bumper_rear_1_1' castShadow receiveShadow geometry={nodes.bumper_rear_1_1.geometry} material={materials.primary} />
+            <mesh name='bumper_rear_1_2' castShadow receiveShadow geometry={nodes.bumper_rear_1_2.geometry} material={materials.lights_primary} />
+            <mesh name='bumper_rear_1_3' castShadow receiveShadow geometry={nodes.bumper_rear_1_3.geometry} material={materials.tail_lights_glass} />
+          </group>
+          {/* <group name="bumper_rear_2" position={[0, -25.124, 2.45]}> */}
+          <group name='bumper_rear_2' position={nodes.origin_bumper_rear.position} visible={storeStyling.demonstrativeBodyparts.bumper_rear_id === 2}>
+            <mesh name='bumper_rear_2_1' castShadow receiveShadow geometry={nodes.bumper_rear_2_1.geometry} material={materials.primary} />
+            <mesh name='bumper_rear_2_2' castShadow receiveShadow geometry={nodes.bumper_rear_2_2.geometry} material={materials.lights_primary} />
+            <mesh name='bumper_rear_2_3' castShadow receiveShadow geometry={nodes.bumper_rear_2_3.geometry} material={materials.tail_lights_glass} />
+            <mesh name='bumper_rear_2_4' castShadow receiveShadow geometry={nodes.bumper_rear_2_4.geometry} material={materials.grille} />
+          </group>
+          {/* <group name="bumper_rear_3" position={[0, -26.124, 2.45]}> */}
+          <group name='bumper_rear_3' position={nodes.origin_bumper_rear.position} visible={storeStyling.demonstrativeBodyparts.bumper_rear_id === 2}>
+            <mesh name='bumper_rear_3_1' castShadow receiveShadow geometry={nodes.bumper_rear_3_1.geometry} material={materials.primary} />
+            <mesh name='bumper_rear_3_2' castShadow receiveShadow geometry={nodes.bumper_rear_3_2.geometry} material={materials.grille} />
+          </group>
 
-      {/* skirts */}
-      {/* <mesh name="skirts_1" castShadow receiveShadow geometry={nodes.skirts_1.geometry} material={materials.primary} position={[0, -0.379, 0.246]} /> */}
-      <mesh
-        name='skirts_1'
-        castShadow
-        receiveShadow
-        geometry={nodes.skirts_1.geometry}
-        material={materials.primary}
-        position={nodes.origin_skirts.position}
-        visible={storeStyling.demonstrativeBodyparts.skirts_id === 1}
-      />
-      {/* <group name="skirts_2" position={[0, -17.379, 0.246]}> */}
-      <group name='skirts_2' position={nodes.origin_skirts.position} visible={storeStyling.demonstrativeBodyparts.skirts_id === 2}>
-        <mesh name='skirts_2_1' castShadow receiveShadow geometry={nodes.skirts_2_1.geometry} material={materials.primary} />
-        <mesh name='skirts_2_2' castShadow receiveShadow geometry={nodes.skirts_2_2.geometry} material={materials.grille} />
-        <mesh name='skirts_2_3' castShadow receiveShadow geometry={nodes.skirts_2_3.geometry} material={materials.dark_mate_plastic} />
-      </group>
-      {/* <group name="skirts_3" position={[0, -18.379, 0.246]}> */}
-      <group name='skirts_3' position={nodes.origin_skirts.position} visible={storeStyling.demonstrativeBodyparts.skirts_id === 3}>
-        <mesh name='skirts_3_1' castShadow receiveShadow geometry={nodes.skirts_3_1.geometry} material={materials.primary} />
-        <mesh name='skirts_3_2' castShadow receiveShadow geometry={nodes.skirts_3_2.geometry} material={materials.dark_mate_plastic} />
-      </group>
+          {/* skirts */}
+          {/* <mesh name="skirts_1" castShadow receiveShadow geometry={nodes.skirts_1.geometry} material={materials.primary} position={[0, -0.379, 0.246]} /> */}
+          <mesh
+            name='skirts_1'
+            castShadow
+            receiveShadow
+            geometry={nodes.skirts_1.geometry}
+            material={materials.primary}
+            position={nodes.origin_skirts.position}
+            visible={storeStyling.demonstrativeBodyparts.skirts_id === 1}
+          />
+          {/* <group name="skirts_2" position={[0, -17.379, 0.246]}> */}
+          <group name='skirts_2' position={nodes.origin_skirts.position} visible={storeStyling.demonstrativeBodyparts.skirts_id === 2}>
+            <mesh name='skirts_2_1' castShadow receiveShadow geometry={nodes.skirts_2_1.geometry} material={materials.primary} />
+            <mesh name='skirts_2_2' castShadow receiveShadow geometry={nodes.skirts_2_2.geometry} material={materials.grille} />
+            <mesh name='skirts_2_3' castShadow receiveShadow geometry={nodes.skirts_2_3.geometry} material={materials.dark_mate_plastic} />
+          </group>
+          {/* <group name="skirts_3" position={[0, -18.379, 0.246]}> */}
+          <group name='skirts_3' position={nodes.origin_skirts.position} visible={storeStyling.demonstrativeBodyparts.skirts_id === 3}>
+            <mesh name='skirts_3_1' castShadow receiveShadow geometry={nodes.skirts_3_1.geometry} material={materials.primary} />
+            <mesh name='skirts_3_2' castShadow receiveShadow geometry={nodes.skirts_3_2.geometry} material={materials.dark_mate_plastic} />
+          </group>
 
-      {/* bonnets */}
-      {/* <group name="bonnet_1" position={[0, 0.331, -0.583]}> */}
-      <group name='bonnet_1' position={nodes.origin_bonnet.position} visible={storeStyling.demonstrativeBodyparts.bonnet_id === 1}>
-        <mesh name='bonnet_1_1' castShadow receiveShadow geometry={nodes.bonnet_1_1.geometry} material={materials.primary} />
-        <mesh name='bonnet_1_2' castShadow receiveShadow geometry={nodes.bonnet_1_2.geometry} material={materials.primary} />
-      </group>
-      {/* <group name="bonnet_2" position={[0, -20.669, -0.583]}> */}
-      <group name='bonnet_2' position={nodes.origin_bonnet.position} visible={storeStyling.demonstrativeBodyparts.bonnet_id === 2}>
-        <mesh name='bonnet_2_1' castShadow receiveShadow geometry={nodes.bonnet_2_1.geometry} material={materials.primary} />
-        <mesh name='bonnet_2_2' castShadow receiveShadow geometry={nodes.bonnet_2_2.geometry} material={materials.grille} />
-      </group>
-      {/* <group name="bonnet_3" position={[0, -19.675, -0.581]}> */}
-      <group name='bonnet_3' position={nodes.origin_bonnet.position} visible={storeStyling.demonstrativeBodyparts.bonnet_id === 3}>
-        <mesh name='bonnet_3_1' castShadow receiveShadow geometry={nodes.bonnet_3_1.geometry} material={materials.primary} />
-        <mesh name='bonnet_3_2' castShadow receiveShadow geometry={nodes.bonnet_3_2.geometry} material={materials.grille} />
-      </group>
+          {/* bonnets */}
+          {/* <group name="bonnet_1" position={[0, 0.331, -0.583]}> */}
+          <group name='bonnet_1' position={nodes.origin_bonnet.position} visible={storeStyling.demonstrativeBodyparts.bonnet_id === 1}>
+            <mesh name='bonnet_1_1' castShadow receiveShadow geometry={nodes.bonnet_1_1.geometry} material={materials.primary} />
+            <mesh name='bonnet_1_2' castShadow receiveShadow geometry={nodes.bonnet_1_2.geometry} material={materials.primary} />
+          </group>
+          {/* <group name="bonnet_2" position={[0, -20.669, -0.583]}> */}
+          <group name='bonnet_2' position={nodes.origin_bonnet.position} visible={storeStyling.demonstrativeBodyparts.bonnet_id === 2}>
+            <mesh name='bonnet_2_1' castShadow receiveShadow geometry={nodes.bonnet_2_1.geometry} material={materials.primary} />
+            <mesh name='bonnet_2_2' castShadow receiveShadow geometry={nodes.bonnet_2_2.geometry} material={materials.grille} />
+          </group>
+          {/* <group name="bonnet_3" position={[0, -19.675, -0.581]}> */}
+          <group name='bonnet_3' position={nodes.origin_bonnet.position} visible={storeStyling.demonstrativeBodyparts.bonnet_id === 3}>
+            <mesh name='bonnet_3_1' castShadow receiveShadow geometry={nodes.bonnet_3_1.geometry} material={materials.primary} />
+            <mesh name='bonnet_3_2' castShadow receiveShadow geometry={nodes.bonnet_3_2.geometry} material={materials.grille} />
+          </group>
 
-      {/* spoilers */}
-      {/* <group name="spoiler_1" position={[0, -15.359, 2.67]}> */}
-      <group name='spoiler_1' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 1}>
-        <mesh name='spoiler_1_1' castShadow receiveShadow geometry={nodes.spoiler_1_1.geometry} material={materials.primary} />
-        <mesh name='spoiler_1_2' castShadow receiveShadow geometry={nodes.spoiler_1_2.geometry} material={materials.primary} />
-      </group>
-      {/* <group name="spoiler_2" position={[0, -16.359, 2.67]}> */}
-      <group name='spoiler_2' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 2}>
-        <mesh name='spoiler_2_1' castShadow receiveShadow geometry={nodes.spoiler_2_1.geometry} material={materials.primary} />
-        <mesh name='spoiler_2_2' castShadow receiveShadow geometry={nodes.spoiler_2_2.geometry} material={materials.primary} />
-      </group>
-      {/* <group name="spoiler_3" position={[0, -19.359, 2.67]}> */}
-      <group name='spoiler_3' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 3}>
-        <mesh name='spoiler_3_1' castShadow receiveShadow geometry={nodes.spoiler_3_1.geometry} material={materials.bolt} />
-        <mesh name='spoiler_3_2' castShadow receiveShadow geometry={nodes.spoiler_3_2.geometry} material={materials.dark_mate_plastic} />
-      </group>
-      {/* <group name="spoiler_4" position={[0, -17.359, 2.67]}> */}
-      <group name='spoiler_4' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 4}>
-        <mesh name='spoiler_4_1' castShadow receiveShadow geometry={nodes.spoiler_4_1.geometry} material={materials.bolt} />
-        <mesh name='spoiler_4_2' castShadow receiveShadow geometry={nodes.spoiler_4_2.geometry} material={materials.dark_mate_plastic} />
-      </group>
-      {/* <group name="spoiler_5" position={[0, -18.359, 2.67]}> */}
-      <group name='spoiler_5' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 5}>
-        <mesh name='spoiler_5_1' castShadow receiveShadow geometry={nodes.spoiler_5_1.geometry} material={materials.bolt} />
-        <mesh name='spoiler_5_2' castShadow receiveShadow geometry={nodes.spoiler_5_2.geometry} material={materials.dark_mate_plastic} />
-      </group>
+          {/* spoilers */}
+          {/* <group name="spoiler_1" position={[0, -15.359, 2.67]}> */}
+          <group name='spoiler_1' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 1}>
+            <mesh name='spoiler_1_1' castShadow receiveShadow geometry={nodes.spoiler_1_1.geometry} material={materials.primary} />
+            <mesh name='spoiler_1_2' castShadow receiveShadow geometry={nodes.spoiler_1_2.geometry} material={materials.primary} />
+          </group>
+          {/* <group name="spoiler_2" position={[0, -16.359, 2.67]}> */}
+          <group name='spoiler_2' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 2}>
+            <mesh name='spoiler_2_1' castShadow receiveShadow geometry={nodes.spoiler_2_1.geometry} material={materials.primary} />
+            <mesh name='spoiler_2_2' castShadow receiveShadow geometry={nodes.spoiler_2_2.geometry} material={materials.primary} />
+          </group>
+          {/* <group name="spoiler_3" position={[0, -19.359, 2.67]}> */}
+          <group name='spoiler_3' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 3}>
+            <mesh name='spoiler_3_1' castShadow receiveShadow geometry={nodes.spoiler_3_1.geometry} material={materials.bolt} />
+            <mesh name='spoiler_3_2' castShadow receiveShadow geometry={nodes.spoiler_3_2.geometry} material={materials.dark_mate_plastic} />
+          </group>
+          {/* <group name="spoiler_4" position={[0, -17.359, 2.67]}> */}
+          <group name='spoiler_4' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 4}>
+            <mesh name='spoiler_4_1' castShadow receiveShadow geometry={nodes.spoiler_4_1.geometry} material={materials.bolt} />
+            <mesh name='spoiler_4_2' castShadow receiveShadow geometry={nodes.spoiler_4_2.geometry} material={materials.dark_mate_plastic} />
+          </group>
+          {/* <group name="spoiler_5" position={[0, -18.359, 2.67]}> */}
+          <group name='spoiler_5' position={nodes.origin_spoiler.position} visible={storeStyling.demonstrativeBodyparts.spoiler_id === 5}>
+            <mesh name='spoiler_5_1' castShadow receiveShadow geometry={nodes.spoiler_5_1.geometry} material={materials.bolt} />
+            <mesh name='spoiler_5_2' castShadow receiveShadow geometry={nodes.spoiler_5_2.geometry} material={materials.dark_mate_plastic} />
+          </group>
 
-      {/* splitter */}
-      {/* <mesh name="splitter_1" castShadow receiveShadow geometry={nodes.splitter_1.geometry} material={materials.canards} position={[0, -6.489, -2.029]} /> */}
-      <mesh
-        name='splitter_1'
-        castShadow
-        receiveShadow
-        geometry={nodes.splitter_1.geometry}
-        material={materials.canards}
-        position={nodes.origin_splitter.position}
-        visible={storeStyling.demonstrativeBodyparts.splitter_id === 1}
-      />
-      {/* <mesh name="splitter_2" castShadow receiveShadow geometry={nodes.splitter_2.geometry} material={materials.canards} position={[0, -7.489, -2.029]} /> */}
-      <mesh
-        name='splitter_2'
-        castShadow
-        receiveShadow
-        geometry={nodes.splitter_2.geometry}
-        material={materials.canards}
-        position={nodes.origin_splitter.position}
-        visible={storeStyling.demonstrativeBodyparts.splitter_id === 2}
-      />
-      {/* <mesh name="splitter_3" castShadow receiveShadow geometry={nodes.splitter_3.geometry} material={materials.canards} position={[0, -8.489, -2.029]} /> */}
-      <mesh
-        name='splitter_3'
-        castShadow
-        receiveShadow
-        geometry={nodes.splitter_3.geometry}
-        material={materials.canards}
-        position={nodes.origin_splitter.position}
-        visible={storeStyling.demonstrativeBodyparts.splitter_id === 3}
-      />
-      {/* <mesh name="splitter_4" castShadow receiveShadow geometry={nodes.splitter_4.geometry} material={materials.canards} position={[0, -9.489, -2.029]} /> */}
-      <mesh
-        name='splitter_4'
-        castShadow
-        receiveShadow
-        geometry={nodes.splitter_4.geometry}
-        material={materials.canards}
-        position={nodes.origin_splitter.position}
-        visible={storeStyling.demonstrativeBodyparts.splitter_id === 4}
-      />
-      {/* <mesh name="splitter_5" castShadow receiveShadow geometry={nodes.splitter_5.geometry} material={materials.canards} position={[0, -10.489, -2.029]} /> */}
-      <mesh
-        name='splitter_5'
-        castShadow
-        receiveShadow
-        geometry={nodes.splitter_5.geometry}
-        material={materials.canards}
-        position={nodes.origin_splitter.position}
-        visible={storeStyling.demonstrativeBodyparts.splitter_id === 5}
-      />
-      {/* <mesh name="splitter_6" castShadow receiveShadow geometry={nodes.splitter_6.geometry} material={materials.canards} position={[0, -11.489, -2.029]} /> */}
-      <mesh
-        name='splitter_6'
-        castShadow
-        receiveShadow
-        geometry={nodes.splitter_6.geometry}
-        material={materials.canards}
-        position={nodes.origin_splitter.position}
-        visible={storeStyling.demonstrativeBodyparts.splitter_id === 6}
-      />
-      {/* <mesh name="splitter_7" castShadow receiveShadow geometry={nodes.splitter_7.geometry} material={materials.canards} position={[0, -12.489, -2.029]} /> */}
-      <mesh
-        name='splitter_7'
-        castShadow
-        receiveShadow
-        geometry={nodes.splitter_7.geometry}
-        material={materials.canards}
-        position={nodes.origin_splitter.position}
-        visible={storeStyling.demonstrativeBodyparts.splitter_id === 7}
-      />
+          {/* splitter */}
+          {/* <mesh name="splitter_1" castShadow receiveShadow geometry={nodes.splitter_1.geometry} material={materials.canards} position={[0, -6.489, -2.029]} /> */}
+          <mesh
+            name='splitter_1'
+            castShadow
+            receiveShadow
+            geometry={nodes.splitter_1.geometry}
+            material={materials.canards}
+            position={nodes.origin_splitter.position}
+            visible={storeStyling.demonstrativeBodyparts.splitter_id === 1}
+          />
+          {/* <mesh name="splitter_2" castShadow receiveShadow geometry={nodes.splitter_2.geometry} material={materials.canards} position={[0, -7.489, -2.029]} /> */}
+          <mesh
+            name='splitter_2'
+            castShadow
+            receiveShadow
+            geometry={nodes.splitter_2.geometry}
+            material={materials.canards}
+            position={nodes.origin_splitter.position}
+            visible={storeStyling.demonstrativeBodyparts.splitter_id === 2}
+          />
+          {/* <mesh name="splitter_3" castShadow receiveShadow geometry={nodes.splitter_3.geometry} material={materials.canards} position={[0, -8.489, -2.029]} /> */}
+          <mesh
+            name='splitter_3'
+            castShadow
+            receiveShadow
+            geometry={nodes.splitter_3.geometry}
+            material={materials.canards}
+            position={nodes.origin_splitter.position}
+            visible={storeStyling.demonstrativeBodyparts.splitter_id === 3}
+          />
+          {/* <mesh name="splitter_4" castShadow receiveShadow geometry={nodes.splitter_4.geometry} material={materials.canards} position={[0, -9.489, -2.029]} /> */}
+          <mesh
+            name='splitter_4'
+            castShadow
+            receiveShadow
+            geometry={nodes.splitter_4.geometry}
+            material={materials.canards}
+            position={nodes.origin_splitter.position}
+            visible={storeStyling.demonstrativeBodyparts.splitter_id === 4}
+          />
+          {/* <mesh name="splitter_5" castShadow receiveShadow geometry={nodes.splitter_5.geometry} material={materials.canards} position={[0, -10.489, -2.029]} /> */}
+          <mesh
+            name='splitter_5'
+            castShadow
+            receiveShadow
+            geometry={nodes.splitter_5.geometry}
+            material={materials.canards}
+            position={nodes.origin_splitter.position}
+            visible={storeStyling.demonstrativeBodyparts.splitter_id === 5}
+          />
+          {/* <mesh name="splitter_6" castShadow receiveShadow geometry={nodes.splitter_6.geometry} material={materials.canards} position={[0, -11.489, -2.029]} /> */}
+          <mesh
+            name='splitter_6'
+            castShadow
+            receiveShadow
+            geometry={nodes.splitter_6.geometry}
+            material={materials.canards}
+            position={nodes.origin_splitter.position}
+            visible={storeStyling.demonstrativeBodyparts.splitter_id === 6}
+          />
+          {/* <mesh name="splitter_7" castShadow receiveShadow geometry={nodes.splitter_7.geometry} material={materials.canards} position={[0, -12.489, -2.029]} /> */}
+          <mesh
+            name='splitter_7'
+            castShadow
+            receiveShadow
+            geometry={nodes.splitter_7.geometry}
+            material={materials.canards}
+            position={nodes.origin_splitter.position}
+            visible={storeStyling.demonstrativeBodyparts.splitter_id === 7}
+          />
 
-      {/* diffusers */}
-      {/* <group name="diffuser_rear_1" position={[0, -0.288, 2.659]}> */}
-      <group name='diffuser_rear_1' position={nodes.origin_diffuser_rear.position} visible={storeStyling.demonstrativeBodyparts.diffuser_id === 1}>
-        <mesh name='diffuser_rear_1_1' castShadow receiveShadow geometry={nodes.diffuser_rear_1_1.geometry} material={materials.diffuser_primary} />
-        <mesh name='diffuser_rear_1_2' castShadow receiveShadow geometry={nodes.diffuser_rear_1_2.geometry} material={materials.diffuser_secondary} />
-        <mesh name='diffuser_rear_1_3' castShadow receiveShadow geometry={nodes.diffuser_rear_1_3.geometry} material={materials.grille} />
-      </group>
-      {/* <group name="diffuser_rear_2" position={[0, -22.288, 2.659]}> */}
-      <group name='diffuser_rear_2' position={nodes.origin_diffuser_rear.position} visible={storeStyling.demonstrativeBodyparts.diffuser_id === 3}>
-        <mesh name='diffuser_rear_2_1' castShadow receiveShadow geometry={nodes.diffuser_rear_2_1.geometry} material={materials.diffuser_primary} />
-        <mesh name='diffuser_rear_2_2' castShadow receiveShadow geometry={nodes.diffuser_rear_2_2.geometry} material={materials.dark_mate_plastic} />
-      </group>
-      {/* <group name="diffuser_rear_3" position={[0, -23.288, 2.659]}> */}
-      <group name='diffuser_rear_3' position={nodes.origin_diffuser_rear.position} visible={storeStyling.demonstrativeBodyparts.diffuser_id === 2}>
-        <mesh name='diffuser_rear_3_1' castShadow receiveShadow geometry={nodes.diffuser_rear_3_1.geometry} material={materials.diffuser_primary} />
-        <mesh name='diffuser_rear_3_2' castShadow receiveShadow geometry={nodes.diffuser_rear_3_2.geometry} material={materials.dark_mate_plastic} />
-      </group>
+          {/* diffusers */}
+          {/* <group name="diffuser_rear_1" position={[0, -0.288, 2.659]}> */}
+          <group name='diffuser_rear_1' position={nodes.origin_diffuser_rear.position} visible={storeStyling.demonstrativeBodyparts.diffuser_id === 1}>
+            <mesh name='diffuser_rear_1_1' castShadow receiveShadow geometry={nodes.diffuser_rear_1_1.geometry} material={materials.diffuser_primary} />
+            <mesh name='diffuser_rear_1_2' castShadow receiveShadow geometry={nodes.diffuser_rear_1_2.geometry} material={materials.diffuser_secondary} />
+            <mesh name='diffuser_rear_1_3' castShadow receiveShadow geometry={nodes.diffuser_rear_1_3.geometry} material={materials.grille} />
+          </group>
+          {/* <group name="diffuser_rear_2" position={[0, -22.288, 2.659]}> */}
+          <group name='diffuser_rear_2' position={nodes.origin_diffuser_rear.position} visible={storeStyling.demonstrativeBodyparts.diffuser_id === 3}>
+            <mesh name='diffuser_rear_2_1' castShadow receiveShadow geometry={nodes.diffuser_rear_2_1.geometry} material={materials.diffuser_primary} />
+            <mesh name='diffuser_rear_2_2' castShadow receiveShadow geometry={nodes.diffuser_rear_2_2.geometry} material={materials.dark_mate_plastic} />
+          </group>
+          {/* <group name="diffuser_rear_3" position={[0, -23.288, 2.659]}> */}
+          <group name='diffuser_rear_3' position={nodes.origin_diffuser_rear.position} visible={storeStyling.demonstrativeBodyparts.diffuser_id === 2}>
+            <mesh name='diffuser_rear_3_1' castShadow receiveShadow geometry={nodes.diffuser_rear_3_1.geometry} material={materials.diffuser_primary} />
+            <mesh name='diffuser_rear_3_2' castShadow receiveShadow geometry={nodes.diffuser_rear_3_2.geometry} material={materials.dark_mate_plastic} />
+          </group>
 
-      {/* canards */}
-      {/* <group name="canards_1" position={[0, -16.237, -1.781]}> */}
-      <group name='canards_1' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 1}>
-        <mesh name='canards_1_1' castShadow receiveShadow geometry={nodes.canards_1_1.geometry} material={materials.plate_model} />
-        <mesh name='canards_1_2' castShadow receiveShadow geometry={nodes.canards_1_2.geometry} material={materials.canards} />
-      </group>
-      {/* <group name="canards_2" position={[0, -13.237, -1.781]}> */}
-      <group name='canards_2' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 2}>
-        <mesh name='canards_2_1' castShadow receiveShadow geometry={nodes.canards_2_1.geometry} material={materials.plate_model} />
-        <mesh name='canards_2_2' castShadow receiveShadow geometry={nodes.canards_2_2.geometry} material={materials.canards} />
-      </group>
-      {/* <group name="canards_3" position={[0, -14.237, -1.781]}> */}
-      <group name='canards_3' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 3}>
-        <mesh name='canards_3_1' castShadow receiveShadow geometry={nodes.canards_3_1.geometry} material={materials.plate_model} />
-        <mesh name='canards_3_2' castShadow receiveShadow geometry={nodes.canards_3_2.geometry} material={materials.canards} />
-      </group>
-      {/* <group name="canards_4" position={[0, -15.237, -1.781]}> */}
-      <group name='canards_4' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 4}>
-        <mesh name='canards_4_1' castShadow receiveShadow geometry={nodes.canards_4_1.geometry} material={materials.plate_model} />
-        <mesh name='canards_4_2' castShadow receiveShadow geometry={nodes.canards_4_2.geometry} material={materials.canards} />
-      </group>
+          {/* canards */}
+          {/* <group name="canards_1" position={[0, -16.237, -1.781]}> */}
+          <group name='canards_1' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 1}>
+            <mesh name='canards_1_1' castShadow receiveShadow geometry={nodes.canards_1_1.geometry} material={materials.plate_model} />
+            <mesh name='canards_1_2' castShadow receiveShadow geometry={nodes.canards_1_2.geometry} material={materials.canards} />
+          </group>
+          {/* <group name="canards_2" position={[0, -13.237, -1.781]}> */}
+          <group name='canards_2' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 2}>
+            <mesh name='canards_2_1' castShadow receiveShadow geometry={nodes.canards_2_1.geometry} material={materials.plate_model} />
+            <mesh name='canards_2_2' castShadow receiveShadow geometry={nodes.canards_2_2.geometry} material={materials.canards} />
+          </group>
+          {/* <group name="canards_3" position={[0, -14.237, -1.781]}> */}
+          <group name='canards_3' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 3}>
+            <mesh name='canards_3_1' castShadow receiveShadow geometry={nodes.canards_3_1.geometry} material={materials.plate_model} />
+            <mesh name='canards_3_2' castShadow receiveShadow geometry={nodes.canards_3_2.geometry} material={materials.canards} />
+          </group>
+          {/* <group name="canards_4" position={[0, -15.237, -1.781]}> */}
+          <group name='canards_4' position={nodes.origin_canards.position} visible={storeStyling.demonstrativeBodyparts.canards_id === 4}>
+            <mesh name='canards_4_1' castShadow receiveShadow geometry={nodes.canards_4_1.geometry} material={materials.plate_model} />
+            <mesh name='canards_4_2' castShadow receiveShadow geometry={nodes.canards_4_2.geometry} material={materials.canards} />
+          </group>
 
-      {/* wings_front */}
-      {/* <group name="wings_front_1" position={[0, -0.09, -1.199]}> */}
-      <group name='wings_front_1' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 1}>
-        <mesh name='wings_front_1_1' castShadow receiveShadow geometry={nodes.wings_front_1_1.geometry} material={materials.radiator_grille} />
-        <mesh name='wings_front_1_2' castShadow receiveShadow geometry={nodes.wings_front_1_2.geometry} material={materials.primary} />
-        <mesh name='wings_front_1_3' castShadow receiveShadow geometry={nodes.wings_front_1_3.geometry} material={materials.plate_model} />
-      </group>
-      {/* <group name="wings_front_2" position={[0, -13.09, -1.199]}> */}
-      <group name='wings_front_2' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 2}>
-        <mesh name='wings_front_2_1' castShadow receiveShadow geometry={nodes.wings_front_2_1.geometry} material={materials.radiator_grille} />
-        <mesh name='wings_front_2_2' castShadow receiveShadow geometry={nodes.wings_front_2_2.geometry} material={materials.primary} />
-        <mesh name='wings_front_2_3' castShadow receiveShadow geometry={nodes.wings_front_2_3.geometry} material={materials.plate_model} />
-      </group>
-      {/* <group name="wings_front_3" position={[0, -14.09, -1.199]}> */}
-      <group name='wings_front_3' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 3}>
-        <mesh name='wings_front_3_1' castShadow receiveShadow geometry={nodes.wings_front_3_1.geometry} material={materials.radiator_grille} />
-        <mesh name='wings_front_3_2' castShadow receiveShadow geometry={nodes.wings_front_3_2.geometry} material={materials.primary} />
-        <mesh name='wings_front_3_3' castShadow receiveShadow geometry={nodes.wings_front_3_3.geometry} material={materials.plate_model} />
-      </group>
-      {/* <group name="wings_front_4" position={[0, -15.097, -1.199]}> */}
-      <group name='wings_front_4' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 4}>
-        <mesh name='wings_front_4_1' castShadow receiveShadow geometry={nodes.wings_front_4_1.geometry} material={materials.radiator_grille} />
-        <mesh name='wings_front_4_2' castShadow receiveShadow geometry={nodes.wings_front_4_2.geometry} material={materials.primary} />
-        <mesh name='wings_front_4_3' castShadow receiveShadow geometry={nodes.wings_front_4_3.geometry} material={materials.plate_model} />
-      </group>
+          {/* wings_front */}
+          {/* <group name="wings_front_1" position={[0, -0.09, -1.199]}> */}
+          <group name='wings_front_1' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 1}>
+            <mesh name='wings_front_1_1' castShadow receiveShadow geometry={nodes.wings_front_1_1.geometry} material={materials.radiator_grille} />
+            <mesh name='wings_front_1_2' castShadow receiveShadow geometry={nodes.wings_front_1_2.geometry} material={materials.primary} />
+            <mesh name='wings_front_1_3' castShadow receiveShadow geometry={nodes.wings_front_1_3.geometry} material={materials.plate_model} />
+          </group>
+          {/* <group name="wings_front_2" position={[0, -13.09, -1.199]}> */}
+          <group name='wings_front_2' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 2}>
+            <mesh name='wings_front_2_1' castShadow receiveShadow geometry={nodes.wings_front_2_1.geometry} material={materials.radiator_grille} />
+            <mesh name='wings_front_2_2' castShadow receiveShadow geometry={nodes.wings_front_2_2.geometry} material={materials.primary} />
+            <mesh name='wings_front_2_3' castShadow receiveShadow geometry={nodes.wings_front_2_3.geometry} material={materials.plate_model} />
+          </group>
+          {/* <group name="wings_front_3" position={[0, -14.09, -1.199]}> */}
+          <group name='wings_front_3' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 3}>
+            <mesh name='wings_front_3_1' castShadow receiveShadow geometry={nodes.wings_front_3_1.geometry} material={materials.radiator_grille} />
+            <mesh name='wings_front_3_2' castShadow receiveShadow geometry={nodes.wings_front_3_2.geometry} material={materials.primary} />
+            <mesh name='wings_front_3_3' castShadow receiveShadow geometry={nodes.wings_front_3_3.geometry} material={materials.plate_model} />
+          </group>
+          {/* <group name="wings_front_4" position={[0, -15.097, -1.199]}> */}
+          <group name='wings_front_4' position={nodes.origin_wings_front.position} visible={storeStyling.demonstrativeBodyparts.wings_front_id === 4}>
+            <mesh name='wings_front_4_1' castShadow receiveShadow geometry={nodes.wings_front_4_1.geometry} material={materials.radiator_grille} />
+            <mesh name='wings_front_4_2' castShadow receiveShadow geometry={nodes.wings_front_4_2.geometry} material={materials.primary} />
+            <mesh name='wings_front_4_3' castShadow receiveShadow geometry={nodes.wings_front_4_3.geometry} material={materials.plate_model} />
+          </group>
 
-      {/* wings_rear */}
-      {/* <mesh name="wings_rear_1" castShadow receiveShadow geometry={nodes.wings_rear_1.geometry} material={materials.primary} position={[0, 0.253, 0.962]} /> */}
-      <mesh
-        name='wings_rear_1'
-        castShadow
-        receiveShadow
-        geometry={nodes.wings_rear_1.geometry}
-        material={materials.primary}
-        position={nodes.origin_wings_rear.position}
-        visible={storeStyling.demonstrativeBodyparts.wings_rear_id === 1}
-      />
-      {/* <mesh name="wings_rear_2" castShadow receiveShadow geometry={nodes.wings_rear_2.geometry} material={materials.primary} position={[0, -11.747, 0.962]} /> */}
-      <mesh
-        name='wings_rear_2'
-        castShadow
-        receiveShadow
-        geometry={nodes.wings_rear_2.geometry}
-        material={materials.primary}
-        position={nodes.origin_wings_rear.position}
-        visible={storeStyling.demonstrativeBodyparts.wings_rear_id === 2}
-      />
-      {/* <mesh name="wings_rear_3" castShadow receiveShadow geometry={nodes.wings_rear_3.geometry} material={materials.primary} position={[0, -12.747, 0.962]} /> */}
-      <mesh
-        name='wings_rear_3'
-        castShadow
-        receiveShadow
-        geometry={nodes.wings_rear_3.geometry}
-        material={materials.primary}
-        position={nodes.origin_wings_rear.position}
-        visible={storeStyling.demonstrativeBodyparts.wings_rear_id === 3}
-      />
+          {/* wings_rear */}
+          {/* <mesh name="wings_rear_1" castShadow receiveShadow geometry={nodes.wings_rear_1.geometry} material={materials.primary} position={[0, 0.253, 0.962]} /> */}
+          <mesh
+            name='wings_rear_1'
+            castShadow
+            receiveShadow
+            geometry={nodes.wings_rear_1.geometry}
+            material={materials.primary}
+            position={nodes.origin_wings_rear.position}
+            visible={storeStyling.demonstrativeBodyparts.wings_rear_id === 1}
+          />
+          {/* <mesh name="wings_rear_2" castShadow receiveShadow geometry={nodes.wings_rear_2.geometry} material={materials.primary} position={[0, -11.747, 0.962]} /> */}
+          <mesh
+            name='wings_rear_2'
+            castShadow
+            receiveShadow
+            geometry={nodes.wings_rear_2.geometry}
+            material={materials.primary}
+            position={nodes.origin_wings_rear.position}
+            visible={storeStyling.demonstrativeBodyparts.wings_rear_id === 2}
+          />
+          {/* <mesh name="wings_rear_3" castShadow receiveShadow geometry={nodes.wings_rear_3.geometry} material={materials.primary} position={[0, -12.747, 0.962]} /> */}
+          <mesh
+            name='wings_rear_3'
+            castShadow
+            receiveShadow
+            geometry={nodes.wings_rear_3.geometry}
+            material={materials.primary}
+            position={nodes.origin_wings_rear.position}
+            visible={storeStyling.demonstrativeBodyparts.wings_rear_id === 3}
+          />
 
-      {/* exhausts */}
-      {/* <group name="exhaust_1" position={[0, -0.352, 2.57]}> */}
-      <group name='exhaust_1' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 1}>
-        <mesh name='exhaust_1_1' castShadow receiveShadow geometry={nodes.exhaust_1_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_1_2' castShadow receiveShadow geometry={nodes.exhaust_1_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_2" position={[0, -21.352, 8.57]}> */}
-      <group name='exhaust_2' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 2}>
-        <mesh name='exhaust_2_1' castShadow receiveShadow geometry={nodes.exhaust_2_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_2_2' castShadow receiveShadow geometry={nodes.exhaust_2_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_3" position={[0, -20.352, 8.57]}> */}
-      <group name='exhaust_3' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 3}>
-        <mesh name='exhaust_3_1' castShadow receiveShadow geometry={nodes.exhaust_3_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_3_2' castShadow receiveShadow geometry={nodes.exhaust_3_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_4" position={[0, -19.352, 8.57]}> */}
-      <group name='exhaust_4' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 4}>
-        <mesh name='exhaust_4_1' castShadow receiveShadow geometry={nodes.exhaust_4_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_4_2' castShadow receiveShadow geometry={nodes.exhaust_4_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_5" position={[0, -18.352, 8.57]}> */}
-      <group name='exhaust_5' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 5}>
-        <mesh name='exhaust_5_1' castShadow receiveShadow geometry={nodes.exhaust_5_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_5_2' castShadow receiveShadow geometry={nodes.exhaust_5_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_6" position={[0, -17.352, 8.57]}> */}
-      <group name='exhaust_6' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 6}>
-        <mesh name='exhaust_6_1' castShadow receiveShadow geometry={nodes.exhaust_6_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_6_2' castShadow receiveShadow geometry={nodes.exhaust_6_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_7" position={[0, -16.352, 8.57]}> */}
-      <group name='exhaust_7' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 7}>
-        <mesh name='exhaust_7_1' castShadow receiveShadow geometry={nodes.exhaust_7_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_7_2' castShadow receiveShadow geometry={nodes.exhaust_7_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_8" position={[0, -15.352, 8.57]}> */}
-      <group name='exhaust_8' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 8}>
-        <mesh name='exhaust_8_1' castShadow receiveShadow geometry={nodes.exhaust_8_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_8_2' castShadow receiveShadow geometry={nodes.exhaust_8_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_9" position={[0, -14.352, 8.57]}> */}
-      <group name='exhaust_9' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 9}>
-        <mesh name='exhaust_9_1' castShadow receiveShadow geometry={nodes.exhaust_9_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_9_2' castShadow receiveShadow geometry={nodes.exhaust_9_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_10" position={[0, -13.352, 8.57]}> */}
-      <group name='exhaust_10' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 10}>
-        <mesh name='exhaust_10_1' castShadow receiveShadow geometry={nodes.exhaust_10_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_10_2' castShadow receiveShadow geometry={nodes.exhaust_10_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_11" position={[0, -12.352, 8.57]}> */}
-      <group name='exhaust_11' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 11}>
-        <mesh name='exhaust_11_1' castShadow receiveShadow geometry={nodes.exhaust_11_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_11_2' castShadow receiveShadow geometry={nodes.exhaust_11_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_12" position={[0, -11.352, 8.57]}> */}
-      <group name='exhaust_12' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 12}>
-        <mesh name='exhaust_12_1' castShadow receiveShadow geometry={nodes.exhaust_12_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_12_2' castShadow receiveShadow geometry={nodes.exhaust_12_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_13" position={[0, -10.352, 8.57]}> */}
-      <group name='exhaust_13' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 13}>
-        <mesh name='exhaust_13_1' castShadow receiveShadow geometry={nodes.exhaust_13_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_13_2' castShadow receiveShadow geometry={nodes.exhaust_13_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_14" position={[0, -9.352, 8.57]}> */}
-      <group name='exhaust_14' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 14}>
-        <mesh name='exhaust_14_1' castShadow receiveShadow geometry={nodes.exhaust_14_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_14_2' castShadow receiveShadow geometry={nodes.exhaust_14_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_15" position={[0, -8.352, 8.57]}> */}
-      <group name='exhaust_15' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 15}>
-        <mesh name='exhaust_15_1' castShadow receiveShadow geometry={nodes.exhaust_15_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_15_2' castShadow receiveShadow geometry={nodes.exhaust_15_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_16" position={[0, -7.352, 8.57]}> */}
-      <group name='exhaust_16' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 16}>
-        <mesh name='exhaust_16_1' castShadow receiveShadow geometry={nodes.exhaust_16_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_16_2' castShadow receiveShadow geometry={nodes.exhaust_16_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_17" position={[0, -6.352, 8.57]}> */}
-      <group name='exhaust_17' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 17}>
-        <mesh name='exhaust_17_1' castShadow receiveShadow geometry={nodes.exhaust_17_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_17_2' castShadow receiveShadow geometry={nodes.exhaust_17_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_18" position={[0, -24.352, 8.57]}> */}
-      <group name='exhaust_18' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 18}>
-        <mesh name='exhaust_18_1' castShadow receiveShadow geometry={nodes.exhaust_18_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_18_2' castShadow receiveShadow geometry={nodes.exhaust_18_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_19" position={[0, -23.343, 8.657]}> */}
-      <group name='exhaust_19' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 19}>
-        <mesh name='exhaust_19_1' castShadow receiveShadow geometry={nodes.exhaust_19_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_19_2' castShadow receiveShadow geometry={nodes.exhaust_19_2.geometry} material={materials.exhaust_primary} />
-      </group>
-      {/* <group name="exhaust_20" position={[0, -22.352, 8.57]}> */}
-      <group name='exhaust_20' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 20}>
-        <mesh name='exhaust_20_1' castShadow receiveShadow geometry={nodes.exhaust_20_1.geometry} material={materials.exhaust_secondary} />
-        <mesh name='exhaust_20_2' castShadow receiveShadow geometry={nodes.exhaust_20_2.geometry} material={materials.exhaust_primary} />
-      </group>
+          {/* exhausts */}
+          {/* <group name="exhaust_1" position={[0, -0.352, 2.57]}> */}
+          <group name='exhaust_1' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 1}>
+            <mesh name='exhaust_1_1' castShadow receiveShadow geometry={nodes.exhaust_1_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_1_2' castShadow receiveShadow geometry={nodes.exhaust_1_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_2" position={[0, -21.352, 8.57]}> */}
+          <group name='exhaust_2' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 2}>
+            <mesh name='exhaust_2_1' castShadow receiveShadow geometry={nodes.exhaust_2_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_2_2' castShadow receiveShadow geometry={nodes.exhaust_2_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_3" position={[0, -20.352, 8.57]}> */}
+          <group name='exhaust_3' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 3}>
+            <mesh name='exhaust_3_1' castShadow receiveShadow geometry={nodes.exhaust_3_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_3_2' castShadow receiveShadow geometry={nodes.exhaust_3_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_4" position={[0, -19.352, 8.57]}> */}
+          <group name='exhaust_4' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 4}>
+            <mesh name='exhaust_4_1' castShadow receiveShadow geometry={nodes.exhaust_4_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_4_2' castShadow receiveShadow geometry={nodes.exhaust_4_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_5" position={[0, -18.352, 8.57]}> */}
+          <group name='exhaust_5' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 5}>
+            <mesh name='exhaust_5_1' castShadow receiveShadow geometry={nodes.exhaust_5_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_5_2' castShadow receiveShadow geometry={nodes.exhaust_5_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_6" position={[0, -17.352, 8.57]}> */}
+          <group name='exhaust_6' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 6}>
+            <mesh name='exhaust_6_1' castShadow receiveShadow geometry={nodes.exhaust_6_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_6_2' castShadow receiveShadow geometry={nodes.exhaust_6_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_7" position={[0, -16.352, 8.57]}> */}
+          <group name='exhaust_7' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 7}>
+            <mesh name='exhaust_7_1' castShadow receiveShadow geometry={nodes.exhaust_7_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_7_2' castShadow receiveShadow geometry={nodes.exhaust_7_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_8" position={[0, -15.352, 8.57]}> */}
+          <group name='exhaust_8' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 8}>
+            <mesh name='exhaust_8_1' castShadow receiveShadow geometry={nodes.exhaust_8_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_8_2' castShadow receiveShadow geometry={nodes.exhaust_8_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_9" position={[0, -14.352, 8.57]}> */}
+          <group name='exhaust_9' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 9}>
+            <mesh name='exhaust_9_1' castShadow receiveShadow geometry={nodes.exhaust_9_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_9_2' castShadow receiveShadow geometry={nodes.exhaust_9_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_10" position={[0, -13.352, 8.57]}> */}
+          <group name='exhaust_10' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 10}>
+            <mesh name='exhaust_10_1' castShadow receiveShadow geometry={nodes.exhaust_10_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_10_2' castShadow receiveShadow geometry={nodes.exhaust_10_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_11" position={[0, -12.352, 8.57]}> */}
+          <group name='exhaust_11' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 11}>
+            <mesh name='exhaust_11_1' castShadow receiveShadow geometry={nodes.exhaust_11_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_11_2' castShadow receiveShadow geometry={nodes.exhaust_11_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_12" position={[0, -11.352, 8.57]}> */}
+          <group name='exhaust_12' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 12}>
+            <mesh name='exhaust_12_1' castShadow receiveShadow geometry={nodes.exhaust_12_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_12_2' castShadow receiveShadow geometry={nodes.exhaust_12_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_13" position={[0, -10.352, 8.57]}> */}
+          <group name='exhaust_13' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 13}>
+            <mesh name='exhaust_13_1' castShadow receiveShadow geometry={nodes.exhaust_13_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_13_2' castShadow receiveShadow geometry={nodes.exhaust_13_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_14" position={[0, -9.352, 8.57]}> */}
+          <group name='exhaust_14' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 14}>
+            <mesh name='exhaust_14_1' castShadow receiveShadow geometry={nodes.exhaust_14_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_14_2' castShadow receiveShadow geometry={nodes.exhaust_14_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_15" position={[0, -8.352, 8.57]}> */}
+          <group name='exhaust_15' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 15}>
+            <mesh name='exhaust_15_1' castShadow receiveShadow geometry={nodes.exhaust_15_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_15_2' castShadow receiveShadow geometry={nodes.exhaust_15_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_16" position={[0, -7.352, 8.57]}> */}
+          <group name='exhaust_16' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 16}>
+            <mesh name='exhaust_16_1' castShadow receiveShadow geometry={nodes.exhaust_16_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_16_2' castShadow receiveShadow geometry={nodes.exhaust_16_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_17" position={[0, -6.352, 8.57]}> */}
+          <group name='exhaust_17' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 17}>
+            <mesh name='exhaust_17_1' castShadow receiveShadow geometry={nodes.exhaust_17_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_17_2' castShadow receiveShadow geometry={nodes.exhaust_17_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_18" position={[0, -24.352, 8.57]}> */}
+          <group name='exhaust_18' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 18}>
+            <mesh name='exhaust_18_1' castShadow receiveShadow geometry={nodes.exhaust_18_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_18_2' castShadow receiveShadow geometry={nodes.exhaust_18_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_19" position={[0, -23.343, 8.657]}> */}
+          <group name='exhaust_19' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 19}>
+            <mesh name='exhaust_19_1' castShadow receiveShadow geometry={nodes.exhaust_19_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_19_2' castShadow receiveShadow geometry={nodes.exhaust_19_2.geometry} material={materials.exhaust_primary} />
+          </group>
+          {/* <group name="exhaust_20" position={[0, -22.352, 8.57]}> */}
+          <group name='exhaust_20' position={nodes.origin_exhaust.position} visible={storeStyling.demonstrativeBodyparts.exhaust_id === 20}>
+            <mesh name='exhaust_20_1' castShadow receiveShadow geometry={nodes.exhaust_20_1.geometry} material={materials.exhaust_secondary} />
+            <mesh name='exhaust_20_2' castShadow receiveShadow geometry={nodes.exhaust_20_2.geometry} material={materials.exhaust_primary} />
+          </group>
 
-      {/* non-indexed / other */}
-      <group name='door_front_right' position={[0.958, -0.118, -0.643]}>
-        <mesh name='door_front_right_1' castShadow receiveShadow geometry={nodes.door_front_right_1.geometry} material={materials.dark_plastic} />
-        <mesh name='door_front_right_2' castShadow receiveShadow geometry={nodes.door_front_right_2.geometry} material={materials.primary} />
-        <mesh name='door_front_right_3' castShadow receiveShadow geometry={nodes.door_front_right_3.geometry} material={materials.interior} />
-        <mesh name='door_front_right_4' castShadow receiveShadow geometry={nodes.door_front_right_4.geometry} material={materials.mirror_reflection} />
-        <mesh name='door_front_right_5' castShadow receiveShadow geometry={nodes.door_front_right_5.geometry} material={materials.glass} />
-      </group>
-      <group name='door_rear_right' position={[0.917, 0.001, 0.493]}>
-        <mesh name='door_rear_right_1' castShadow receiveShadow geometry={nodes.door_rear_right_1.geometry} material={materials.dark_plastic} />
-        <mesh name='door_rear_right_2' castShadow receiveShadow geometry={nodes.door_rear_right_2.geometry} material={materials.primary} />
-        <mesh name='door_rear_right_3' castShadow receiveShadow geometry={nodes.door_rear_right_3.geometry} material={materials.interior} />
-      </group>
-      <group name='door_rear_left' position={[-0.921, 0.001, 0.493]}>
-        <mesh name='door_rear_left_1' castShadow receiveShadow geometry={nodes.door_rear_left_1.geometry} material={materials.dark_plastic} />
-        <mesh name='door_rear_left_2' castShadow receiveShadow geometry={nodes.door_rear_left_2.geometry} material={materials.primary} />
-        <mesh name='door_rear_left_3' castShadow receiveShadow geometry={nodes.door_rear_left_3.geometry} material={materials.interior} />
-      </group>
-      <group name='door_front_left' position={[-0.962, -0.118, -0.643]}>
-        <mesh name='door_front_left_1' castShadow receiveShadow geometry={nodes.door_front_left_1.geometry} material={materials.dark_plastic} />
-        <mesh name='door_front_left_2' castShadow receiveShadow geometry={nodes.door_front_left_2.geometry} material={materials.primary} />
-        <mesh name='door_front_left_3' castShadow receiveShadow geometry={nodes.door_front_left_3.geometry} material={materials.interior} />
-        <mesh name='door_front_left_4' castShadow receiveShadow geometry={nodes.door_front_left_4.geometry} material={materials.mirror_reflection} />
-        <mesh name='door_front_left_5' castShadow receiveShadow geometry={nodes.door_front_left_5.geometry} material={materials.glass} />
-      </group>
-      <group name='wheel_front_right' position={[0.861, -0.343, -1.265]}>
-        <mesh name='wheel_front_right_1' castShadow receiveShadow geometry={nodes.wheel_front_right_1.geometry} material={materials.wheel_disk_shell} />
-        <mesh name='wheel_front_right_2' castShadow receiveShadow geometry={nodes.wheel_front_right_2.geometry} material={materials.glass_frame} />
-        <mesh name='wheel_front_right_3' castShadow receiveShadow geometry={nodes.wheel_front_right_3.geometry} material={materials.wheel_disk_secondary} />
-        <mesh name='wheel_front_right_4' castShadow receiveShadow geometry={nodes.wheel_front_right_4.geometry} material={materials.wheel_disk_primary} />
-        <mesh name='wheel_front_right_5' castShadow receiveShadow geometry={nodes.wheel_front_right_5.geometry} material={materials.wheel_tire} />
-        <mesh name='wheel_front_right_6' castShadow receiveShadow geometry={nodes.wheel_front_right_6.geometry} material={materials.wheel_brakes} />
-      </group>
-      <group name='wheel_rear_right' position={[0.861, -0.343, 1.735]}>
-        <mesh name='wheel_front_right_1' castShadow receiveShadow geometry={nodes.wheel_front_right_1.geometry} material={materials.wheel_disk_shell} />
-        <mesh name='wheel_front_right_2' castShadow receiveShadow geometry={nodes.wheel_front_right_2.geometry} material={materials.glass_frame} />
-        <mesh name='wheel_front_right_3' castShadow receiveShadow geometry={nodes.wheel_front_right_3.geometry} material={materials.wheel_disk_secondary} />
-        <mesh name='wheel_front_right_4' castShadow receiveShadow geometry={nodes.wheel_front_right_4.geometry} material={materials.wheel_disk_primary} />
-        <mesh name='wheel_front_right_5' castShadow receiveShadow geometry={nodes.wheel_front_right_5.geometry} material={materials.wheel_tire} />
-        <mesh name='wheel_front_right_6' castShadow receiveShadow geometry={nodes.wheel_front_right_6.geometry} material={materials.wheel_brakes} />
-      </group>
-      <group name='wheel_front_left' position={[-0.861, -0.343, -1.265]}>
-        <mesh name='wheel_front_left_1' castShadow receiveShadow geometry={nodes.wheel_front_left_1.geometry} material={materials.wheel_disk_shell} />
-        <mesh name='wheel_front_left_2' castShadow receiveShadow geometry={nodes.wheel_front_left_2.geometry} material={materials.glass_frame} />
-        <mesh name='wheel_front_left_3' castShadow receiveShadow geometry={nodes.wheel_front_left_3.geometry} material={materials.wheel_disk_secondary} />
-        <mesh name='wheel_front_left_4' castShadow receiveShadow geometry={nodes.wheel_front_left_4.geometry} material={materials.wheel_disk_primary} />
-        <mesh name='wheel_front_left_5' castShadow receiveShadow geometry={nodes.wheel_front_left_5.geometry} material={materials.wheel_tire} />
-        <mesh name='wheel_front_left_6' castShadow receiveShadow geometry={nodes.wheel_front_left_6.geometry} material={materials.wheel_brakes} />
-      </group>
-      <group name='wheel_rear_left' position={[-0.861, -0.343, 1.735]}>
-        <mesh name='wheel_front_left_1' castShadow receiveShadow geometry={nodes.wheel_front_left_1.geometry} material={materials.wheel_disk_shell} />
-        <mesh name='wheel_front_left_2' castShadow receiveShadow geometry={nodes.wheel_front_left_2.geometry} material={materials.glass_frame} />
-        <mesh name='wheel_front_left_3' castShadow receiveShadow geometry={nodes.wheel_front_left_3.geometry} material={materials.wheel_disk_secondary} />
-        <mesh name='wheel_front_left_4' castShadow receiveShadow geometry={nodes.wheel_front_left_4.geometry} material={materials.wheel_disk_primary} />
-        <mesh name='wheel_front_left_5' castShadow receiveShadow geometry={nodes.wheel_front_left_5.geometry} material={materials.wheel_tire} />
-        <mesh name='wheel_front_left_6' castShadow receiveShadow geometry={nodes.wheel_front_left_6.geometry} material={materials.wheel_brakes} />
-      </group>
+          {/* non-indexed / other */}
+          <group name='door_front_right' position={[0.958, -0.118, -0.643]}>
+            <mesh name='door_front_right_1' castShadow receiveShadow geometry={nodes.door_front_right_1.geometry} material={materials.dark_plastic} />
+            <mesh name='door_front_right_2' castShadow receiveShadow geometry={nodes.door_front_right_2.geometry} material={materials.primary} />
+            <mesh name='door_front_right_3' castShadow receiveShadow geometry={nodes.door_front_right_3.geometry} material={materials.interior} />
+            <mesh name='door_front_right_4' castShadow receiveShadow geometry={nodes.door_front_right_4.geometry} material={materials.mirror_reflection} />
+            <mesh name='door_front_right_5' castShadow receiveShadow geometry={nodes.door_front_right_5.geometry} material={materials.glass} />
+          </group>
+          <group name='door_rear_right' position={[0.917, 0.001, 0.493]}>
+            <mesh name='door_rear_right_1' castShadow receiveShadow geometry={nodes.door_rear_right_1.geometry} material={materials.dark_plastic} />
+            <mesh name='door_rear_right_2' castShadow receiveShadow geometry={nodes.door_rear_right_2.geometry} material={materials.primary} />
+            <mesh name='door_rear_right_3' castShadow receiveShadow geometry={nodes.door_rear_right_3.geometry} material={materials.interior} />
+          </group>
+          <group name='door_rear_left' position={[-0.921, 0.001, 0.493]}>
+            <mesh name='door_rear_left_1' castShadow receiveShadow geometry={nodes.door_rear_left_1.geometry} material={materials.dark_plastic} />
+            <mesh name='door_rear_left_2' castShadow receiveShadow geometry={nodes.door_rear_left_2.geometry} material={materials.primary} />
+            <mesh name='door_rear_left_3' castShadow receiveShadow geometry={nodes.door_rear_left_3.geometry} material={materials.interior} />
+          </group>
+          <group name='door_front_left' position={[-0.962, -0.118, -0.643]}>
+            <mesh name='door_front_left_1' castShadow receiveShadow geometry={nodes.door_front_left_1.geometry} material={materials.dark_plastic} />
+            <mesh name='door_front_left_2' castShadow receiveShadow geometry={nodes.door_front_left_2.geometry} material={materials.primary} />
+            <mesh name='door_front_left_3' castShadow receiveShadow geometry={nodes.door_front_left_3.geometry} material={materials.interior} />
+            <mesh name='door_front_left_4' castShadow receiveShadow geometry={nodes.door_front_left_4.geometry} material={materials.mirror_reflection} />
+            <mesh name='door_front_left_5' castShadow receiveShadow geometry={nodes.door_front_left_5.geometry} material={materials.glass} />
+          </group>
+          <group name='wheel_front_right' position={[0.861, -0.343, -1.265]}>
+            <mesh name='wheel_front_right_1' castShadow receiveShadow geometry={nodes.wheel_front_right_1.geometry} material={materials.wheel_disk_shell} />
+            <mesh name='wheel_front_right_2' castShadow receiveShadow geometry={nodes.wheel_front_right_2.geometry} material={materials.glass_frame} />
+            <mesh name='wheel_front_right_3' castShadow receiveShadow geometry={nodes.wheel_front_right_3.geometry} material={materials.wheel_disk_secondary} />
+            <mesh name='wheel_front_right_4' castShadow receiveShadow geometry={nodes.wheel_front_right_4.geometry} material={materials.wheel_disk_primary} />
+            <mesh name='wheel_front_right_5' castShadow receiveShadow geometry={nodes.wheel_front_right_5.geometry} material={materials.wheel_tire} />
+            <mesh name='wheel_front_right_6' castShadow receiveShadow geometry={nodes.wheel_front_right_6.geometry} material={materials.wheel_brakes} />
+          </group>
+          <group name='wheel_rear_right' position={[0.861, -0.343, 1.735]}>
+            <mesh name='wheel_front_right_1' castShadow receiveShadow geometry={nodes.wheel_front_right_1.geometry} material={materials.wheel_disk_shell} />
+            <mesh name='wheel_front_right_2' castShadow receiveShadow geometry={nodes.wheel_front_right_2.geometry} material={materials.glass_frame} />
+            <mesh name='wheel_front_right_3' castShadow receiveShadow geometry={nodes.wheel_front_right_3.geometry} material={materials.wheel_disk_secondary} />
+            <mesh name='wheel_front_right_4' castShadow receiveShadow geometry={nodes.wheel_front_right_4.geometry} material={materials.wheel_disk_primary} />
+            <mesh name='wheel_front_right_5' castShadow receiveShadow geometry={nodes.wheel_front_right_5.geometry} material={materials.wheel_tire} />
+            <mesh name='wheel_front_right_6' castShadow receiveShadow geometry={nodes.wheel_front_right_6.geometry} material={materials.wheel_brakes} />
+          </group>
+          <group name='wheel_front_left' position={[-0.861, -0.343, -1.265]}>
+            <mesh name='wheel_front_left_1' castShadow receiveShadow geometry={nodes.wheel_front_left_1.geometry} material={materials.wheel_disk_shell} />
+            <mesh name='wheel_front_left_2' castShadow receiveShadow geometry={nodes.wheel_front_left_2.geometry} material={materials.glass_frame} />
+            <mesh name='wheel_front_left_3' castShadow receiveShadow geometry={nodes.wheel_front_left_3.geometry} material={materials.wheel_disk_secondary} />
+            <mesh name='wheel_front_left_4' castShadow receiveShadow geometry={nodes.wheel_front_left_4.geometry} material={materials.wheel_disk_primary} />
+            <mesh name='wheel_front_left_5' castShadow receiveShadow geometry={nodes.wheel_front_left_5.geometry} material={materials.wheel_tire} />
+            <mesh name='wheel_front_left_6' castShadow receiveShadow geometry={nodes.wheel_front_left_6.geometry} material={materials.wheel_brakes} />
+          </group>
+          <group name='wheel_rear_left' position={[-0.861, -0.343, 1.735]}>
+            <mesh name='wheel_front_left_1' castShadow receiveShadow geometry={nodes.wheel_front_left_1.geometry} material={materials.wheel_disk_shell} />
+            <mesh name='wheel_front_left_2' castShadow receiveShadow geometry={nodes.wheel_front_left_2.geometry} material={materials.glass_frame} />
+            <mesh name='wheel_front_left_3' castShadow receiveShadow geometry={nodes.wheel_front_left_3.geometry} material={materials.wheel_disk_secondary} />
+            <mesh name='wheel_front_left_4' castShadow receiveShadow geometry={nodes.wheel_front_left_4.geometry} material={materials.wheel_disk_primary} />
+            <mesh name='wheel_front_left_5' castShadow receiveShadow geometry={nodes.wheel_front_left_5.geometry} material={materials.wheel_tire} />
+            <mesh name='wheel_front_left_6' castShadow receiveShadow geometry={nodes.wheel_front_left_6.geometry} material={materials.wheel_brakes} />
+          </group>
 
-      <mesh
-        name='trunk_indicators'
-        castShadow
-        receiveShadow
-        geometry={nodes.trunk_indicators.geometry}
-        material={materials.head_lights_day_lamps}
-        position={[-0.002, 0.734, 1.625]}
-      />
-      <mesh
-        name='trunk_miniglass'
-        castShadow
-        receiveShadow
-        geometry={nodes.trunk_miniglass.geometry}
-        material={materials.tail_lights_glass}
-        position={[-0.002, 0.734, 1.624]}
-      />
-      <mesh
-        name='door_glass_front_right'
-        castShadow
-        receiveShadow
-        geometry={nodes.door_glass_front_right.geometry}
-        material={materials.glass}
-        position={[0.917, 0.001, -0.556]}
-      />
-      <mesh
-        name='door_glass_rear_right'
-        castShadow
-        receiveShadow
-        geometry={nodes.door_glass_rear_right.geometry}
-        material={materials.glass}
-        position={[0.917, 0.001, 0.493]}
-      />
-      <mesh
-        name='door_glass_rear_left'
-        castShadow
-        receiveShadow
-        geometry={nodes.door_glass_rear_left.geometry}
-        material={materials.glass}
-        position={[-0.921, 0.001, 0.493]}
-      />
-      <mesh
-        name='door_glass_front_left'
-        castShadow
-        receiveShadow
-        geometry={nodes.door_glass_front_left.geometry}
-        material={materials.glass}
-        position={[-0.921, 0.001, -0.556]}
-      />
+          <mesh
+            name='trunk_indicators'
+            castShadow
+            receiveShadow
+            geometry={nodes.trunk_indicators.geometry}
+            material={materials.head_lights_day_lamps}
+            position={[-0.002, 0.734, 1.625]}
+          />
+          <mesh
+            name='trunk_miniglass'
+            castShadow
+            receiveShadow
+            geometry={nodes.trunk_miniglass.geometry}
+            material={materials.tail_lights_glass}
+            position={[-0.002, 0.734, 1.624]}
+          />
+          <mesh
+            name='door_glass_front_right'
+            castShadow
+            receiveShadow
+            geometry={nodes.door_glass_front_right.geometry}
+            material={materials.glass}
+            position={[0.917, 0.001, -0.556]}
+          />
+          <mesh
+            name='door_glass_rear_right'
+            castShadow
+            receiveShadow
+            geometry={nodes.door_glass_rear_right.geometry}
+            material={materials.glass}
+            position={[0.917, 0.001, 0.493]}
+          />
+          <mesh
+            name='door_glass_rear_left'
+            castShadow
+            receiveShadow
+            geometry={nodes.door_glass_rear_left.geometry}
+            material={materials.glass}
+            position={[-0.921, 0.001, 0.493]}
+          />
+          <mesh
+            name='door_glass_front_left'
+            castShadow
+            receiveShadow
+            geometry={nodes.door_glass_front_left.geometry}
+            material={materials.glass}
+            position={[-0.921, 0.001, -0.556]}
+          />
 
-      {/* origins */}
-      {/* <mesh name="origin_ground" castShadow receiveShadow geometry={nodes.origin_ground.geometry} material={materials.origin_alpha} position={[0, -0.704, 0.3]} scale={[1, 1, 2.8]} />
+          {/* origins */}
+          {/* <mesh name="origin_ground" castShadow receiveShadow geometry={nodes.origin_ground.geometry} material={materials.origin_alpha} position={[0, -0.704, 0.3]} scale={[1, 1, 2.8]} />
       <mesh name="origin_bonnet" castShadow receiveShadow geometry={nodes.origin_bonnet.geometry} material={materials.origin_alpha} position={[0, 0.331, -0.583]} />
       <mesh name="origin_bumper_front" castShadow receiveShadow geometry={nodes.origin_bumper_front.geometry} material={materials.origin_alpha} position={[0, -0.218, -1.903]} scale={[1.091, 0.274, 0.312]} />
       <mesh name="origin_wings_front" castShadow receiveShadow geometry={nodes.origin_wings_front.geometry} material={materials.origin_alpha} position={[0, -0.09, -1.199]} scale={[1.246, 0.327, 0.602]} />
@@ -927,10 +930,12 @@ function Model(props: JSX.IntrinsicElements['group']) {
       <mesh name="origin_splitter" castShadow receiveShadow geometry={nodes.origin_splitter.geometry} material={materials.origin_alpha} position={[0, -0.489, -2.029]} scale={[1, 0.028, 0.369]} />
       <mesh name="origin_canards" castShadow receiveShadow geometry={nodes.origin_canards.geometry} material={materials.origin_alpha} position={[0, -0.237, -1.781]} rotation={[0, 0, -Math.PI]} scale={[-1, -0.109, -0.162]} />
       <mesh name="origin_spoiler" castShadow receiveShadow geometry={nodes.origin_spoiler.geometry} material={materials.origin_alpha} position={[0, 0.641, 2.67]} scale={[0.66, 0.12, 0.12]} /> */}
+        </>
+      )}
     </group>
   )
 }
 
-useGLTF.preload('assets/3d/transformed_gltf/cars/audi/S5/s5-transformed.glb')
+// useGLTF.preload('assets/3d/transformed_gltf/cars/audi/S5/s5-transformed.glb')
 
 export default observer(Model)

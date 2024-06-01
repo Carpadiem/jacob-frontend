@@ -51,54 +51,12 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
 import axios from 'axios'
 
-// import { DRACOLoader } from 'three/examples/jsm/libs/draco/gltf'
-
-function base64ToArrayBuffer(base64: string) {
-  var binaryString = atob(base64)
-  var bytes = new Uint8Array(binaryString.length)
-  for (var i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i)
-  }
-  return bytes.buffer
-}
-
 function Garage() {
   const user_id = 230990098 // get from local storage
 
   const [isStyling, setIsStyling] = React.useState(false)
   const [maxSlots, setMaxSlots] = React.useState(3)
   const [playerCars, setPlayerCars] = React.useState<IPlayerCar[]>([])
-
-  const [gltf, set] = React.useState<GLTF>()
-
-  React.useEffect(() => {
-    const url = 'http://localhost:3001/api/3d/glb/vehicles/audi_s5'
-
-    const loader = new GLTFLoader()
-    const dracoLoader = new DRACOLoader()
-    dracoLoader.setDecoderPath('../node_modules/three/examples/jsm/libs/draco/gltf/')
-    loader.setDRACOLoader(dracoLoader)
-
-    axios.get(url).then((res) => {
-      console.log(`res.data: ${res.data}`)
-      loader.parse(base64ToArrayBuffer(res.data), '', (gltf: GLTF) => {
-        console.log(gltf)
-
-        const materials = []
-        const nodes = []
-
-        gltf.scene.traverse((child: THREE.Object3D) => {
-          if (child instanceof THREE.Mesh) {
-            materials.push(child.material)
-            nodes.push(child)
-          }
-        })
-
-        console.log(materials)
-        console.log(nodes)
-      })
-    })
-  }, [])
 
   React.useEffect(() => {
     // получение максимального количества слотов в гараже
