@@ -24,16 +24,12 @@ import storeStyling from '@stores/storeStyling'
 // three, r3f
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
-import { Stats, OrbitControls } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
+import { Perf } from 'r3f-perf'
 // 3dtsx
-import Autosalone from '@3dtsx/scenes/Autosalon'
-import AudiA8 from '@3dtsx/cars/audi/A8'
-import AudiR8 from '@3dtsx/cars/audi/R8'
-import AudiRS6 from '@3dtsx/cars/audi/RS6'
-import AudiRS7 from '@3dtsx/cars/audi/RS7'
-import AudiS5 from '@3dtsx/cars/audi/S5'
-import BentleyBentayga from '@3dtsx/cars/bentley/Bentayga'
-import BentleyContinental from '@3dtsx/cars/bentley/Continental'
+import Autosalone from '@3d/scenes/Autosalon'
+import AudiA8 from '@3d/cars/Audi_a8'
+import AudiR8 from '@3d/cars/Audi_r8'
 // exotic
 import { EnvExotic } from '@exotic/EnvExotic'
 import { EffectsExotic } from '@exotic/EffectsExotic'
@@ -99,30 +95,20 @@ function Autosalon() {
             state.gl.outputColorSpace = THREE.SRGBColorSpace
           }}
         >
-          <Stats />
-          <EnvExotic intensity={1} path='assets/3d/hdri/metro_vijzelgracht_1k.hdr' />
+          <Perf position='top-left' />
+          <EnvExotic intensity={1} path='3d/hdri/metro_vijzelgracht_1k.hdr' />
           <EffectsExotic />
           <OrbitControls />
           <Autosalone />
           {activeCar?.id === 401 && <AudiA8 />}
           {activeCar?.id === 402 && <AudiR8 />}
-          {activeCar?.id === 403 && <AudiRS6 position={[0, 1.1, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
-          {activeCar?.id === 404 && <AudiRS7 />}
-          {activeCar?.id === 405 && <AudiS5 position={[0, 0.92, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
-          {activeCar?.id === 406 && <BentleyBentayga position={[0, 1.04, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
-          {activeCar?.id === 407 && <BentleyContinental position={[0, 0, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
         </Canvas>
 
         <div className={styles.frame_autosalon}>
           <div className={styles.frame_brands}>
             {brands.map((brand_name: string) => {
               return (
-                <div
-                  key={brand_name}
-                  className={styles.brand}
-                  style={{ backgroundColor: brand_name === activeBrand ? 'white' : 'transparent' } as React.CSSProperties}
-                  onClick={() => setActiveBrand(brand_name)}
-                >
+                <div key={brand_name} className={styles.brand} style={{ backgroundColor: brand_name === activeBrand ? 'white' : 'transparent' } as React.CSSProperties} onClick={() => setActiveBrand(brand_name)}>
                   <p className={styles.brand_name} style={{ color: brand_name === activeBrand ? '#212121' : '#9B9B9B' } as React.CSSProperties}>
                     {Capitalize(brand_name)}
                   </p>
@@ -137,12 +123,7 @@ function Autosalon() {
                 .filter((car: ICar) => car.brand === activeBrand)
                 .map((car: ICar) => {
                   return (
-                    <div
-                      key={car.id}
-                      className={styles.preview}
-                      style={{ backgroundImage: `url(${car.autosalon_preview_image_url})` } as React.CSSProperties}
-                      onClick={() => setActiveCar(car)}
-                    >
+                    <div key={car.id} className={styles.preview} style={{ backgroundImage: `url(${car.autosalon_preview_image_url})` } as React.CSSProperties} onClick={() => setActiveCar(car)}>
                       <div className={styles.preview_info}>
                         <p className={styles.preview_info_car_name}>{Capitalize(car.model_name)}</p>
                         <p className={styles.preview_info_car_price}>${ThousandComma(car.price)}</p>
@@ -165,14 +146,7 @@ function Autosalon() {
                 <p className={styles.purchase_car_price}>${ThousandComma(activeCar?.price)}</p>
               </div>
 
-              <ActionButton
-                bgColor='s:#264E34'
-                text='Приобрести'
-                textColor='#1FE362'
-                textWeight={700}
-                padding={{ v: 16, h: 32 }}
-                onClick={purchase_click_handler}
-              />
+              <ActionButton bgColor='s:#264E34' text='Приобрести' textColor='#1FE362' textWeight={700} padding={{ v: 16, h: 32 }} onClick={purchase_click_handler} />
             </div>
           </div>
         </div>

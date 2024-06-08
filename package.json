@@ -33,6 +33,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
+    "r3f-perf": "^7.2.1",
     "sass": "^1.72.0",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",

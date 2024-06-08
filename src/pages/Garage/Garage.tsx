@@ -29,18 +29,11 @@ import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'
 import { Stats, OrbitControls, Html, useTexture } from '@react-three/drei'
 // 3dtsx
-import StylingGarage from '@3dtsx/scenes/StylingGarage'
-import AudiA8 from '@3dtsx/cars/audi/A8'
-import AudiR8 from '@3dtsx/cars/audi/R8'
-import AudiRS6 from '@3dtsx/cars/audi/RS6'
-import AudiRS7 from '@3dtsx/cars/audi/RS7'
-import AudiS5 from '@3dtsx/cars/audi/S5'
-import BentleyBentayga from '@3dtsx/cars/bentley/Bentayga'
-import BentleyContinental from '@3dtsx/cars/bentley/Continental'
-import { declaredBodypartsData as AudiRS6_declaredBodypartsData } from '@3dtsx/cars/audi/RS6'
-import { declaredBodypartsData as AudiS5_declaredBodypartsData } from '@3dtsx/cars/audi/S5'
-import { declaredBodypartsData as BentleyBentayga_declaredBodypartsData } from '@3dtsx/cars/bentley/Bentayga'
-import { declaredBodypartsData as BentleyContinental_declaredBodypartsData } from '@3dtsx/cars/bentley/Continental'
+import StylingGarage from '@3d/scenes/StylingGarage'
+import AudiA8 from '@3d/cars/Audi_a8'
+import AudiR8 from '@3d/cars/Audi_r8'
+// import { declaredBodypartsData as AudiRS6_declaredBodypartsData } from '@3dtsx/cars/audi/RS6'
+// import { declaredBodypartsData as AudiS5_declaredBodypartsData } from '@3dtsx/cars/audi/S5'
 // exotic
 import { CameraMovementExotic } from '@exotic/CameraMovementExotic'
 import { EnvExotic } from '@exotic/EnvExotic'
@@ -77,10 +70,10 @@ function Garage() {
   }, [])
 
   const update_declared_bodyparts_data = async () => {
-    if (playerCars[storeGarage.slot - 1]?.id === 403) storeStyling.setDeclaredBodypartsData(AudiRS6_declaredBodypartsData)
-    else if (playerCars[storeGarage.slot - 1]?.id === 405) storeStyling.setDeclaredBodypartsData(AudiS5_declaredBodypartsData)
-    else if (playerCars[storeGarage.slot - 1]?.id === 406) storeStyling.setDeclaredBodypartsData(BentleyBentayga_declaredBodypartsData)
-    else if (playerCars[storeGarage.slot - 1]?.id === 407) storeStyling.setDeclaredBodypartsData(BentleyContinental_declaredBodypartsData)
+    // if (playerCars[storeGarage.slot - 1]?.id === 403) storeStyling.setDeclaredBodypartsData(AudiRS6_declaredBodypartsData)
+    // else if (playerCars[storeGarage.slot - 1]?.id === 405) storeStyling.setDeclaredBodypartsData(AudiS5_declaredBodypartsData)
+    // else if (playerCars[storeGarage.slot - 1]?.id === 406) storeStyling.setDeclaredBodypartsData(BentleyBentayga_declaredBodypartsData)
+    // else if (playerCars[storeGarage.slot - 1]?.id === 407) storeStyling.setDeclaredBodypartsData(BentleyContinental_declaredBodypartsData)
   }
 
   // duplicate in StylingBar.tsx
@@ -140,7 +133,7 @@ function Garage() {
         >
           <Stats />
           <EffectsExotic />
-          <EnvExotic intensity={0.25} path='assets/3d/hdri/metro_vijzelgracht_1k.hdr' />
+          <EnvExotic intensity={0.25} path='3d/hdri/metro_vijzelgracht_1k.hdr' />
           {/* <CameraMovementExotic /> */}
           <OrbitControls />
 
@@ -148,11 +141,6 @@ function Garage() {
 
           {playerCars[storeGarage.slot - 1]?.id === 401 && <AudiA8 />}
           {playerCars[storeGarage.slot - 1]?.id === 402 && <AudiR8 />}
-          {playerCars[storeGarage.slot - 1]?.id === 403 && <AudiRS6 position={[0, 0.92, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
-          {playerCars[storeGarage.slot - 1]?.id === 404 && <AudiRS7 />}
-          {playerCars[storeGarage.slot - 1]?.id === 405 && <AudiS5 position={[0, 0.7, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
-          {playerCars[storeGarage.slot - 1]?.id === 406 && <BentleyBentayga position={[0, 0.83, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
-          {playerCars[storeGarage.slot - 1]?.id === 407 && <BentleyContinental position={[0, 0, 0]} rotation={[degToRad(0), degToRad(-135), degToRad(0)]} />}
         </Canvas>
 
         {/* no cars */}
@@ -181,11 +169,7 @@ function Garage() {
                   <p className={styles.slots_info_text}>
                     Слот {storeGarage.slot}/{playerCars.length}
                   </p>
-                  {maxSlots - playerCars.length > 0 ? (
-                    <p className={styles.slots_available}> Доступно еще {maxSlots - playerCars.length} слотов </p>
-                  ) : (
-                    <p className={styles.slots_available}>Нет доступных слотов</p>
-                  )}
+                  {maxSlots - playerCars.length > 0 ? <p className={styles.slots_available}> Доступно еще {maxSlots - playerCars.length} слотов </p> : <p className={styles.slots_available}>Нет доступных слотов</p>}
                 </div>
                 <div onClick={slot_next_handler} className={styles.slots_button}>
                   <SvgArrowToLeft style={{ transform: 'rotateZ(180deg)' }} />

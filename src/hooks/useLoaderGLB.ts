@@ -31,10 +31,12 @@ function useLoaderGLB(
                         materials[(child.material as THREE.Material).name] = child.material
                     }
                 })
+                console.log(`gltf: ${JSON.stringify(gltf)}`)
                 setGLB({...gltf, nodes: nodes, materials: materials})
             })
         })
     }, [])
+    console.log(`glb: ${glb}`)
     return {...glb}
 }
 
