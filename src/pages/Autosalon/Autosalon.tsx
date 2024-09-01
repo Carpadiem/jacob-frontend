@@ -1,192 +1,250 @@
-// react, styles, router
-import React from 'react'
-import styles from './Autosalon.module.scss'
+import React, { ChangeEvent } from 'react'
+import styles from './Autosalon.module.css'
+// images
+import bg from './images/bg.jpg'
+import keys_help from './images/keys_help.png'
+import Search from './images/search.svg?react'
+import ArrowDown from './images/arrow_down.svg?react'
+import PNGLoading from './images/loading.png'
 // components
-import { Header } from '@components/Header'
-import { ActionButton } from '@components/ActionButton'
-// svg
-import SvgCheckmark from '@svg/ui/checkmark.svg?react'
-import SvgDollar from '@svg/ui/dollar.svg?react'
-import SvgMaxspeed from '@svg/car_specs/maxspeed.svg?react'
-import SvgAcceleration from '@svg/car_specs/acceleration.svg?react'
-import SvgControl from '@svg/car_specs/control.svg?react'
-// utils
-import { ThousandComma, Capitalize } from '@utils/utils'
-import { degToRad } from 'three/src/math/MathUtils'
-// api, models
-import { api } from '@api/api'
-import { ICar } from '@models/cars/ICar'
-import { PurchaseCarResponse } from '@api/ResponseModels/PurchaseCarResponse'
-// mobx, stores
-import { observer } from 'mobx-react-lite'
-import storePlayer from '@stores/storePlayer'
-import storeStyling from '@stores/storeStyling'
-// three, r3f
-import * as THREE from 'three'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
-import { Perf } from 'r3f-perf'
-// 3dtsx
-import Autosalone from '@3d/scenes/Autosalon'
-import AudiA8 from '@3d/cars/Audi_a8'
-import AudiR8 from '@3d/cars/Audi_r8'
-// exotic
-import { EnvExotic } from '@exotic/EnvExotic'
-import { EffectsExotic } from '@exotic/EffectsExotic'
+import { Item } from './components/Item'
+import { BrandItem } from './components/BrandItem'
+// misc
+import wuzzy from 'wuzzy'
+import { useDebounce } from 'use-debounce'
 
-const brands = ['audi', 'bentley']
+
+const brands = [
+  'nissan',
+  'mercedes',
+  'ford',
+  'porsche',
+  'bmw',
+  'mazda',
+  'koenigsegg',
+  'subaru',
+  'toyota',
+  'lada',
+  'dodge',
+  'mitsubishi',
+  'volkswagen',
+]
+
+const game_cars = [
+  {
+    brand: 'nissan',
+    model: 'skyline gt-r r34'
+  },
+  {
+    brand: 'nissan',
+    model: 'skyline gt-r r35'
+  },
+  {
+    brand: 'dodge',
+    model: 'charger'
+  },
+  {
+    brand: 'dodge',
+    model: 'demon'
+  },
+  {
+    brand: 'bmw',
+    model: 'm5 f90'
+  },
+  {
+    brand: 'bmw',
+    model: 'm3 gtr'
+  },
+  {
+    brand: 'mercedes-benz',
+    model: 'amg gt'
+  },
+  {
+    brand: 'mitsubishi',
+    model: 'evo 9'
+  },
+  {
+    brand: 'mitsubishi',
+    model: 'evo 10'
+  },
+  {
+    brand: 'ford',
+    model: 'mustang'
+  },
+  {
+    brand: 'mazda',
+    model: 'rx-7'
+  },
+]
+
 
 function Autosalon() {
-  const [gameCars, setGameCars] = React.useState<ICar[]>([])
-  const [activeCar, setActiveCar] = React.useState<ICar>(null!)
-  const [activeBrand, setActiveBrand] = React.useState('audi')
+  // vars
+  const cars_count: number = 14
 
-  React.useEffect(() => {
-    const user_id = 230990098
+  // states
+  const [brand, setBrand] = React.useState<string>('nissan')
+  const [isBrandsOpened, setIsBrandsOpened] = React.useState<boolean>(false)
+  const [hoveredId, setHoveredId] = React.useState<number>(1)
+  const [selectedId, setSelectedId] = React.useState<number>(1)
+  const [searchText, setSearchText] = React.useState<string>('')
+  const [searchTextDebounced] = useDebounce(searchText, 1000)
+  const [searchMatchCars, setSearchMatchCars] = React.useState<any[] | undefined>([])
 
-    // set game cars
-    api.get<ICar[]>('/cars/game_cars').then((res) => {
-      setGameCars(res.data)
-      setActiveCar(res.data[0])
-    })
-
-    // set player money (store)
-    api.get<number>(`/main/money/${user_id}`).then((res) => {
-      storePlayer.setMoney(res.data)
-    })
-
-    // set default demonstrativeStyling
-    storeStyling.setDemonstrativeBodyparts({
-      bumper_front_id: 1,
-      bumper_rear_id: 1,
-      skirts_id: 1,
-      bonnet_id: 1,
-      spoiler_id: 1,
-      splitter_id: 1,
-      diffuser_id: 1,
-      canards_id: 1,
-      wings_front_id: 1,
-      wings_rear_id: 1,
-      exhaust_id: 1,
-    })
-  }, [])
-
-  async function purchase_click_handler() {
-    const url = '/cars/purchase'
-    const data = { user_id: 230990098, car_id: activeCar.id }
-    const res = (await api.post<PurchaseCarResponse>(url, data)).data
-    const res_code = res['code']
-    const res_text = res['text']
-    const alert_text = `Code: ${res_code}\nText: ${res_text}`
-    alert(alert_text)
-    storePlayer.setMoney(storePlayer.money - activeCar.price)
+  // handlers
+  const item_click_handler = (item_id: number) => {
+    setSelectedId(item_id)
+  }
+  const brands_opened_handler = () => {
+    setIsBrandsOpened(!isBrandsOpened)
+  }
+  const brand_item_click_handler = (brand: string) => {
+    setBrand(brand.charAt(0).toUpperCase() + brand.slice(1))
+    setIsBrandsOpened(false)
+  }
+  const search_input_change_handler = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.currentTarget.value)
   }
 
+  // refs
+  const ref_list_items = React.useRef<HTMLDivElement>(null!)
+  const ref_list_brands_container = React.useRef<HTMLDivElement>(null!)
+
+  // effects
+  React.useEffect(()=>{
+    
+    const keydown_func = (e) => {
+      if (e.key == 'ArrowUp') setHoveredId(prev=>prev-1)
+      if (e.key == 'ArrowDown') setHoveredId(prev=>prev+1)
+      if (e.key == 'Enter') {
+        setSelectedId(hoveredId)
+      }
+    }
+
+    document.addEventListener('keydown', keydown_func)    
+    return () => document.removeEventListener('keydown', keydown_func)
+  })
+
+  React.useEffect(()=>{
+    setHoveredId(selectedId)
+  }, [selectedId])
+
+  React.useEffect(()=>{
+    if (hoveredId <= 1) setHoveredId(1)
+    if (hoveredId >= cars_count) setHoveredId(cars_count)
+  }, [hoveredId])
+
+  React.useEffect(()=>{
+    if (isBrandsOpened) {
+      ref_list_brands_container.current.style.height = '250px'
+    }
+    else {
+      ref_list_brands_container.current.style.height = '60px'
+    }
+  }, [isBrandsOpened])
+
+  // effect: debounce search
+  React.useEffect(()=>{
+    const match_cars = game_cars.filter(car=>wuzzy.levenshtein(searchTextDebounced, car.brand + ' ' + car.model) >= .235)
+    
+    if (match_cars.length !== 0) {
+      setSearchMatchCars(match_cars)
+    }
+    else {
+      setSearchMatchCars(undefined)
+    }
+    
+  }, [searchTextDebounced])
+
+  React.useEffect(()=>{
+    setSearchMatchCars([])
+  }, [searchText])
+
+
   return (
-    <>
-      <div className={styles.container}>
-        <Header bg_color='#161616' />
-
-        <Canvas
-          shadows
-          onCreated={(state) => {
-            state.gl.shadowMap.enabled = true
-            state.gl.shadowMap.type = THREE.PCFSoftShadowMap
-            state.gl.outputColorSpace = THREE.SRGBColorSpace
-          }}
-        >
-          <Perf position='top-left' />
-          <EnvExotic intensity={1} path='3d/hdri/metro_vijzelgracht_1k.hdr' />
-          <EffectsExotic />
-          <OrbitControls />
-          <Autosalone />
-          {activeCar?.id === 401 && <AudiA8 />}
-          {activeCar?.id === 402 && <AudiR8 />}
-        </Canvas>
-
-        <div className={styles.frame_autosalon}>
-          <div className={styles.frame_brands}>
-            {brands.map((brand_name: string) => {
-              return (
-                <div key={brand_name} className={styles.brand} style={{ backgroundColor: brand_name === activeBrand ? 'white' : 'transparent' } as React.CSSProperties} onClick={() => setActiveBrand(brand_name)}>
-                  <p className={styles.brand_name} style={{ color: brand_name === activeBrand ? '#212121' : '#9B9B9B' } as React.CSSProperties}>
-                    {Capitalize(brand_name)}
-                  </p>
-                </div>
-              )
-            })}
+    <div className={styles.page} style={{backgroundImage: 'url('+bg+')'}}>
+      <div className={styles.list_frame}>
+        <div className={styles.list_head}>
+          <div className={styles.logo_container}>
+            <h2 className={styles.logo_text}>
+              <span>J</span>Motors
+            </h2>
           </div>
-
-          <div className={styles.general_area}>
-            <div className={styles.frame_previews}>
-              {gameCars
-                .filter((car: ICar) => car.brand === activeBrand)
-                .map((car: ICar) => {
-                  return (
-                    <div key={car.id} className={styles.preview} style={{ backgroundImage: `url(${car.autosalon_preview_image_url})` } as React.CSSProperties} onClick={() => setActiveCar(car)}>
-                      <div className={styles.preview_info}>
-                        <p className={styles.preview_info_car_name}>{Capitalize(car.model_name)}</p>
-                        <p className={styles.preview_info_car_price}>${ThousandComma(car.price)}</p>
-                      </div>
-
-                      {car === activeCar && (
-                        <div className={styles.label_is_selected}>
-                          <SvgCheckmark />
-                          <div className={styles.label_is_selected_text}>Выбрано</div>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
+          <div className={styles.search_container}>
+            <div className={styles.search_field}>
+              <Search fill='white' />
+              <input
+                className={styles.search_input}
+                placeholder='Поиск'
+                type='text'
+                value={searchText}
+                onChange={ search_input_change_handler }
+              />
             </div>
-
-            <div className={styles.frame_purchase}>
-              <div className={styles.purchase_text_wrapper}>
-                <p className={styles.purchase_car_name}>{Capitalize(activeCar?.model_name)}</p>
-                <p className={styles.purchase_car_price}>${ThousandComma(activeCar?.price)}</p>
-              </div>
-
-              <ActionButton bgColor='s:#264E34' text='Приобрести' textColor='#1FE362' textWeight={700} padding={{ v: 16, h: 32 }} onClick={purchase_click_handler} />
+            <div
+              className={styles.search_frame}
+              style={{
+                transform: searchText === '' ? 'translateY(-100px)' : 'translateY(0)',
+                opacity: searchText === '' ? '0' : '1'
+              } as React.CSSProperties}
+            >
+              {
+                searchMatchCars?.length > 0
+                ?
+                searchMatchCars?.map(car=><Item brand={car.brand} model={car.model} price={1_350_000} isHovered={hoveredId===0} isSelected={selectedId===0} onClick={()=>item_click_handler(1)}/>)
+                :
+                searchMatchCars === undefined
+                ?
+                <p className={styles.search_nothing_text}>Ничего не найдено</p>
+                :
+                <img className={styles.loading_image} src={PNGLoading} />
+              }
             </div>
           </div>
         </div>
 
-        <div className={styles.frame_player_money}>
-          <SvgDollar className={styles.player_money_icon} />
-          <p className={styles.player_money_text}>{ThousandComma(storePlayer.money)}$</p>
-        </div>
-        <div className={styles.frame_car_specs}>
-          <h2 className={styles.specs_car_name}>{Capitalize(activeCar?.model_name)}</h2>
-          <div className={styles.specs_content_group}>
-            <p className={styles.specs_content_group_header}>Характеристики</p>
-            <div className={styles.specs_content_group_specifications}>
-              <div className={styles.specification}>
-                <SvgMaxspeed fill='#FB4040' />
-                <p className={styles.specification_text}>
-                  <span>Скорость: </span>
-                  {activeCar?.specifications.maxspeed} км/ч
-                </p>
-              </div>
-              <div className={styles.specification}>
-                <SvgAcceleration fill='#FB4040' />
-                <p className={styles.specification_text}>
-                  <span>Разгон: </span>
-                  {activeCar?.specifications.acceleration} сек/100 км
-                </p>
-              </div>
-              <div className={styles.specification}>
-                <SvgControl fill='#FB4040' />
-                <p className={styles.specification_text}>
-                  <span>Управляемость: </span>
-                  {activeCar?.specifications.control}/10
-                </p>
-              </div>
-            </div>
+        <div className={styles.list_brands_container} ref={ref_list_brands_container}>
+          <div className={styles.list_brand_select_frame} onClick={brands_opened_handler}>
+            <p className={styles.list_brand_text}>{brand}</p>
+            <ArrowDown fill='white' />
+          </div>
+          <div className={styles.brand_items_container}>
+            <BrandItem brand='Nissan' onClick={()=>{brand_item_click_handler('nissan')}} />
+            <BrandItem brand='Mercedes' onClick={()=>{brand_item_click_handler('mercedes')}} />
+            <BrandItem brand='Mazda' onClick={()=>{brand_item_click_handler('mazda')}} />
+            <BrandItem brand='Volvo' onClick={()=>{brand_item_click_handler('volvo')}} />
+            <BrandItem brand='Chevrolet' onClick={()=>{brand_item_click_handler('chevrolet')}} />
+            <BrandItem brand='Range Rover' onClick={()=>{brand_item_click_handler('range rover')}} />
+            <BrandItem brand='Ford' onClick={()=>{brand_item_click_handler('ford')}} />
+            <BrandItem brand='Lada' onClick={()=>{brand_item_click_handler('lada')}} />
+            <BrandItem brand='Maserati' onClick={()=>{brand_item_click_handler('maserati')}} />
           </div>
         </div>
+        
+        <div className={styles.list_items} ref={ref_list_items}>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===1} isSelected={selectedId===1} onClick={()=>item_click_handler(1)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===2} isSelected={selectedId===2} onClick={()=>item_click_handler(2)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===3} isSelected={selectedId===3} onClick={()=>item_click_handler(3)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===4} isSelected={selectedId===4} onClick={()=>item_click_handler(4)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===5} isSelected={selectedId===5} onClick={()=>item_click_handler(5)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===6} isSelected={selectedId===6} onClick={()=>item_click_handler(6)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===7} isSelected={selectedId===7} onClick={()=>item_click_handler(7)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===8} isSelected={selectedId===8} onClick={()=>item_click_handler(8)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===9} isSelected={selectedId===9} onClick={()=>item_click_handler(9)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===10} isSelected={selectedId===10} onClick={()=>item_click_handler(10)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===11} isSelected={selectedId===11} onClick={()=>item_click_handler(11)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===12} isSelected={selectedId===12} onClick={()=>item_click_handler(12)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===13} isSelected={selectedId===13} onClick={()=>item_click_handler(13)}/>
+          <Item brand='Nissan' model='Skyline GT-R R34' price={1_350_000} isHovered={hoveredId===14} isSelected={selectedId===14} onClick={()=>item_click_handler(14)}/>
+        </div>
+
       </div>
-    </>
+      <div className={styles.keys_help}>
+        <p className={styles.keys_help_text}>Используйте клавиатуру, для перемещения между автомобилями</p>
+        <img src={keys_help} />
+      </div>
+    </div>
   )
 }
 
-export default observer(Autosalon)
+export default Autosalon

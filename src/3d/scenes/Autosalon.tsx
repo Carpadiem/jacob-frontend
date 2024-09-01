@@ -48,7 +48,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
     <group {...props} dispose={null}>
       <PerspectiveCamera name='Camera' makeDefault far={1000} near={0.01} fov={20.102} position={[0, 1.7, 10.018]} rotation={[degToRad(-5), degToRad(0), degToRad(0)]} />
 
-      <pointLight name='Point' intensity={50} decay={2} position={[0, 3, 0]} castShadow receiveShadow shadow-mapSize={1024} shadow-bias={-0.0003} shadow-radius={5} shadow-autoUpdate />
+      {/* <pointLight name='Point' intensity={50} decay={2} position={[0, 3, 0]} castShadow receiveShadow shadow-mapSize={1024} shadow-bias={-0.0003} shadow-radius={5} shadow-autoUpdate /> */}
 
       <mesh name='Plane_1' castShadow receiveShadow geometry={nodes.Plane_1.geometry} material={materials.floor} />
       <mesh name='Plane_2' castShadow receiveShadow geometry={nodes.Plane_2.geometry} material={materials.wall} />

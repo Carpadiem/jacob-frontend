@@ -3,10 +3,10 @@ import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 // pages
 import { Home } from './pages/Home'
-import { Profile } from './pages/Profile'
+import { Lobby } from './pages/Lobby'
 import { Autosalon } from './pages/Autosalon'
 import { Garage } from './pages/Garage'
-import { Auth } from './pages/Auth'
+import { Synchronization } from './pages/Synchronization'
 
 export default function App() {
   return (
@@ -14,12 +14,12 @@ export default function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/home' element={<Home />} />
+        <Route path='/synchronization' element={<Synchronization />} />
 
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/lobby' element={<Lobby />} />
+
         <Route path='/autosalon' element={<Autosalon />} />
         <Route path='/garage' element={<Garage />} />
-
-        <Route path='/auth' element={<Auth />} />
       </Routes>
     </BrowserRouter>
   )

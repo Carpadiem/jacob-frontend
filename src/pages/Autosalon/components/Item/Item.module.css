@@ -1,0 +1,47 @@
+.list_item {
+  width: 100%;
+  height: 80px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(40px);
+  cursor: pointer;
+  transition: background-color .3s ease;
+}
+
+.item_left {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+p.car_brand_text {
+  font-family: 'Montserrat';
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+p.car_model_text {
+  font-family: 'Montserrat';
+  font-size: 12px;
+  font-weight: 600;
+  color: #9b9b9b;
+}
+
+.item_right {
+  display: flex;
+  gap: 10px;
+}
+p.car_price_number {
+  font-family: 'Montserrat';
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+p.car_price_currency {
+  font-family: 'Montserrat';
+  font-size: 14px;
+  font-weight: 600;
+  color: #33fc76;
+}
