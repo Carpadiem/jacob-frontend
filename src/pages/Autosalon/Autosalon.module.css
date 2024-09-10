@@ -14,11 +14,30 @@ body {
   height: 100vh;
   background-size: cover;
   padding: 20px;
-  /* overflow: hidden; */
+  
+  display: flex;
+  justify-content: space-between;
 }
 
+.canvas {
+  z-index: 20 !important;
+  position: absolute !important;
+  width: 100vw !important;
+  height: 100vh !important;
+
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+/* canvas {
+  height: 100vh !important;
+} */
+
 .list_frame {
-  max-width: 420px;
+  z-index: 21;
+  min-width: 400px;
+  max-width: 500px;
 }
 
 .list_head {
@@ -54,7 +73,7 @@ h2.logo_text span {
   position: absolute;
   left: 250px;
   
-  width: 400px;
+  width: 330px;
   min-height: 40px;
   
   display: flex;
@@ -148,6 +167,7 @@ p.list_brand_text {
 
 .list_items {
   margin-top: 20px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -160,10 +180,10 @@ p.list_brand_text {
 .list_items:focus { outline: none; }
 
 .keys_help {
-  display: inline-block;
-  position: absolute;
-  left: 460px;
-  bottom: 20px;
+  /* display: inline-block; */
+  /* position: absolute; */
+  /* left: 460px;
+  bottom: 20px; */
 }
 
 p.keys_help_text {
@@ -184,4 +204,55 @@ p.keys_help_text {
   animation: 2s rotate360 infinite linear;
   width: 20px;
   height: 20px;
+}
+
+
+.purchase_frame {
+  /* background-color: red; */
+  width: 400px;
+  height: 200px;
+  align-self: flex-end;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  z-index: 21;
+  padding: 30px;
+}
+
+.selected_car_price {
+  display: flex;
+  gap: 10px;
+  letter-spacing: 1px;
+}
+.selected_car_price_number {
+  font-family: 'Montserrat';
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+.selected_car_price_currency {
+  font-family: 'Montserrat';
+  font-size: 18px;
+  font-weight: 600;
+  color: #33FC76;
+}
+
+.btn_purchase {
+  margin-top: 20px;
+  cursor: pointer;
+
+  background-color: #624CFE;
+  
+  font-family: 'Montserrat';
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+
+  width: 180px;
+  height: 55px;
+  border-radius: 4px;
+  padding: 16px 20px;
+  border: none;
 }

@@ -30,7 +30,7 @@ import { Perf } from 'r3f-perf'
 import Autosalone from '@3d/scenes/Autosalon'
 import AudiA8 from '@3d/cars/Audi_a8'
 import AudiR8 from '@3d/cars/Audi_r8'
-import BmwM5F90 from '@3d/cars/Bmw_m5_f90'
+import BmwM5F90 from '@3d/cars/BMWM5F90'
 // exotic
 import { EnvExotic } from '@exotic/EnvExotic'
 import { EffectsExotic } from '@exotic/EffectsExotic'

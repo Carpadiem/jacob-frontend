@@ -1,0 +1,25 @@
+.search_item {
+    width: 100%;
+    height: 50px;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(40px);
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+p.search_car_brand_text {
+    font-family: 'Montserrat';
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+p.search_car_model_text {
+    font-family: 'Montserrat';
+    font-size: 12px;
+    font-weight: 600;
+    color: #9b9b9b;
+}
