@@ -30,9 +30,6 @@ body {
   left: 0 !important;
   right: 0 !important;
 }
-/* canvas {
-  height: 100vh !important;
-} */
 
 .list_frame {
   z-index: 21;

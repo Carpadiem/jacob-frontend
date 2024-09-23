@@ -7,6 +7,11 @@ import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
+// models
+import IBodypart from '@models/IBodypart'
+// stores
+import { observer } from 'mobx-react-lite'
+import stylingStore from '@stores/styling.store'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -516,8 +521,92 @@ type GLTFResult = GLTF & {
   }
 }
 
-export default function Model(props: JSX.IntrinsicElements['group']) {
+
+export const shop_bodyparts: IBodypart[] = [
+  // bumpers_front
+  { id: 1, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1000, },
+  { id: 2, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Beta', price: 2350, },
+  { id: 3, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 2350, },
+  { id: 4, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Delta', price: 2350, },
+  { id: 5, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Epsilon', price: 2350, },
+  { id: 6, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Zeta', price: 2350, },
+  { id: 7, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Eta', price: 2350, },
+  { id: 8, type: 'bumper_front', for_vehicle: 'mazda rx-7', name: 'Theta', price: 2350, },
+
+  // bumpers_rear
+  { id: 1, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1250, },
+  { id: 2, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Beta', price: 2200, },
+  { id: 3, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 2200, },
+  { id: 4, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Delta', price: 2200, },
+  { id: 5, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Epsilon', price: 2200, },
+  { id: 6, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Zeta', price: 2200, },
+  { id: 7, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Eta', price: 2200, },
+  { id: 8, type: 'bumper_rear', for_vehicle: 'mazda rx-7', name: 'Theta', price: 2200, },
+
+  // skirts
+  { id: 1, type: 'skirts', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  { id: 2, type: 'skirts', for_vehicle: 'mazda rx-7', name: 'Beta', price: 2350, },
+  { id: 3, type: 'skirts', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 2350, },
+  { id: 4, type: 'skirts', for_vehicle: 'mazda rx-7', name: 'Delta', price: 2350, },
+  { id: 5, type: 'skirts', for_vehicle: 'mazda rx-7', name: 'Epsilom', price: 2350, },
+  { id: 6, type: 'skirts', for_vehicle: 'mazda rx-7', name: 'Zeta', price: 2350, },
+  { id: 7, type: 'skirts', for_vehicle: 'mazda rx-7', name: 'Eta', price: 2350, },
+
+  // spoilers
+  { id: 1, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  { id: 2, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Beta', price: 3400, },
+  { id: 3, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 3400, },
+  { id: 4, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Delta', price: 3400, },
+  { id: 5, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Epsilom', price: 3400, },
+  { id: 6, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Zeta', price: 3400, },
+  { id: 7, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Eta', price: 3400, },
+  { id: 8, type: 'spoiler', for_vehicle: 'mazda rx-7', name: 'Theta', price: 3400, },
+
+  // bonnets
+  { id: 1, type: 'bonnet', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  { id: 2, type: 'bonnet', for_vehicle: 'mazda rx-7', name: 'Beta', price: 3400, },
+  { id: 3, type: 'bonnet', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 3400, },
+  { id: 4, type: 'bonnet', for_vehicle: 'mazda rx-7', name: 'Delta', price: 3400, },
+  { id: 5, type: 'bonnet', for_vehicle: 'mazda rx-7', name: 'Epsilom', price: 3400, },
+  { id: 6, type: 'bonnet', for_vehicle: 'mazda rx-7', name: 'Zeta', price: 3400, },
+  { id: 7, type: 'bonnet', for_vehicle: 'mazda rx-7', name: 'Eta', price: 3400, },
+  
+  // mirrors
+  { id: 1, type: 'mirrors', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  
+  // head lights
+  { id: 1, type: 'head_lights', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  { id: 2, type: 'head_lights', for_vehicle: 'mazda rx-7', name: 'Beta', price: 3400, },
+  { id: 3, type: 'head_lights', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 3400, },
+
+  // tail lights
+  { id: 1, type: 'tail_lights', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  { id: 2, type: 'tail_lights', for_vehicle: 'mazda rx-7', name: 'Beta', price: 3400, },
+  { id: 3, type: 'tail_lights', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 3400, },
+  { id: 4, type: 'tail_lights', for_vehicle: 'mazda rx-7', name: 'Delta', price: 3400, },
+  { id: 5, type: 'tail_lights', for_vehicle: 'mazda rx-7', name: 'Epsilom', price: 3400, },
+  { id: 6, type: 'tail_lights', for_vehicle: 'mazda rx-7', name: 'Zeta', price: 3400, },
+
+  // wings front
+  { id: 1, type: 'wings_front', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  { id: 2, type: 'wings_front', for_vehicle: 'mazda rx-7', name: 'Beta', price: 3400, },
+  { id: 3, type: 'wings_front', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 3400, },
+
+  // wings rear
+  { id: 1, type: 'wings_rear', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+  { id: 2, type: 'wings_rear', for_vehicle: 'mazda rx-7', name: 'Beta', price: 3400, },
+  { id: 3, type: 'wings_rear', for_vehicle: 'mazda rx-7', name: 'Gamma', price: 3400, },
+
+  // exhausts
+  { id: 1, type: 'exhaust', for_vehicle: 'mazda rx-7', name: 'Stock', price: 1500, },
+]
+
+
+function Model(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF('3d/gltf/cars/MazdaRX7/mazda_rx7.gltf') as GLTFResult
+  
+  // effects
+
   return (
     <group {...props} dispose={null} position={[0, .734, 0]}>
       
@@ -608,29 +697,29 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bodykit_veilside_door_front_right_10" castShadow receiveShadow geometry={nodes.bodykit_veilside_door_front_right_10.geometry} material={materials['door_lf.3']} />
         <mesh name="bodykit_veilside_door_front_right_11" castShadow receiveShadow geometry={nodes.bodykit_veilside_door_front_right_11.geometry} material={materials['glass.005']} />
       </group>
-      <group name="bonnet_1" position={[0, 0.36, -0.694]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bonnet_id === 1} name="bonnet_1" position={[0, 0.36, -0.694]}>
         <mesh name="bonnet_1_1" castShadow receiveShadow geometry={nodes.bonnet_1_1.geometry} material={materials.primary} />
         <mesh name="bonnet_1_2" castShadow receiveShadow geometry={nodes.bonnet_1_2.geometry} material={materials['chassis_vlo.0']} />
       </group>
-      <group name="bonnet_2" position={[0, -14.64, -0.694]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bonnet_id === 2} name="bonnet_2" position={[0, .36, -0.694]}>
         <mesh name="bonnet_2_1" castShadow receiveShadow geometry={nodes.bonnet_2_1.geometry} material={materials['bonnet1.0']} />
         <mesh name="bonnet_2_2" castShadow receiveShadow geometry={nodes.bonnet_2_2.geometry} material={materials['bonnet1.1']} />
       </group>
-      <group name="bonnet_3" position={[0, -15.64, -0.694]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bonnet_id === 3} name="bonnet_3" position={[0, .36, -0.694]}>
         <mesh name="bonnet_3_1" castShadow receiveShadow geometry={nodes.bonnet_3_1.geometry} material={materials.primary} />
         <mesh name="bonnet_3_2" castShadow receiveShadow geometry={nodes.bonnet_3_2.geometry} material={materials['chassis_vlo.0']} />
       </group>
-      <group name="bonnet_4" position={[0, -16.64, -0.694]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bonnet_id === 4} name="bonnet_4" position={[0, .36, -0.694]}>
         <mesh name="bonnet_4_1" castShadow receiveShadow geometry={nodes.bonnet_4_1.geometry} material={materials['bonnet1.0']} />
         <mesh name="bonnet_4_2" castShadow receiveShadow geometry={nodes.bonnet_4_2.geometry} material={materials['bonnet1.1']} />
         <mesh name="bonnet_4_3" castShadow receiveShadow geometry={nodes.bonnet_4_3.geometry} material={materials['chassis_vlo.0']} />
       </group>
-      <group name="bonnet_5" position={[0, -17.64, -0.694]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bonnet_id === 5} name="bonnet_5" position={[0, .36, -0.694]}>
         <mesh name="bonnet_5_1" castShadow receiveShadow geometry={nodes.bonnet_5_1.geometry} material={materials.primary} />
         <mesh name="bonnet_5_2" castShadow receiveShadow geometry={nodes.bonnet_5_2.geometry} material={materials['bonnet1.1']} />
         <mesh name="bonnet_5_3" castShadow receiveShadow geometry={nodes.bonnet_5_3.geometry} material={materials['chassis_vlo.0']} />
       </group>
-      <group name="bonnet_6" position={[0, -18.64, -0.694]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bonnet_id === 6} name="bonnet_6" position={[0, .36, -0.694]}>
         <mesh name="bonnet_6_1" castShadow receiveShadow geometry={nodes.bonnet_6_1.geometry} material={materials.primary} />
         <mesh name="bonnet_6_2" castShadow receiveShadow geometry={nodes.bonnet_6_2.geometry} material={materials['chassis_vlo.0']} />
       </group>
@@ -639,37 +728,37 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bodykit_veilside_bonnet_2" castShadow receiveShadow geometry={nodes.bodykit_veilside_bonnet_2.geometry} material={materials.secondary} />
         <mesh name="bodykit_veilside_bonnet_3" castShadow receiveShadow geometry={nodes.bodykit_veilside_bonnet_3.geometry} material={materials.primary} />
       </group>
-      <group name="bonnet_7" position={[0, -19.64, -0.694]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bonnet_id === 7} name="bonnet_7" position={[0, .36, -0.694]}>
         <mesh name="bonnet_7_1" castShadow receiveShadow geometry={nodes.bonnet_7_1.geometry} material={materials.primary} />
         <mesh name="bonnet_7_2" castShadow receiveShadow geometry={nodes.bonnet_7_2.geometry} material={materials['bonnet1.1']} />
         <mesh name="bonnet_7_3" castShadow receiveShadow geometry={nodes.bonnet_7_3.geometry} material={materials.exhaust} />
         <mesh name="bonnet_7_4" castShadow receiveShadow geometry={nodes.bonnet_7_4.geometry} material={materials['chassis_vlo.0']} />
       </group>
-      <group name="spoiler_1" position={[0, 0.796, 0.779]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds?.spoiler_id === 1} name="spoiler_1" position={[0, 0.796, 0.779]}>
         <mesh name="spoiler_1_1" castShadow receiveShadow geometry={nodes.spoiler_1_1.geometry} material={materials['door_lf.2']} />
         <mesh name="spoiler_1_2" castShadow receiveShadow geometry={nodes.spoiler_1_2.geometry} material={materials.primary} />
       </group>
-      <mesh name="spoiler_2" castShadow receiveShadow geometry={nodes.spoiler_2.geometry} material={materials.primary} position={[0, -14.204, 0.779]} />
-      <mesh name="spoiler_3" castShadow receiveShadow geometry={nodes.spoiler_3.geometry} material={materials.primary} position={[0, -15.204, 0.779]} />
-      <group name="spoiler_4" position={[0, -16.204, 0.779]}>
+      <mesh visible={stylingStore.nowDisplayedBodypartsIds.spoiler_id === 2} name="spoiler_2" castShadow receiveShadow geometry={nodes.spoiler_2.geometry} material={materials.primary} position={[0, 0.796, 0.779]} />
+      <mesh visible={stylingStore.nowDisplayedBodypartsIds.spoiler_id === 3} name="spoiler_3" castShadow receiveShadow geometry={nodes.spoiler_3.geometry} material={materials.primary} position={[0, 0.796, 0.779]} />
+      <group visible={stylingStore.nowDisplayedBodypartsIds.spoiler_id === 4} name="spoiler_4" position={[0, 0.796, 0.779]}>
         <mesh name="spoiler_4_1" castShadow receiveShadow geometry={nodes.spoiler_4_1.geometry} material={materials.primary} />
         <mesh name="spoiler_4_2" castShadow receiveShadow geometry={nodes.spoiler_4_2.geometry} material={materials['door_lf.2']} />
         <mesh name="spoiler_4_3" castShadow receiveShadow geometry={nodes.spoiler_4_3.geometry} material={materials.exhaust} />
       </group>
       <mesh name="bodykit_veilside_spoiler" castShadow receiveShadow geometry={nodes.bodykit_veilside_spoiler.geometry} material={materials.secondary} position={[0, -24.204, 0.779]} />
-      <mesh name="spoiler_5" castShadow receiveShadow geometry={nodes.spoiler_5.geometry} material={materials.primary} position={[0, -17.204, 0.779]} />
-      <group name="spoiler_6" position={[0, -18.204, 0.779]}>
+      <mesh visible={stylingStore.nowDisplayedBodypartsIds.spoiler_id === 5} name="spoiler_5" castShadow receiveShadow geometry={nodes.spoiler_5.geometry} material={materials.primary} position={[0, 0.796, 0.779]} />
+      <group visible={stylingStore.nowDisplayedBodypartsIds.spoiler_id === 6} name="spoiler_6" position={[0, 0.796, 0.779]}>
         <mesh name="spoiler_6_1" castShadow receiveShadow geometry={nodes.spoiler_6_1.geometry} material={materials['door_lf.2']} />
         <mesh name="spoiler_6_2" castShadow receiveShadow geometry={nodes.spoiler_6_2.geometry} material={materials['bonnet1.0']} />
         <mesh name="spoiler_6_3" castShadow receiveShadow geometry={nodes.spoiler_6_3.geometry} material={materials.primary} />
         <mesh name="spoiler_6_4" castShadow receiveShadow geometry={nodes.spoiler_6_4.geometry} material={materials.exhaust} />
       </group>
-      <group name="spoiler_7" position={[0, -19.204, 0.779]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.spoiler_id === 7} name="spoiler_7" position={[0, 0.796, 0.779]}>
         <mesh name="spoiler_7_1" castShadow receiveShadow geometry={nodes.spoiler_7_1.geometry} material={materials['bonnet1.0']} />
         <mesh name="spoiler_7_2" castShadow receiveShadow geometry={nodes.spoiler_7_2.geometry} material={materials.exhaust} />
         <mesh name="spoiler_7_3" castShadow receiveShadow geometry={nodes.spoiler_7_3.geometry} material={materials['door_lf.2']} />
       </group>
-      <group name="spoiler_8" position={[0, -20.204, 0.779]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.spoiler_id === 8} name="spoiler_8" position={[0, 0.796, 0.779]}>
         <mesh name="spoiler_8_1" castShadow receiveShadow geometry={nodes.spoiler_8_1.geometry} material={materials['bonnet1.0']} />
         <mesh name="spoiler_8_2" castShadow receiveShadow geometry={nodes.spoiler_8_2.geometry} material={materials.exhaust} />
       </group>
@@ -766,7 +855,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="head_lights_3_7" castShadow receiveShadow geometry={nodes.head_lights_3_7.geometry} material={materials['left front light']} />
         <mesh name="head_lights_3_8" castShadow receiveShadow geometry={nodes.head_lights_3_8.geometry} material={materials.glass} />
       </group>
-      <group name="bumper_front_2" position={[0, -7, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 2} name="bumper_front_2" position={[0,0,0]}>
         <mesh name="bumper_front_2_1" castShadow receiveShadow geometry={nodes.bumper_front_2_1.geometry} material={materials['door_lf.0']} />
         <mesh name="bumper_front_2_2" castShadow receiveShadow geometry={nodes.bumper_front_2_2.geometry} material={materials['tail_lights0.3']} />
         <mesh name="bumper_front_2_3" castShadow receiveShadow geometry={nodes.bumper_front_2_3.geometry} material={materials['tail_lights0.4']} />
@@ -774,7 +863,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_front_2_5" castShadow receiveShadow geometry={nodes.bumper_front_2_5.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_front_2_6" castShadow receiveShadow geometry={nodes.bumper_front_2_6.geometry} material={materials.primary} />
       </group>
-      <group name="bumper_front_3" position={[0, -8, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 3} name="bumper_front_3" position={[0,0,0]}>
         <mesh name="bumper_front_3_1" castShadow receiveShadow geometry={nodes.bumper_front_3_1.geometry} material={materials.primary} />
         <mesh name="bumper_front_3_2" castShadow receiveShadow geometry={nodes.bumper_front_3_2.geometry} material={materials['door_lf.6']} />
         <mesh name="bumper_front_3_3" castShadow receiveShadow geometry={nodes.bumper_front_3_3.geometry} material={materials['door_lf.0']} />
@@ -787,7 +876,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_front_3_10" castShadow receiveShadow geometry={nodes.bumper_front_3_10.geometry} material={materials.glass} />
         <mesh name="bumper_front_3_11" castShadow receiveShadow geometry={nodes.bumper_front_3_11.geometry} material={materials['chassis_vlo.0']} />
       </group>
-      <group name="bumper_front_4" position={[0, -9, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 4} name="bumper_front_4" position={[0,0,0]}>
         <mesh name="bumper_front_4_1" castShadow receiveShadow geometry={nodes.bumper_front_4_1.geometry} material={materials['bonnet1.1']} />
         <mesh name="bumper_front_4_2" castShadow receiveShadow geometry={nodes.bumper_front_4_2.geometry} material={materials['door_lf.0']} />
         <mesh name="bumper_front_4_3" castShadow receiveShadow geometry={nodes.bumper_front_4_3.geometry} material={materials['head_lights2.4']} />
@@ -798,7 +887,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_front_4_8" castShadow receiveShadow geometry={nodes.bumper_front_4_8.geometry} material={materials.glass} />
         <mesh name="bumper_front_4_9" castShadow receiveShadow geometry={nodes.bumper_front_4_9.geometry} material={materials.primary} />
       </group>
-      <group name="bumper_front_5" position={[0, -10, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 5} name="bumper_front_5" position={[0,0,0]}>
         <mesh name="bumper_front_5_1" castShadow receiveShadow geometry={nodes.bumper_front_5_1.geometry} material={materials['tail_lights0.0']} />
         <mesh name="bumper_front_5_2" castShadow receiveShadow geometry={nodes.bumper_front_5_2.geometry} material={materials['bonnet1.1']} />
         <mesh name="bumper_front_5_3" castShadow receiveShadow geometry={nodes.bumper_front_5_3.geometry} material={materials['door_lf.0']} />
@@ -810,7 +899,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_front_5_9" castShadow receiveShadow geometry={nodes.bumper_front_5_9.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_front_5_10" castShadow receiveShadow geometry={nodes.bumper_front_5_10.geometry} material={materials.primary} />
       </group>
-      <group name="bumper_front_6" position={[0, -11, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 6} name="bumper_front_6" position={[0,0,0]}>
         <mesh name="bumper_front_6_1" castShadow receiveShadow geometry={nodes.bumper_front_6_1.geometry} material={materials['door_lf.0']} />
         <mesh name="bumper_front_6_2" castShadow receiveShadow geometry={nodes.bumper_front_6_2.geometry} material={materials['head_lights2.4']} />
         <mesh name="bumper_front_6_3" castShadow receiveShadow geometry={nodes.bumper_front_6_3.geometry} material={materials['tail_lights0.3']} />
@@ -821,7 +910,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_front_6_8" castShadow receiveShadow geometry={nodes.bumper_front_6_8.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_front_6_9" castShadow receiveShadow geometry={nodes.bumper_front_6_9.geometry} material={materials.primary} />
       </group>
-      <group name="bumper_front_7" position={[0, -12, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 7} name="bumper_front_7" position={[0,0,0]}>
         <mesh name="bumper_front_7_1" castShadow receiveShadow geometry={nodes.bumper_front_7_1.geometry} material={materials.exhaust} />
         <mesh name="bumper_front_7_2" castShadow receiveShadow geometry={nodes.bumper_front_7_2.geometry} material={materials['door_lf.0']} />
         <mesh name="bumper_front_7_3" castShadow receiveShadow geometry={nodes.bumper_front_7_3.geometry} material={materials['tail_lights0.3']} />
@@ -831,7 +920,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_front_7_7" castShadow receiveShadow geometry={nodes.bumper_front_7_7.geometry} material={materials.glass} />
         <mesh name="bumper_front_7_8" castShadow receiveShadow geometry={nodes.bumper_front_7_8.geometry} material={materials.primary} />
       </group>
-      <group name="bumper_front_8" position={[0, -13, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 8} name="bumper_front_8" position={[0,0,0]}>
         <mesh name="bumper_front_8_1" castShadow receiveShadow geometry={nodes.bumper_front_8_1.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_front_8_2" castShadow receiveShadow geometry={nodes.bumper_front_8_2.geometry} material={materials['door_lf.2']} />
         <mesh name="bumper_front_8_3" castShadow receiveShadow geometry={nodes.bumper_front_8_3.geometry} material={materials['bonnet1.1']} />
@@ -849,7 +938,18 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bodykit_veilside_bumper_front_6" castShadow receiveShadow geometry={nodes.bodykit_veilside_bumper_front_6.geometry} material={materials.exhaust} />
         <mesh name="bodykit_veilside_bumper_front_7" castShadow receiveShadow geometry={nodes.bodykit_veilside_bumper_front_7.geometry} material={materials['chassis_vlo.0']} />
       </group>
-      <group name="bumper_rear_2" position={[0, -7, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 1} name='bumper_rear_1' position={[0,0,0]}>
+        <mesh name="bumper_rear_1_1" castShadow receiveShadow geometry={nodes.bumper_rear_1_1.geometry} material={materials.primary} />
+        <mesh name="bumper_rear_1_2" castShadow receiveShadow geometry={nodes.bumper_rear_1_2.geometry} material={materials['head_lights2.4']} />
+        <mesh name="bumper_rear_1_3" castShadow receiveShadow geometry={nodes.bumper_rear_1_3.geometry} material={materials['door_lf.6']} />
+        <mesh name="bumper_rear_1_4" castShadow receiveShadow geometry={nodes.bumper_rear_1_4.geometry} material={materials['door_lf.0']} />
+        <mesh name="bumper_rear_1_5" castShadow receiveShadow geometry={nodes.bumper_rear_1_5.geometry} material={materials['door_lf.2']} />
+        <mesh name="bumper_rear_1_6" castShadow receiveShadow geometry={nodes.bumper_rear_1_6.geometry} material={materials['bumper_r0.7']} />
+        <mesh name="bumper_rear_1_7" castShadow receiveShadow geometry={nodes.bumper_rear_1_7.geometry} material={materials['bumper_r0.8']} />
+        <mesh name="bumper_rear_1_8" castShadow receiveShadow geometry={nodes.bumper_rear_1_8.geometry} material={materials['bumper_r0.9']} />
+        <mesh name="bumper_rear_1_9" castShadow receiveShadow geometry={nodes.bumper_rear_1_9.geometry} material={materials['left front light']} />
+      </group>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 2} name="bumper_rear_2" position={[0, 0, 0]}>
         <mesh name="bumper_rear_2_1" castShadow receiveShadow geometry={nodes.bumper_rear_2_1.geometry} material={materials.primary} />
         <mesh name="bumper_rear_2_2" castShadow receiveShadow geometry={nodes.bumper_rear_2_2.geometry} material={materials['head_lights2.4']} />
         <mesh name="bumper_rear_2_3" castShadow receiveShadow geometry={nodes.bumper_rear_2_3.geometry} material={materials['door_lf.6']} />
@@ -862,7 +962,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_rear_2_10" castShadow receiveShadow geometry={nodes.bumper_rear_2_10.geometry} material={materials['bumper_r0.9']} />
         <mesh name="bumper_rear_2_11" castShadow receiveShadow geometry={nodes.bumper_rear_2_11.geometry} material={materials['left front light']} />
       </group>
-      <group name="bumper_rear_3" position={[0, -8, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 3} name="bumper_rear_3" position={[0, 0, 0]}>
         <mesh name="bumper_rear_3_1" castShadow receiveShadow geometry={nodes.bumper_rear_3_1.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_rear_3_2" castShadow receiveShadow geometry={nodes.bumper_rear_3_2.geometry} material={materials['head_lights2.4']} />
         <mesh name="bumper_rear_3_3" castShadow receiveShadow geometry={nodes.bumper_rear_3_3.geometry} material={materials.primary} />
@@ -872,7 +972,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_rear_3_7" castShadow receiveShadow geometry={nodes.bumper_rear_3_7.geometry} material={materials['bumper_r0.9']} />
         <mesh name="bumper_rear_3_8" castShadow receiveShadow geometry={nodes.bumper_rear_3_8.geometry} material={materials['left front light']} />
       </group>
-      <group name="bumper_rear_4" position={[0, -9, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 4} name="bumper_rear_4" position={[0, 0, 0]}>
         <mesh name="bumper_rear_4_1" castShadow receiveShadow geometry={nodes.bumper_rear_4_1.geometry} material={materials['head_lights2.4']} />
         <mesh name="bumper_rear_4_2" castShadow receiveShadow geometry={nodes.bumper_rear_4_2.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_rear_4_3" castShadow receiveShadow geometry={nodes.bumper_rear_4_3.geometry} material={materials.primary} />
@@ -882,7 +982,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_rear_4_7" castShadow receiveShadow geometry={nodes.bumper_rear_4_7.geometry} material={materials['bumper_r0.9']} />
         <mesh name="bumper_rear_4_8" castShadow receiveShadow geometry={nodes.bumper_rear_4_8.geometry} material={materials['left front light']} />
       </group>
-      <group name="bumper_rear_5" position={[0, -10, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 5} name="bumper_rear_5" position={[0, 0, 0]}>
         <mesh name="bumper_rear_5_1" castShadow receiveShadow geometry={nodes.bumper_rear_5_1.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_rear_5_2" castShadow receiveShadow geometry={nodes.bumper_rear_5_2.geometry} material={materials['head_lights2.4']} />
         <mesh name="bumper_rear_5_3" castShadow receiveShadow geometry={nodes.bumper_rear_5_3.geometry} material={materials.primary} />
@@ -893,7 +993,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_rear_5_8" castShadow receiveShadow geometry={nodes.bumper_rear_5_8.geometry} material={materials['bumper_r0.9']} />
         <mesh name="bumper_rear_5_9" castShadow receiveShadow geometry={nodes.bumper_rear_5_9.geometry} material={materials['left front light']} />
       </group>
-      <group name="bumper_rear_6" position={[0, -11, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 6} name="bumper_rear_6" position={[0, 0, 0]}>
         <mesh name="bumper_rear_6_1" castShadow receiveShadow geometry={nodes.bumper_rear_6_1.geometry} material={materials['chassis_vlo.0']} />
         <mesh name="bumper_rear_6_2" castShadow receiveShadow geometry={nodes.bumper_rear_6_2.geometry} material={materials['head_lights2.4']} />
         <mesh name="bumper_rear_6_3" castShadow receiveShadow geometry={nodes.bumper_rear_6_3.geometry} material={materials.primary} />
@@ -904,7 +1004,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_rear_6_8" castShadow receiveShadow geometry={nodes.bumper_rear_6_8.geometry} material={materials['bumper_r0.9']} />
         <mesh name="bumper_rear_6_9" castShadow receiveShadow geometry={nodes.bumper_rear_6_9.geometry} material={materials['left front light']} />
       </group>
-      <group name="bumper_rear_7" position={[0, -12, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 7} name="bumper_rear_7" position={[0, 0, 0]}>
         <mesh name="bumper_rear_7_1" castShadow receiveShadow geometry={nodes.bumper_rear_7_1.geometry} material={materials['head_lights2.4']} />
         <mesh name="bumper_rear_7_2" castShadow receiveShadow geometry={nodes.bumper_rear_7_2.geometry} material={materials['door_lf.0']} />
         <mesh name="bumper_rear_7_3" castShadow receiveShadow geometry={nodes.bumper_rear_7_3.geometry} material={materials['door_lf.2']} />
@@ -916,7 +1016,7 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="bumper_rear_7_9" castShadow receiveShadow geometry={nodes.bumper_rear_7_9.geometry} material={materials['bumper_r0.9']} />
         <mesh name="bumper_rear_7_10" castShadow receiveShadow geometry={nodes.bumper_rear_7_10.geometry} material={materials['left front light']} />
       </group>
-      <group name="bumper_rear_8" position={[0, -13, 0]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_rear_id === 8} name="bumper_rear_8" position={[0, 0, 0]}>
         <mesh name="bumper_rear_8_1" castShadow receiveShadow geometry={nodes.bumper_rear_8_1.geometry} material={materials['bonnet1.0']} />
         <mesh name="bumper_rear_8_2" castShadow receiveShadow geometry={nodes.bumper_rear_8_2.geometry} material={materials['door_lf.0']} />
         <mesh name="bumper_rear_8_3" castShadow receiveShadow geometry={nodes.bumper_rear_8_3.geometry} material={materials['door_lf.2']} />
@@ -1048,17 +1148,19 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="windscreen_ok_1" castShadow receiveShadow geometry={nodes.windscreen_ok_1.geometry} material={materials['glass.005']} />
         <mesh name="windscreen_ok_2" castShadow receiveShadow geometry={nodes.windscreen_ok_2.geometry} material={materials['tail_lights0.0']} />
       </group>
-      <group name="side_mirror_left_1" position={[-0.911, 0.072, -0.594]}>
-        <mesh name="side_mirror_left_1_1" castShadow receiveShadow geometry={nodes.side_mirror_left_1_1.geometry} material={materials.primary} />
-        <mesh name="side_mirror_left_1_2" castShadow receiveShadow geometry={nodes.side_mirror_left_1_2.geometry} material={materials.exhaust} />
+      <group visible={stylingStore.nowDisplayedBodypartsIds.mirrors_id === 1} name='mirrors_1' position={[0,0,0]}>
+        <group name="side_mirror_left_1" position={[-0.911, 0.072, -0.594]}>
+          <mesh name="side_mirror_left_1_1" castShadow receiveShadow geometry={nodes.side_mirror_left_1_1.geometry} material={materials.primary} />
+          <mesh name="side_mirror_left_1_2" castShadow receiveShadow geometry={nodes.side_mirror_left_1_2.geometry} material={materials.exhaust} />
+        </group>
+        <group name="side_mirror_right_1" position={[0.911, 0.072, -0.594]}>
+          <mesh name="side_mirror_right_1_1" castShadow receiveShadow geometry={nodes.side_mirror_right_1_1.geometry} material={materials.primary} />
+          <mesh name="side_mirror_right_1_2" castShadow receiveShadow geometry={nodes.side_mirror_right_1_2.geometry} material={materials.exhaust} />
+        </group>
       </group>
-      <group name="exhaust_1" position={[0.004, -0.128, 2.313]}>
+      <group visible={stylingStore.nowDisplayedBodypartsIds.exhaust_id === 1} name="exhaust_1" position={[0.004, -0.128, 2.313]}>
         <mesh name="exhaust_1_1" castShadow receiveShadow geometry={nodes.exhaust_1_1.geometry} material={materials.exhaust} />
         <mesh name="exhaust_1_2" castShadow receiveShadow geometry={nodes.exhaust_1_2.geometry} material={materials['chassis_vlo.0']} />
-      </group>
-      <group name="side_mirror_right_1" position={[0.911, 0.072, -0.594]}>
-        <mesh name="side_mirror_right_1_1" castShadow receiveShadow geometry={nodes.side_mirror_right_1_1.geometry} material={materials.primary} />
-        <mesh name="side_mirror_right_1_2" castShadow receiveShadow geometry={nodes.side_mirror_right_1_2.geometry} material={materials.exhaust} />
       </group>
       <group name="wiper_rear" position={[0, 0.796, 0.779]}>
         <mesh name="wiper_rear_1" castShadow receiveShadow geometry={nodes.wiper_rear_1.geometry} material={materials['door_lf.6']} />
@@ -1072,25 +1174,18 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
       <mesh name="tail_lights_1_6" castShadow receiveShadow geometry={nodes.tail_lights_1_6.geometry} material={materials['tail_lights0.5']} />
       <mesh name="tail_lights_1_7" castShadow receiveShadow geometry={nodes.tail_lights_1_7.geometry} material={materials['right rear light']} />
       <mesh name="tail_lights_1_8" castShadow receiveShadow geometry={nodes.tail_lights_1_8.geometry} material={materials.glass} />
-      <mesh name="bumper_front_1_1" castShadow receiveShadow geometry={nodes.bumper_front_1_1.geometry} material={materials.glass} />
-      <mesh name="bumper_front_1_2" castShadow receiveShadow geometry={nodes.bumper_front_1_2.geometry} material={materials.primary} />
-      <mesh name="bumper_front_1_3" castShadow receiveShadow geometry={nodes.bumper_front_1_3.geometry} material={materials['chassis_vlo.0']} />
-      <mesh name="bumper_front_1_4" castShadow receiveShadow geometry={nodes.bumper_front_1_4.geometry} material={materials['door_lf.0']} />
-      <mesh name="bumper_front_1_5" castShadow receiveShadow geometry={nodes.bumper_front_1_5.geometry} material={materials['head_lights2.4']} />
-      <mesh name="bumper_front_1_6" castShadow receiveShadow geometry={nodes.bumper_front_1_6.geometry} material={materials['tail_lights0.3']} />
-      <mesh name="bumper_front_1_7" castShadow receiveShadow geometry={nodes.bumper_front_1_7.geometry} material={materials.exhaust} />
-      <mesh name="bumper_front_1_8" castShadow receiveShadow geometry={nodes.bumper_front_1_8.geometry} material={materials['bonnet1.1']} />
-      <mesh name="bumper_front_1_9" castShadow receiveShadow geometry={nodes.bumper_front_1_9.geometry} material={materials['tail_lights0.4']} />
-      <mesh name="bumper_front_1_10" castShadow receiveShadow geometry={nodes.bumper_front_1_10.geometry} material={materials['door_lf.2']} />
-      <mesh name="bumper_rear_1_1" castShadow receiveShadow geometry={nodes.bumper_rear_1_1.geometry} material={materials.primary} />
-      <mesh name="bumper_rear_1_2" castShadow receiveShadow geometry={nodes.bumper_rear_1_2.geometry} material={materials['head_lights2.4']} />
-      <mesh name="bumper_rear_1_3" castShadow receiveShadow geometry={nodes.bumper_rear_1_3.geometry} material={materials['door_lf.6']} />
-      <mesh name="bumper_rear_1_4" castShadow receiveShadow geometry={nodes.bumper_rear_1_4.geometry} material={materials['door_lf.0']} />
-      <mesh name="bumper_rear_1_5" castShadow receiveShadow geometry={nodes.bumper_rear_1_5.geometry} material={materials['door_lf.2']} />
-      <mesh name="bumper_rear_1_6" castShadow receiveShadow geometry={nodes.bumper_rear_1_6.geometry} material={materials['bumper_r0.7']} />
-      <mesh name="bumper_rear_1_7" castShadow receiveShadow geometry={nodes.bumper_rear_1_7.geometry} material={materials['bumper_r0.8']} />
-      <mesh name="bumper_rear_1_8" castShadow receiveShadow geometry={nodes.bumper_rear_1_8.geometry} material={materials['bumper_r0.9']} />
-      <mesh name="bumper_rear_1_9" castShadow receiveShadow geometry={nodes.bumper_rear_1_9.geometry} material={materials['left front light']} />
+      <group visible={stylingStore.nowDisplayedBodypartsIds.bumper_front_id === 1} name="bumper_front_1" position={[0,0,0]}>
+        <mesh name="bumper_front_1_1" castShadow receiveShadow geometry={nodes.bumper_front_1_1.geometry} material={materials.glass} />
+        <mesh name="bumper_front_1_2" castShadow receiveShadow geometry={nodes.bumper_front_1_2.geometry} material={materials.primary} />
+        <mesh name="bumper_front_1_3" castShadow receiveShadow geometry={nodes.bumper_front_1_3.geometry} material={materials['chassis_vlo.0']} />
+        <mesh name="bumper_front_1_4" castShadow receiveShadow geometry={nodes.bumper_front_1_4.geometry} material={materials['door_lf.0']} />
+        <mesh name="bumper_front_1_5" castShadow receiveShadow geometry={nodes.bumper_front_1_5.geometry} material={materials['head_lights2.4']} />
+        <mesh name="bumper_front_1_6" castShadow receiveShadow geometry={nodes.bumper_front_1_6.geometry} material={materials['tail_lights0.3']} />
+        <mesh name="bumper_front_1_7" castShadow receiveShadow geometry={nodes.bumper_front_1_7.geometry} material={materials.exhaust} />
+        <mesh name="bumper_front_1_8" castShadow receiveShadow geometry={nodes.bumper_front_1_8.geometry} material={materials['bonnet1.1']} />
+        <mesh name="bumper_front_1_9" castShadow receiveShadow geometry={nodes.bumper_front_1_9.geometry} material={materials['tail_lights0.4']} />
+        <mesh name="bumper_front_1_10" castShadow receiveShadow geometry={nodes.bumper_front_1_10.geometry} material={materials['door_lf.2']} />
+      </group>
       <mesh name="interior_1" castShadow receiveShadow geometry={nodes.interior_1.geometry} material={materials['door_lf.6']} />
       <mesh name="interior_2" castShadow receiveShadow geometry={nodes.interior_2.geometry} material={materials['door_lf.0']} />
       <mesh name="interior_3" castShadow receiveShadow geometry={nodes.interior_3.geometry} material={materials['door_lf.5']} />
@@ -1114,6 +1209,8 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
       <mesh name="seats_8" castShadow receiveShadow geometry={nodes.seats_8.geometry} material={materials.exhaust} />
       <mesh name="gauges_1" castShadow receiveShadow geometry={nodes.gauges_1.geometry} material={materials['gauges.0']} />
       <mesh name="gauges_2" castShadow receiveShadow geometry={nodes.gauges_2.geometry} material={materials['steeringwheel_ok.3']} />
+      
+      {/* dummies */}
       {/* <mesh name="dummy_bonnet" castShadow receiveShadow geometry={nodes.dummy_bonnet.geometry} material={nodes.dummy_bonnet.material} position={[0, 0.36, -0.694]} scale={0.1} />
       <mesh name="dummy_door_front_right" castShadow receiveShadow geometry={nodes.dummy_door_front_right.geometry} material={nodes.dummy_door_front_right.material} position={[0.911, 0.072, -0.594]} scale={0.1} />
       <mesh name="dummy_door_front_left" castShadow receiveShadow geometry={nodes.dummy_door_front_left.geometry} material={nodes.dummy_door_front_left.material} position={[-0.911, 0.072, -0.594]} scale={0.1} />
@@ -1135,3 +1232,5 @@ export default function Model(props: JSX.IntrinsicElements['group']) {
 }
 
 // useGLTF.preload('3d/gltf/cars/MazdaRX7/mazda_rx7.gltf')
+
+export default observer(Model)

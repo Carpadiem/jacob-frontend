@@ -8,6 +8,7 @@ import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useGLTF, PerspectiveCamera } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
+import { useThree } from '@react-three/fiber'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -20,13 +21,20 @@ type GLTFResult = GLTF & {
 
 export default function Model(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF('3d/gltf/scenes/StylingGarage/StylingGarage-transformed.glb') as GLTFResult
+
+  // three
+  useThree((state)=>{
+    state.camera.lookAt(new THREE.Vector3(1.5,1,0))
+  })
+
+  // return
   return (
     <group {...props} dispose={null}>
-      <pointLight castShadow shadow-bias={-0.0002} shadow-radius={2} shadow-mapSize={1024} name='Light' intensity={60} decay={2} position={[4.076, 5.904, -1.005]} rotation={[-1.839, 0.602, 1.932]} />
-      <pointLight castShadow shadow-bias={-0.0002} shadow-radius={2} shadow-mapSize={1024} name='Light001' intensity={60} decay={2} position={[-8.732, 2.484, -1.005]} rotation={[-1.839, 0.602, 1.932]} />
+      <pointLight castShadow shadow-bias={-0.0002} shadow-radius={2} shadow-mapSize={1024} name='Light' intensity={60} decay={2.2} position={[4.076, 5.904, -1.005]} />
+      {/* <pointLight castShadow shadow-bias={-0.0002} shadow-radius={2} shadow-mapSize={1024} name='Light001' intensity={60} decay={2} position={[-8.732, 2.484, -1.005]} rotation={[-1.839, 0.602, 1.932]} /> */}
 
-      <PerspectiveCamera name='Camera' makeDefault far={1000} near={0.01} fov={31.417} position={[0, 1, 7]} />
-      <mesh name='Plane' castShadow receiveShadow geometry={nodes.Plane.geometry} material={materials.floor} />
+      <PerspectiveCamera name='Camera' makeDefault far={1000} near={0.1} fov={30} position={[-3, 1.3, -6]} />
+      <mesh name='Plane' castShadow receiveShadow geometry={nodes.Plane.geometry} material={materials.floor} position={[0, .205, 0]} />
     </group>
   )
 }

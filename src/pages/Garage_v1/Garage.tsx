@@ -21,9 +21,9 @@ import { IPlayerCar } from '@models/cars/IPlayerCar'
 import IDemonstrativeBodyparts from '@models/styling/IDemonstrativeBodyparts'
 // mobx, stores
 import { observer } from 'mobx-react-lite'
-import storeStyling from '@stores/storeStyling'
-import storeGarage from '@stores/storeGarage'
-import storePlayer from '@stores/storePlayer'
+import storeStyling from '@stores/legacy/storeStyling'
+import storeGarage from '@stores/legacy/storeGarage'
+import storePlayer from '@stores/legacy/storePlayer'
 // three, r3f
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'

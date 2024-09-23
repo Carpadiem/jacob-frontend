@@ -1,0 +1,58 @@
+.wrapper {
+    position: absolute;
+    background-color: rgba(0,0,0,.3);
+    backdrop-filter: blur(20px);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.frame {
+    background-color: rgba(0, 0, 0,.5);
+    backdrop-filter: blur(20px);
+
+    border-radius: 4px;
+    padding: 30px;
+    max-width: 500px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: flex-end;
+}
+
+.head {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.foot {
+    display: flex;
+    gap: 10px;
+}
+
+h1.title {
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+h2.subtitle {
+    color: rgb(178, 178, 178);
+    font-size: 12px;
+    font-weight: 400;
+}
+
+p.text {
+    /* margin-top: 20px; */
+    color: rgb(180, 180, 180);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 150%;
+}

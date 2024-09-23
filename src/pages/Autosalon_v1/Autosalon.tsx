@@ -19,8 +19,8 @@ import { ICar } from '@models/cars/ICar'
 import { PurchaseCarResponse } from '@api/ResponseModels/PurchaseCarResponse'
 // mobx, stores
 import { observer } from 'mobx-react-lite'
-import storePlayer from '@stores/storePlayer'
-import storeStyling from '@stores/storeStyling'
+import storePlayer from '@stores/legacy/storePlayer'
+import storeStyling from '@stores/legacy/storeStyling'
 // three, r3f
 import * as THREE from 'three'
 import { Canvas } from '@react-three/fiber'

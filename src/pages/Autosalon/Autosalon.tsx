@@ -10,6 +10,7 @@ import PNGLoading from './images/loading.png'
 import { CarItem } from './components/CarItem'
 import { BrandItem } from './components/BrandItem'
 import { SearchItem } from './components/SearchItem'
+import { ModalWindow } from '@components/ModalWindow'
 // misc
 import wuzzy from 'wuzzy'
 import { useDebounce } from 'use-debounce'
@@ -35,6 +36,13 @@ import Porsche911TurboS from '@3d/cars/Porsche911TurboS'
 import ToyotaSupraMK4 from '@3d/cars/ToyotaSupraMK4'
 import VolkswagenGolf from '@3d/cars/VolkswagenGolf'
 import { degToRad } from 'three/src/math/MathUtils'
+// network
+import axios from 'axios'
+import { url } from 'inspector'
+import { ModalButton } from '@components/ModalButton'
+// models
+import IVehicle from '@models/IVehicle'
+import useGameVehicles from 'src/hooks/useGameVehicles'
 
 
 const all_brand_items = [
@@ -49,103 +57,74 @@ const all_brand_items = [
   'Volkswagen',
 ]
 
-interface ICar {
-  brand: string
-  model: string
-  price: number
-  is_selected: boolean
-}
-
-const game_cars: ICar[] = [
-  {
-    brand: 'BMW',
-    model: 'M5 F90',
-    price: 1_350_000,
-    is_selected: true,
-  },
-  {
-    brand: 'Dodge',
-    model: 'Charger',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Dodge',
-    model: 'Demon',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Mazda',
-    model: 'RX-7',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Mercedes-Benz',
-    model: 'AMG GT',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Mitsubishi',
-    model: 'Evo 9',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Nissan',
-    model: 'Skyline GT-R R34',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Porsche',
-    model: '911 Turbo S',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Toyota',
-    model: 'Supra MK4',
-    price: 1_350_000,
-    is_selected: false,
-  },
-  {
-    brand: 'Volkswagen',
-    model: 'Golf',
-    price: 1_350_000,
-    is_selected: false,
-  },
-]
 
 function Autosalon() {
   // vars
-  //
+
+  // hooks
+  const game_vehicles = useGameVehicles()
+
+  // refs
+  const ref_list_items = React.useRef<HTMLDivElement>(null!)
+  const ref_list_brands_container = React.useRef<HTMLDivElement>(null!)
 
   // states
-  const [selectedBrand, setSelectedBrand] = React.useState<string>('BMW') // Nissan
+  const [selectedBrand, setSelectedBrand] = React.useState<string>('BMW')
   const [isBrandsOpened, setIsBrandsOpened] = React.useState<boolean>(false)
   const [searchText, setSearchText] = React.useState<string>('')
   const [searchTextDebounced] = useDebounce(searchText, 1000)
-  const [searchMatchCars, setSearchMatchCars] = React.useState<any[] | undefined>([])
-  const [filterListCars, setFilterListCars] = React.useState<ICar[]>(game_cars.filter(car=>car.brand==='BMW')) // cars by brand 'BMW'
-  const [displayedCar, setDisplayedCar] = React.useState<ICar>(game_cars[0])
+  const [searchMatchVehicles, setSearchMatchVehicles] = React.useState<any[] | undefined>([])
+  const [filterListVehicles, setFilterListVehicles] = React.useState<IVehicle[]>(null!) // vehicles by brand 'BMW'
+  const [displayedVehicle, setDisplayedVehicle] = React.useState<IVehicle>(null!)
+  // states of modals
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = React.useState<boolean>(false)
+  const [isNotEnoughMoneyModalOpen, setIsNotEnoughMoneyModalOpen] = React.useState<boolean>(false)
+  const [isNotEnoughGarageSlotsModalOpen, setIsNotEnoughGarageSlotsModalOpen] = React.useState<boolean>(false)
+  const [isSuccessPurchaseModalOpen, setIsSuccessPurchaseModalOpen] = React.useState<boolean>(false)
+
+  // effects
+  React.useEffect(()=>{
+    setFilterListVehicles(game_vehicles.filter((vehicle, index)=>{
+      if (index === 0) vehicle.is_selected = true
+      return vehicle.brand.toLowerCase()==='bmw'
+    }))
+  }, [game_vehicles])
+
+  React.useEffect(()=>{
+    // set Displayed vehicle
+    const newDisplayedVehicle = filterListVehicles?.filter(vehicle=>vehicle.is_selected)[0]
+    setDisplayedVehicle(newDisplayedVehicle)
+  }, [filterListVehicles])
+
+  React.useEffect(()=>{
+    if (isBrandsOpened) ref_list_brands_container.current.style.height = '250px'
+    else ref_list_brands_container.current.style.height = '60px'
+  }, [isBrandsOpened])
+
+  // effect: debounce search
+  React.useEffect(()=>{
+    const match_vehicles = game_vehicles.filter(vehicle=>wuzzy.levenshtein(searchTextDebounced.toLowerCase(), vehicle.brand.toLowerCase() + ' ' + vehicle.model.toLowerCase()) >= .235)
+    if (match_vehicles.length !== 0) setSearchMatchVehicles(match_vehicles)
+    else setSearchMatchVehicles(undefined)
+  }, [searchTextDebounced])
+
+  React.useEffect(()=>{
+    setSearchMatchVehicles([])
+  }, [searchText])
 
   // functions
   //
 
   // handlers
-  const item_click_handler = (clickedCar: ICar) => {
+  const item_click_handler = (clickedVehicle: IVehicle) => {
     // reset 'is_selected' prop to 'false' for all filtered items AND...
     // select item by clickedCarItem
-    const newFilterListCars = filterListCars.map(car=>{
-      if (car === clickedCar) car.is_selected = true
-      else car.is_selected = false
-      return car
+    const newFilterListVehicles = filterListVehicles.map(vehicle=>{
+      if (vehicle === clickedVehicle) vehicle.is_selected = true
+      else vehicle.is_selected = false
+      return vehicle
     })
-
-    setFilterListCars(newFilterListCars)
+    setFilterListVehicles(newFilterListVehicles)
   }
 
   const brands_opened_handler = () => {
@@ -155,63 +134,56 @@ function Autosalon() {
   const brand_item_click_handler = (clickedBrand: string) => {
     setSelectedBrand(clickedBrand)
     setIsBrandsOpened(false)
-    
     // filter cars (items) in list + select first item
-    const filterListCars: ICar[] = game_cars.filter(item=>item.brand === clickedBrand)
-    filterListCars[0].is_selected = true
-    setFilterListCars(filterListCars)
+    const filterListVehicles: IVehicle[] = game_vehicles.filter(item=>item.brand === clickedBrand)
+    filterListVehicles[0].is_selected = true
+    setFilterListVehicles(filterListVehicles)
   }
 
   const search_input_change_handler = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.currentTarget.value)
   }
 
-  const search_item_click_handler = (car_brand: string, car_model: string) => {
-    
+  const search_item_click_handler = (vehicle_brand: string, vehicle_model: string) => {
     // hide search window
     setSearchText('')
     // set brand state
-    setSelectedBrand(car_brand)
+    setSelectedBrand(vehicle_brand)
     setIsBrandsOpened(false)
     // display car items by brand + select for found item
-    let carsByBrand: ICar[] = game_cars.filter(item=>item.brand === car_brand)
-    carsByBrand = carsByBrand.map(car=>{
-      if (car.model === car_model) car.is_selected = true
-      else car.is_selected = false
-      return car
+    let vehiclesByBrand: IVehicle[] = game_vehicles.filter(item=>item.brand === vehicle_brand)
+    vehiclesByBrand = vehiclesByBrand.map(vehicle=>{
+      if (vehicle.model === vehicle_model) vehicle.is_selected = true
+      else vehicle.is_selected = false
+      return vehicle
     })
-    setFilterListCars(carsByBrand)
+    setFilterListVehicles(vehiclesByBrand)
   }
 
-  // refs
-  const ref_list_items = React.useRef<HTMLDivElement>(null!)
-  const ref_list_brands_container = React.useRef<HTMLDivElement>(null!)
+  const purchase_handler = async () => {
 
-  // effects
+    // выключить модальное окно подтверждения
+    setIsConfirmationModalOpen(false)
 
-  React.useEffect(()=>{
-    
-    // set Displayed Car
-    const newDisplayedCar = filterListCars.filter(car=>car.is_selected)[0]
-    setDisplayedCar(newDisplayedCar)
-
-  }, [filterListCars])
-
-  React.useEffect(()=>{
-    if (isBrandsOpened) ref_list_brands_container.current.style.height = '250px'
-    else ref_list_brands_container.current.style.height = '60px'
-  }, [isBrandsOpened])
-
-  // effect: debounce search
-  React.useEffect(()=>{
-    const match_cars = game_cars.filter(car=>wuzzy.levenshtein(searchTextDebounced.toLowerCase(), car.brand.toLowerCase() + ' ' + car.model.toLowerCase()) >= .235)
-    if (match_cars.length !== 0) setSearchMatchCars(match_cars)
-    else setSearchMatchCars(undefined)
-  }, [searchTextDebounced])
-
-  React.useEffect(()=>{
-    setSearchMatchCars([])
-  }, [searchText])
+    // запрос на бекенд - приобретение нового авто
+    const url = 'http://localhost:3001/api/vehicles/purchaseVehicle'
+    const data = {
+      user_id: 230990098,
+      vehicle_brand: displayedVehicle.brand,
+      vehicle_model: displayedVehicle.model,
+    }
+    const response = (await axios.post(url, data)).data
+    if (response.status === 'ok') {
+      setIsSuccessPurchaseModalOpen(true)
+    } else if (response.status === 'error') {
+      if (response.error == 'NotEnoughPlayerMoney') {
+        setIsNotEnoughMoneyModalOpen(true)
+      }
+      else if (response.error === 'NotEnoughGarageSlots') {
+        setIsNotEnoughGarageSlotsModalOpen(true)
+      }
+    }
+  }
 
   return (
     <>
@@ -231,19 +203,82 @@ function Autosalon() {
           <EffectsExotic />
           <SceneAutosalon />
 
-          { displayedCar.brand.toLowerCase() === 'bmw' && displayedCar.model.toLowerCase() === 'm5 f90' && <BMWM5F90 /> }
-          { displayedCar.brand.toLowerCase() === 'dodge' && displayedCar.model.toLowerCase() === 'charger' && <DodgeCharger /> }
-          { displayedCar.brand.toLowerCase() === 'dodge' && displayedCar.model.toLowerCase() === 'demon' && <DodgeDemon /> }
-          { displayedCar.brand.toLowerCase() === 'mazda' && displayedCar.model.toLowerCase() === 'rx-7' && <MazdaRX7 /> }
-          { displayedCar.brand.toLowerCase() === 'mercedes-benz' && displayedCar.model.toLowerCase() === 'amg gt' && <MercedesBenzAMGGT /> }
-          { displayedCar.brand.toLowerCase() === 'mitsubishi' && displayedCar.model.toLowerCase() === 'evo 9' && <MitsubishiEvo9 /> }
-          { displayedCar.brand.toLowerCase() === 'nissan' && displayedCar.model.toLowerCase() === 'skyline gt-r r34' && <NissanSkylineGTRR34 /> }
-          { displayedCar.brand.toLowerCase() === 'porsche' && displayedCar.model.toLowerCase() === '911 turbo s' && <Porsche911TurboS /> }
-          { displayedCar.brand.toLowerCase() === 'toyota' && displayedCar.model.toLowerCase() === 'supra mk4' && <ToyotaSupraMK4 /> }
-          { displayedCar.brand.toLowerCase() === 'volkswagen' && displayedCar.model.toLowerCase() === 'golf' && <VolkswagenGolf /> }
-          
-
+          { displayedVehicle?.brand.toLowerCase() === 'bmw' && displayedVehicle?.model.toLowerCase() === 'm5 f90' && <BMWM5F90 /> }
+          { displayedVehicle?.brand.toLowerCase() === 'dodge' && displayedVehicle?.model.toLowerCase() === 'charger' && <DodgeCharger /> }
+          { displayedVehicle?.brand.toLowerCase() === 'dodge' && displayedVehicle?.model.toLowerCase() === 'demon' && <DodgeDemon /> }
+          { displayedVehicle?.brand.toLowerCase() === 'mazda' && displayedVehicle?.model.toLowerCase() === 'rx-7' && <MazdaRX7 /> }
+          { displayedVehicle?.brand.toLowerCase() === 'mercedes-benz' && displayedVehicle?.model.toLowerCase() === 'amg gt' && <MercedesBenzAMGGT /> }
+          { displayedVehicle?.brand.toLowerCase() === 'mitsubishi' && displayedVehicle?.model.toLowerCase() === 'evo 9' && <MitsubishiEvo9 /> }
+          { displayedVehicle?.brand.toLowerCase() === 'nissan' && displayedVehicle?.model.toLowerCase() === 'skyline gt-r r34' && <NissanSkylineGTRR34 /> }
+          { displayedVehicle?.brand.toLowerCase() === 'porsche' && displayedVehicle?.model.toLowerCase() === '911 turbo s' && <Porsche911TurboS /> }
+          { displayedVehicle?.brand.toLowerCase() === 'toyota' && displayedVehicle?.model.toLowerCase() === 'supra mk4' && <ToyotaSupraMK4 /> }
+          { displayedVehicle?.brand.toLowerCase() === 'volkswagen' && displayedVehicle?.model.toLowerCase() === 'golf' && <VolkswagenGolf /> }
         </Canvas>
+
+        {/* Modals */}
+        { isConfirmationModalOpen &&
+        <ModalWindow
+          title='Подтвердите действие'
+          subtitle=''
+          text='Вы покупаете новый автомобиль за некоторое количество денег. Подтвердите пожалуйста свои действия!'
+          buttons={[
+            {
+              text: 'Отмена',
+              tcolor: 'white',
+              bcolor: 'rgba(0,0,0,.45)',
+              onClick: ()=>{setIsConfirmationModalOpen(false)}
+            },
+            {
+              text: 'Приобрести',
+              tcolor: 'white',
+              bcolor: '#624CFE',
+              onClick: purchase_handler
+            },
+          ]}
+        />}
+        { isNotEnoughMoneyModalOpen &&
+        <ModalWindow
+          title='Недостаточно средств'
+          subtitle=''
+          text='У вас недостаточно наличных средств.'
+          buttons={[
+            {
+              text: 'Ок',
+              tcolor: 'white',
+              bcolor: 'rgba(0,0,0,.45)',
+              onClick: ()=>{setIsNotEnoughMoneyModalOpen(false)}
+            },
+          ]}
+        />}
+        { isNotEnoughGarageSlotsModalOpen &&
+        <ModalWindow
+          title='Слоты заняты'
+          subtitle=''
+          text='В гараже не осталось свободных слотов. Освободите место или приобретите новые слоты.'
+          buttons={[
+            {
+              text: 'Понятно',
+              tcolor: 'white',
+              bcolor: 'rgba(0,0,0,.45)',
+              onClick: ()=>{setIsNotEnoughGarageSlotsModalOpen(false)}
+            },
+          ]}
+        />}
+        { isSuccessPurchaseModalOpen &&
+        <ModalWindow
+          title='Поздравляем!'
+          subtitle=''
+          text='Вы приобрели новую машину за баксы.'
+          buttons={[
+            {
+              text: 'Супер',
+              tcolor: 'white',
+              bcolor: '#624CFE',
+              onClick: ()=>{setIsSuccessPurchaseModalOpen(false)}
+            },
+          ]}
+        />}
+
         <div className={styles.list_frame}>
           <div className={styles.list_head}>
             <div className={styles.logo_container}>
@@ -270,11 +305,11 @@ function Autosalon() {
                 } as React.CSSProperties}
               >
                 {
-                  searchMatchCars?.length > 0
+                  searchMatchVehicles?.length > 0
                   ?
-                  searchMatchCars?.map(car=><SearchItem brand={car.brand} model={car.model} onClick={()=>search_item_click_handler(car.brand, car.model)}/>)
+                  searchMatchVehicles?.map(vehicle=><SearchItem brand={vehicle.brand} model={vehicle.model} onClick={()=>search_item_click_handler(vehicle.brand, vehicle.model)}/>)
                   :
-                  searchMatchCars === undefined
+                  searchMatchVehicles === undefined
                   ?
                   <p className={styles.search_nothing_text}>Ничего не найдено</p>
                   :
@@ -290,20 +325,21 @@ function Autosalon() {
               <ArrowDown fill='white' />
             </div>
             <div className={styles.brand_items_container}>
-              { all_brand_items.map((brand)=> <BrandItem brand={brand} onClick={()=>{brand_item_click_handler(brand)}} /> ) }
+              { all_brand_items.map((brand, index)=> <BrandItem key={index} brand={brand} onClick={()=>{brand_item_click_handler(brand)}} /> ) }
             </div>
           </div>
           
           <div className={styles.list_items} ref={ref_list_items}>
             {
-              filterListCars.map(car=>{
-                if (car.brand === selectedBrand)
+              filterListVehicles?.map((vehicle, index)=>{
+                if (vehicle.brand === selectedBrand)
                   return <CarItem
-                            brand={car.brand}
-                            model={car.model}
-                            price={car.price}
-                            isSelected={car.is_selected}
-                            onClick={()=>item_click_handler(car)}
+                            key={index}
+                            brand={vehicle.brand}
+                            model={vehicle.model}
+                            price={vehicle.price}
+                            isSelected={vehicle.is_selected}
+                            onClick={()=>item_click_handler(vehicle)}
                           />
               })
             }
@@ -311,10 +347,10 @@ function Autosalon() {
         </div>
         <div className={styles.purchase_frame}>
           <div className={styles.selected_car_price}>
-            <p className={styles.selected_car_price_number}>{filterListCars.filter(item=>item.is_selected)[0].price.toLocaleString('en-US')}</p>
+            <p className={styles.selected_car_price_number}>{filterListVehicles && filterListVehicles.filter(item=>item.is_selected)[0]?.price.toLocaleString('en-US')}</p>
             <p className={styles.selected_car_price_currency}>$</p>
           </div>
-          <button className={styles.btn_purchase}>Купить</button>
+          <button className={styles.btn_purchase} onClick={()=>setIsConfirmationModalOpen(true)}>Купить</button>
         </div>
       </div>
     </>

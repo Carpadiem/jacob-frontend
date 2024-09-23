@@ -11,9 +11,9 @@ import IDeclaredBodypart from '@models/styling/IDeclaredBodypartData'
 import IDemonstrativeBodyparts from '@models/styling/IDemonstrativeBodyparts'
 // mobx, stores
 import { observer } from 'mobx-react-lite'
-import storeStyling from '@stores/storeStyling'
-import storePlayer from '@stores/storePlayer'
-import storeGarage from '@stores/storeGarage'
+import storeStyling from '@stores/legacy/storeStyling'
+import storePlayer from '@stores/legacy/storePlayer'
+import storeGarage from '@stores/legacy/storeGarage'
 
 interface TabProps {
   text: string
