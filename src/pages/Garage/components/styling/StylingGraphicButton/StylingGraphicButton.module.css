@@ -1,4 +1,6 @@
-.styling_nav_button {
+.btn {
+    display: flex;
+    justify-content: space-between;
     min-height: 50px;
     background-color: rgba(0,0,0,.5);
     display: flex;
@@ -6,28 +8,29 @@
     justify-content: space-between;
     padding: 0 20px;
     cursor: pointer;
-    transition: all .3s ease;
-
     backdrop-filter: blur(20px);
+    transition: all .3s ease;
 }
-.styling_nav_button:hover {
-    /* padding-left: 30px; */
-    /* transform: translateX(5px); */
+.btn:hover {
     padding: 0 25px;
     background-color: rgba(0,0,0,.6);
 }
-
-.styling_nav_button p {
+.text {
     color: white;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-p.text {
-    color: white;
-}
-p.subtext {
-    color: #c7c7c7;
     font-size: 12px;
     font-weight: 500;
+}
+.price_container {
+    display: flex;
+    gap: 5px;
+}
+.price_number {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+.price_currency {
+    font-size: 12px;
+    font-weight: 600;
+    color: #33FC76;
 }

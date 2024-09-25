@@ -65,39 +65,50 @@ const CameraMovementExotic = () => {
     if (stylingStore.menuLevel === 'styling' || stylingStore.menuLevel === 'styling.bodyparts') {
       posVec = new THREE.Vector3(-3,1.2,-6)
       lookVec = new THREE.Vector3(1.5,1,0)
-    } else if (stylingStore.menuLevel === 'styling.bodyparts.bumpers_front') {
-      posVec = new THREE.Vector3(-2,1,-6)
-      lookVec = new THREE.Vector3(1.5,1,0)
-    } else if (stylingStore.menuLevel === 'styling.bodyparts.bumpers_rear') {
+    } else if (stylingStore.menuLevel === 'styling.bodyparts.bumper_front') {
+      // posVec = new THREE.Vector3(-2,1,-6)
+      // lookVec = new THREE.Vector3(1.5,1,0)
+      posVec = new THREE.Vector3(1,1,-5.5)
+      lookVec = new THREE.Vector3(.2,.7,0)
+    } else if (stylingStore.menuLevel === 'styling.bodyparts.bumper_rear') {
       posVec = new THREE.Vector3(-2,1,6)
       lookVec = new THREE.Vector3(0,1,0)
     } else if (stylingStore.menuLevel === 'styling.bodyparts.skirts') {
       posVec = new THREE.Vector3(-7,1.5,-.7)
       lookVec = new THREE.Vector3(0,1,-.7)
-    } else if (stylingStore.menuLevel === 'styling.bodyparts.spoilers') {
+    } else if (stylingStore.menuLevel === 'styling.bodyparts.spoiler') {
       posVec = new THREE.Vector3(-1.1,1.7,7)
       lookVec = new THREE.Vector3(0,1,-.7)
-    } else if (stylingStore.menuLevel === 'styling.bodyparts.bonnets') {
+    } else if (stylingStore.menuLevel === 'styling.bodyparts.bonnet') {
       posVec = new THREE.Vector3(2,1.7,-6)
       lookVec = new THREE.Vector3(0.4,.75,0)
     } else if (stylingStore.menuLevel === 'styling.bodyparts.mirrors') {
-      posVec = new THREE.Vector3(-7,1.5,-.7)
-      lookVec = new THREE.Vector3(0,1,-.7)
+      posVec = new THREE.Vector3(-2,1.5,-3)
+      lookVec = new THREE.Vector3(-.7,1.2,0)
     } else if (stylingStore.menuLevel === 'styling.bodyparts.head_lights') {
-      posVec = new THREE.Vector3(-7,1.5,-.7)
-      lookVec = new THREE.Vector3(0,1,-.7)
+      posVec = new THREE.Vector3(0,1.7,-6)
+      lookVec = new THREE.Vector3(0.4,.75,0)
     } else if (stylingStore.menuLevel === 'styling.bodyparts.tail_lights') {
-      posVec = new THREE.Vector3(-7,1.5,-.7)
-      lookVec = new THREE.Vector3(0,1,-.7)
+      posVec = new THREE.Vector3(0,1.7,6)
+      lookVec = new THREE.Vector3(-.8,.75,0)
     } else if (stylingStore.menuLevel === 'styling.bodyparts.wings_front') {
-      posVec = new THREE.Vector3(-7,1.5,-.7)
-      lookVec = new THREE.Vector3(0,1,-.7)
+      posVec = new THREE.Vector3(-4,1.2,2)
+      lookVec = new THREE.Vector3(0,1,-2)
     } else if (stylingStore.menuLevel === 'styling.bodyparts.wings_rear') {
-      posVec = new THREE.Vector3(-7,1.5,-.7)
-      lookVec = new THREE.Vector3(0,1,-.7)
-    } else if (stylingStore.menuLevel === 'styling.bodyparts.exhausts') {
-      posVec = new THREE.Vector3(-7,1.5,-.7)
-      lookVec = new THREE.Vector3(0,1,-.7)
+      posVec = new THREE.Vector3(-5,1.2,2)
+      lookVec = new THREE.Vector3(4,1,0)
+    } else if (stylingStore.menuLevel === 'styling.bodyparts.exhaust') {
+      posVec = new THREE.Vector3(-1.3,1,5.5)
+      lookVec = new THREE.Vector3(.3,.7,0)
+    } else if (stylingStore.menuLevel === 'styling.graphics.paint_coating') {
+      posVec = new THREE.Vector3(-3,1.7,-6)
+      lookVec = new THREE.Vector3(1.5,.7,0)
+    } else if (stylingStore.menuLevel === 'styling.graphics.paint_color') {
+      posVec = new THREE.Vector3(-3,1.7,-6)
+      lookVec = new THREE.Vector3(1.5,.7,0)
+    } else {
+      posVec = new THREE.Vector3(-3,1.2,-6)
+      lookVec = new THREE.Vector3(1.5,1,0)
     }
 
     state.camera.lookAt(lookVec)

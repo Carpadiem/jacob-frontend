@@ -10,9 +10,17 @@ import SvgBrush from './images/brush.svg?react'
 import SvgMusic from './images/music.svg?react'
 import SvgWheel from './images/wheel.svg?react'
 // components
+
+import { ModalWindow } from '@components/ModalWindow'
+import { ModalButton } from '@components/ModalButton'
+
 import { CarItem } from './components/CarItem'
-import { StylingNavButton } from './components/StylingNavButton'
-import { BodypartButton } from './components/BodypartButton'
+import { StylingNavList } from './components/styling/StylingNavList'
+import { StylingNavItem } from './components/styling/StylingNavItem'
+import { StylingBodypartButton } from './components/styling/StylingBodypartButton'
+import { StylingGraphicButton } from './components/styling/StylingGraphicButton'
+import { StylingPurchasing } from './components/styling/StylingPurchasing'
+
 import { Canvas } from '@react-three/fiber'
 import { Perf } from 'r3f-perf'
 import { EnvExotic } from '@exotic/EnvExotic'
@@ -44,10 +52,34 @@ import stylingStore from '@stores/styling.store'
 import { shop_bodyparts as shop_bodyparts_mazda_rx7 } from '@3d/cars/MazdaRX7'
 import axios from 'axios'
 import IBodypart from '@models/IBodypart'
+import IGraphic from '@models/IGraphic'
+
+
 
 const Garage = () => {
 
     // vars
+
+    // functions
+    const translateBodypartType = (word: string) => {
+        if (word === 'bumper_front') return 'Передний бампер'
+        else if (word === 'bumper_rear') return 'Задний бампер'
+        else if (word === 'skirts') return 'Боковые юбки'
+        else if (word === 'spoiler') return 'Спойлер'
+        else if (word === 'bonnet') return 'Капот'
+        else if (word === 'mirrors') return 'Боковые зеркала'
+        else if (word === 'head_lights') return 'Передние фары'
+        else if (word === 'tail_lights') return 'Задние огни'
+        else if (word === 'wings_front') return 'Передние крылья'
+        else if (word === 'wings_rear') return 'Задние крылья'
+        else if (word === 'exhaust') return 'Выхлопная труба'
+        return ''
+    }
+    const translateGraphicType = (word: string) => {
+        if (word === 'paint_color') return 'Цвет кузова'
+        else if (word === 'paint_coating') return 'Покрытие краски'
+        return ''
+    }
 
     // hooks
     const playerVehicles = usePlayerVehicles(230990098)
@@ -56,7 +88,11 @@ const Garage = () => {
     const [displayedVehicle, setDisplayedVehicle] = React.useState<IVehicle>(null!)
     const [isVehiclesPanelOpen, setIsVehiclesPanelOpen] = React.useState<boolean>(false)
     const [isStylingOpen, setIsStylingOpen] = React.useState<boolean>(false)
-    // const [stylingMenuLevel, setStylingMenuLevel] = React.useState<string>('styling')
+    const [selectedBodypartData, setSelectedBodypartData] = React.useState<IBodypart>(null!)
+    // modals states
+    const [isShowedModalWindow_ConfirmPurchase, setIsShowedModalWindow_ConfirmPurchase] = React.useState(false)
+    const [isShowedModalWindow_NotEnoughMoney, setIsShowedModalWindow_NotEnoughMoney] = React.useState(false)
+    const [isShowedModalWindow_SuccessPurchase, setIsShowedModalWindow_SuccessPurchase] = React.useState(false)
 
     // effects
     React.useEffect(()=>{
@@ -64,17 +100,28 @@ const Garage = () => {
     }, [playerVehicles])
 
     React.useEffect(()=>{
+        // BODYPARTS
         // set just now displaying body parts
         stylingStore.setNowDisplayedBodypartsIds(displayedVehicle?.bodyparts_ids)
         
         // set shop data of bodyparts for some vehicle BY NAME: `mazda_rx7` | `bmw...` | `mercedes...` | etc.
         const vehicle_name = `${displayedVehicle?.brand}_${displayedVehicle?.model}`
-        if (vehicle_name.toLowerCase() === 'mazda_rx-7') {
+        if (vehicle_name.toLowerCase() === 'mazda_rx-7')
             stylingStore.setShopBodypartsForVehicle(shop_bodyparts_mazda_rx7)
-        } else {
+        else
             stylingStore.setShopBodypartsForVehicle([]) // clear
-        }
     }, [displayedVehicle])
+
+    React.useEffect(()=>{
+        const level = stylingStore.menuLevel
+        const split_level = level.split('.')
+
+        if (split_level.length >= 3) {
+            // `if` is true IF > example: styling.bodyparts.bumper_front
+            const selectedBodypart = stylingStore.shopBodypartsForVehicle.filter(part=>part.type===split_level[2])[0]
+            setSelectedBodypartData(selectedBodypart)
+        }
+    }, [stylingStore.menuLevel])
 
     // handlers
     const vehiclesPanelOpenHandler = () => {
@@ -84,7 +131,7 @@ const Garage = () => {
         setDisplayedVehicle(vehicle)
         setIsVehiclesPanelOpen(false)
     }
-    const bodypartButtonClickHandler = (bodypart_data: IBodypart ) => {
+    const stylingBodypartButtonClickHandler = (bodypart_data: IBodypart) => {
         if (bodypart_data.type === 'bumper_front') stylingStore.setBumperFrontId(bodypart_data.id)
         else if (bodypart_data.type === 'bumper_rear') stylingStore.setBumperRearId(bodypart_data.id)
         else if (bodypart_data.type === 'skirts') stylingStore.setSkirtsId(bodypart_data.id)
@@ -96,12 +143,63 @@ const Garage = () => {
         else if (bodypart_data.type === 'wings_front') stylingStore.setWingsFrontId(bodypart_data.id)
         else if (bodypart_data.type === 'wings_rear') stylingStore.setWingsRearId(bodypart_data.id)
         else if (bodypart_data.type === 'exhaust') stylingStore.setExhaustId(bodypart_data.id)
+        setSelectedBodypartData(bodypart_data)
     }
-    const styling_third_level_back_button_click_handler = () => {
+    const stylingGraphicButtonClickHandler = (graphic_data: IGraphic) => {
+        // if (graphic_data.type === 'paint_color') stylingStore.setGraphicsPaintColor(graphic_data.data)
+        // else if (graphic_data.type === 'paint_coating') stylingStore.setGraphicsPaintCoating(graphic_data.data)
+        if (graphic_data.type === 'paint_color') stylingStore.setGraphicsPaintColor(graphic_data.data)
+        else if (graphic_data.type === 'paint_coating') stylingStore.setGraphicsPaintCoating(graphic_data.data)
+    }
+    const styling_third_level_back_button_click_handler = (to: string) => {
         // set styling menu level
-        stylingStore.setMenuLevel('styling.bodyparts')
+        stylingStore.setMenuLevel(to)
         // set current displaying bodyparts by id
         stylingStore.setNowDisplayedBodypartsIds(displayedVehicle.bodyparts_ids)
+    }
+    const stylingBodypartPurchaseConfirmHandler = async () => {
+        
+        // disable confirmation modal window
+        setIsShowedModalWindow_ConfirmPurchase(false)
+
+        // make post request with response
+        // request
+        const url = 'http://localhost:3001/api/vehicles/purchaseBodypart'
+        const data = {
+            user_id: 230990098,
+            vehicle_slot: displayedVehicle.garage_slot,
+            bodypart_data: selectedBodypartData,
+        }
+        const response = (await axios.post(url, data)).data
+        // check response status of request
+        if (response.status === 'ok') {
+            // открыть модалку успешного приобретения
+            setIsShowedModalWindow_SuccessPurchase(true)
+            // обновить displayedVehicle (получить снова из базы данных)
+            const url = `http://localhost:3001/api/vehicles/playerVehicles/${230990098}`
+            await axios.get(url).then((res)=>setDisplayedVehicle(res.data[0]))
+            // обновить displayedBodypart
+            
+            // имитация нажатия на кнопку назад
+            styling_third_level_back_button_click_handler('styling.bodyparts')
+        }
+        else if (response.status === 'error') {
+            if (response.error === 'NotEnoughPlayerMoney') {
+                // enable not enough modal window
+                setIsShowedModalWindow_NotEnoughMoney(true)
+
+                // установить отображаемую деталь как деталь, которая уже куплена у игрока
+                // а также установить данные детали в selectedBodypartData
+                if (selectedBodypartData.type === 'bumper_front') {
+                    stylingStore.setBumperFrontId(displayedVehicle.bodyparts_ids.bumper_front_id)
+                    setSelectedBodypartData(
+                        stylingStore.shopBodypartsForVehicle
+                        .filter(bodypart=>bodypart.type==='bumper_front')
+                        .filter(bodypart=>bodypart.id === displayedVehicle.bodyparts_ids.bumper_front_id)[0]
+                    )
+                }
+            }
+        }
     }
 
     return (
@@ -115,9 +213,6 @@ const Garage = () => {
                     state.gl.outputColorSpace = THREE.SRGBColorSpace
                 }}
                 >
-                {/* <OrbitControls /> */}
-                {/* <Perf position='bottom-left' /> */}
-                {/* <EnvExotic intensity={1.3} path='3d/hdri/metro_vijzelgracht_1k.hdr' /> */}
                 <EnvExotic intensity={1} path='3d/hdri/metro_vijzelgracht_1k.hdr' />
                 <EffectsExotic />
                 <CameraMovementExotic />
@@ -134,6 +229,61 @@ const Garage = () => {
                 { displayedVehicle?.brand.toLowerCase() === 'toyota' && displayedVehicle?.model.toLowerCase() === 'supra mk4' && <ToyotaSupraMK4 /> }
                 { displayedVehicle?.brand.toLowerCase() === 'volkswagen' && displayedVehicle?.model.toLowerCase() === 'golf' && <VolkswagenGolf /> }
             </Canvas>
+            {
+                isShowedModalWindow_ConfirmPurchase &&
+                <ModalWindow
+                    title='Подтвердите действие'
+                    subtitle=''
+                    text='Хотите приобрести эту запчасть?'
+                    buttons={[
+                        {
+                            text: 'Нет',
+                            tcolor: 'white',
+                            bcolor: 'rgba(0,0,0,.45)',
+                            onClick: ()=>setIsShowedModalWindow_ConfirmPurchase(false)
+                        },
+                        {
+                            text: 'Приобрести',
+                            tcolor: 'white',
+                            bcolor: '#624CFE',
+                            onClick: stylingBodypartPurchaseConfirmHandler
+                        },
+                    ]}
+                />
+            }
+            {
+                isShowedModalWindow_NotEnoughMoney &&
+                <ModalWindow
+                    title='Недостаточно средств'
+                    subtitle=''
+                    text='У вас не хватает средст для приобретения этой запчасти.'
+                    buttons={[
+                        {
+                            text: 'Понятно',
+                            tcolor: 'white',
+                            bcolor: 'rgba(0,0,0,.45)',
+                            onClick: ()=>setIsShowedModalWindow_NotEnoughMoney(false)
+                        },
+                    ]}
+                />
+            }
+            {
+                isShowedModalWindow_SuccessPurchase &&
+                <ModalWindow
+                    title='Успешное приобретение'
+                    subtitle=''
+                    text='Поздравляем с новой покупкой!'
+                    buttons={[
+                        {
+                            text: 'Супер',
+                            tcolor: 'white',
+                            bcolor: '#624CFE',
+                            onClick: ()=>setIsShowedModalWindow_SuccessPurchase(false)
+                        },
+                    ]}
+                />
+            }
+
 
             {!isStylingOpen &&
             <div className={styles.garage_container}>
@@ -178,392 +328,91 @@ const Garage = () => {
             {/* Styling  */}
             {isStylingOpen &&
             <div className={styles.styling_container}>
+                
                 <CarItem title={displayedVehicle.brand} subtitle={displayedVehicle.model} />
-                <div className={styles.styling_nav_buttons_container}>
+                
+                {
+                    stylingStore.menuLevel === 'styling' &&
+                    <StylingNavList title='Стайлинг' subtitle='Выберите магазин'>
+                        <StylingNavItem text='Кузовное ателье' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
+                        <StylingNavItem text='Покрасочный цех' onClick={()=>stylingStore.setMenuLevel('styling.graphics')} />
+                        <StylingNavItem text='Аксессуарная лавка' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
+                        <StylingNavItem text='Колесная станция' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
+                    </StylingNavList>
+                }
+                {/* BODYPARTS */}
+                {
+                    stylingStore.menuLevel === 'styling.bodyparts' &&
+                    <StylingNavList title='Кузовное ателье' subtitle='Выберите тип деталей' buttonText='Назад' onButtonClick={()=>stylingStore.setMenuLevel('styling')}>
+                        <StylingNavItem text='Передние бамперы' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bumper_front')} />
+                        <StylingNavItem text='Задние бамперы' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bumper_rear')} />
+                        <StylingNavItem text='Боковые юбки' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.skirts')} />
+                        <StylingNavItem text='Спойлеры' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.spoiler')} />
+                        <StylingNavItem text='Капоты' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bonnet')} />
+                        <StylingNavItem text='Боковые зеркала' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.mirrors')} />
+                        <StylingNavItem text='Передние фары' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.head_lights')} />
+                        <StylingNavItem text='Задние огни' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.tail_lights')} />
+                        <StylingNavItem text='Передние крылья' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.wings_front')} />
+                        <StylingNavItem text='Задние крылья' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.wings_rear')} />
+                        <StylingNavItem text='Выхлопные трубы' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.exhaust')} />
+                    </StylingNavList>
+                }
+                {
+                    stylingStore.menuLevel.includes('bodyparts') && stylingStore.menuLevel.split('.').length >= 3 &&
+                    <StylingNavList title='Кузовное ателье' subtitle={translateBodypartType(stylingStore.menuLevel.split('.')[2])} buttonText='Назад' onButtonClick={()=>styling_third_level_back_button_click_handler('styling.bodyparts')}>
+                        {
+                            stylingStore.shopBodypartsForVehicle
+                            .filter(bodypart_data => bodypart_data.type===stylingStore.menuLevel.split('.')[2])
+                            .map(bodypart_data =>
+                                <StylingBodypartButton
+                                    key={bodypart_data.id}
+                                    partName={bodypart_data.name}
+                                    price={bodypart_data.price}
+                                    isPurchased={bodypart_data.id === displayedVehicle.bodyparts_ids[`${stylingStore.menuLevel.split('.')[2]}_id`]}
+                                    onClick={()=>stylingBodypartButtonClickHandler(bodypart_data)}
+                                />
+                            )
+                        }
+                    </StylingNavList>
+                }
+                {
+                    stylingStore.menuLevel.includes('bodyparts') && stylingStore.menuLevel.split('.').length >= 3 &&
+                    <StylingPurchasing
+                        title={ selectedBodypartData?.name }
+                        subtitle={ translateBodypartType(stylingStore.menuLevel.split('.')[2]) }
+                        price={ selectedBodypartData?.price }
+                        onPurchaseClick={()=>setIsShowedModalWindow_ConfirmPurchase(true)}
+                    />
+                }
 
-                    {/* styling start page */}
-                    {
-                        stylingStore.menuLevel === 'styling' &&
-                        <div className={styles.nav_buttons_list}>
-                            <StylingNavButton text='Кузовное ателье' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
-                            <StylingNavButton text='Покрасочный цех' onClick={()=>stylingStore.setMenuLevel('styling.graphics')} />
-                            <StylingNavButton text='Аксессуарная лавка' onClick={()=>stylingStore.setMenuLevel('styling.accessories')} />
-                            <StylingNavButton text='Колесная станция' onClick={()=>stylingStore.setMenuLevel('styling.wheels')} />
-                        </div>
-                    }
+                {/* GRAPHICS */}
+                {
+                    stylingStore.menuLevel === 'styling.graphics' &&
+                    <StylingNavList title='Покрасочный цех' subtitle='Выберите тип работ' buttonText='Назад' onButtonClick={()=>stylingStore.setMenuLevel('styling')}>
+                        <StylingNavItem text='Цвет кузова' onClick={()=>stylingStore.setMenuLevel('styling.graphics.paint_color')} />
+                        <StylingNavItem text='Покрытие краски' onClick={()=>stylingStore.setMenuLevel('styling.graphics.paint_coating')} />
+                    </StylingNavList>
+                }
+                {
+                    stylingStore.menuLevel.includes('graphics') && stylingStore.menuLevel.split('.').length >= 3 &&
+                    <StylingNavList title='Покрасочный цех' subtitle={translateGraphicType(stylingStore.menuLevel.split('.')[2])} buttonText='Назад' onButtonClick={()=>styling_third_level_back_button_click_handler('styling.graphics')}>
+                        {
+                            stylingStore.shopGraphicsForVehicle
+                            .filter(graphic_data => graphic_data.type===stylingStore.menuLevel.split('.')[2])
+                            .map(graphic_data =>
+                                <StylingGraphicButton
+                                    key={graphic_data.id}
+                                    text={graphic_data.name}
+                                    price={graphic_data.price}
+                                    isPurchased={false}
+                                    onClick={()=>stylingGraphicButtonClickHandler(graphic_data)}
+                                />
+                            )
+                        }
+                    </StylingNavList>
+                }
 
-                    {/* styling.bodyparts */}
-                    {
-                        stylingStore.menuLevel === 'styling.bodyparts' &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <h2>Кузовное ателье</h2>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                <StylingNavButton text='Передние бамперы' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='bumper_front').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bumpers_front')} />
-                                <StylingNavButton text='Здание бамперы' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='bumper_rear').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bumpers_rear')} />
-                                <StylingNavButton text='Боковые юбки' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='skirts').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.skirts')} />
-                                <StylingNavButton text='Спойлеры' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='spoiler').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.spoilers')} />
-                                <StylingNavButton text='Капоты' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='bonnet').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bonnets')} />
-                                <StylingNavButton text='Боковые зеркала' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='mirrors').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.mirrors')} />
-                                <StylingNavButton text='Передние фары' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='head_lights').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.head_lights')} />
-                                <StylingNavButton text='Задние огни' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='tail_lights').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.tail_lights')} />
-                                <StylingNavButton text='Передние крылья' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='wings_front').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.wings_front')} />
-                                <StylingNavButton text='Задние крылья' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='wings_rear').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.wings_rear')} />
-                                <StylingNavButton text='Выхлопные трубы' subtext={`${stylingStore.shopBodypartsForVehicle.filter(part=>part.type==='exhaust').length} шт.`} onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.exhausts')} />
-                            </div>
-                            <StylingNavButton text='Назад' onClick={()=>stylingStore.setMenuLevel('styling')} />
-                        </div>
-                    }
-                        
-                    {/* styling.bodyparts.bumpers_front */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.bumpers_front') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Передние бамперы</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='bumper_front')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.bumper_front_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                            <div className={styles.purchasing_frame}>
-                                <div className={styles.purchasing_head}>
-                                    <h2 className={styles.purchasing_title}>{ stylingStore.shopBodypartsForVehicle[stylingStore.nowDisplayedBodypartsIds.bumper_front_id-1].name }</h2>
-                                    <p className={styles.purchasing_text}>Передний бампер</p>
-                                    <div className={styles.purchasing_price_container}>
-                                        <p className={styles.purchasing_price_number}>{ stylingStore.shopBodypartsForVehicle[stylingStore.nowDisplayedBodypartsIds.bumper_front_id-1].price.toLocaleString('en-US') }</p>
-                                        <p className={styles.purchasing_price_currency}>$</p>
-                                    </div>
-                                </div>
-                                <button className={styles.btn_purchase}><p>Приобрести</p></button>
-                            </div>
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.bumpers_rear */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.bumpers_rear') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Задние бамперы</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='bumper_rear')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.bumper_rear_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.skirts */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.skirts') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Боковые юбки</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='skirts')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.skirts_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.spoilers */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.spoilers') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Спойлеры</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='spoiler')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.spoiler_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.bonnets */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.bonnets') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Капоты</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='bonnet')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.bonnet_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.mirrors */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.mirrors') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Боковые зеркала</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='mirrors')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.mirrors_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.head_lights */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.head_lights') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Передние фары</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='head_lights')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.head_lights_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.tail_lights */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.tail_lights') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Передние фары</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='tail_lights')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.tail_lights_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.wings_front */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.wings_front') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Передние крылья</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='wings_front')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.wings_front_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.wings_rear */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.wings_rear') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Задние крылья</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='wings_rear')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.wings_rear_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-
-                    {/*styling.bodyparts.wings_rear */}
-                    {
-                        stylingStore.menuLevel.includes('styling.bodyparts.exhausts') &&
-                        <div className={styles.styling_nav_container}>
-                            <div className={styles.styling_nav_head}>
-                                <div>
-                                    <h2>Кузовное ателье</h2>
-                                    <p>Выхлопные трубы</p>
-                                </div>
-                                <SvgDoor fill='black' />
-                            </div>
-                            <div className={styles.nav_buttons_list}>
-                                {
-                                    stylingStore.shopBodypartsForVehicle
-                                    .filter(bodypart_data => bodypart_data.type==='exhaust')
-                                    .map(bodypart_data =>
-                                        <BodypartButton
-                                            key={bodypart_data.id}
-                                            name={bodypart_data.name}
-                                            price={bodypart_data.price}
-                                            is_purchased={bodypart_data.id === displayedVehicle.bodyparts_ids.exhaust_id}
-                                            onClick={()=>bodypartButtonClickHandler(bodypart_data)}
-                                        />
-                                    )
-                                }
-                            </div>
-                            <StylingNavButton text='Назад' onClick={styling_third_level_back_button_click_handler} />
-                        </div>
-                    }
-                </div>
-
-                {/* back to garage button */}
-                <button className={styles.btn_back_to_garage} onClick={()=>{
-                    setIsStylingOpen(false)
-                    styling_third_level_back_button_click_handler()
-                }}>
+                <button className={styles.btn_back_to_garage} onClick={()=>{ setIsStylingOpen(false); styling_third_level_back_button_click_handler('styling')}}>
                     <p>Вернуться в гараж</p>
                 </button>
             </div>

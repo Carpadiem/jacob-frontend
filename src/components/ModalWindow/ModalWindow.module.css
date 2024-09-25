@@ -19,7 +19,8 @@
 
     border-radius: 4px;
     padding: 30px;
-    max-width: 500px;
+    max-width: 700px;
+    min-width: 400px;
 
     display: flex;
     flex-direction: column;
@@ -30,6 +31,7 @@
 .head {
     display: flex;
     flex-direction: column;
+    align-self: flex-start;
     gap: 10px;
 }
 .foot {
