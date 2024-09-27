@@ -1,4 +1,8 @@
+// models
+import IShopPaintCoating from "./IShopPaintCoating"
+import IShopPaintColor from "./IShopPaintColor"
+
 export interface INowDisplayedGraphics {
-    paint_coating: string // 'mate' | 'glossy' | 'metallic' | 'chameleon'
-    paint_color: string
+    paint_coating: IShopPaintCoating
+    paint_color: IShopPaintColor
 }

@@ -43,6 +43,9 @@ import { ModalButton } from '@components/ModalButton'
 // models
 import IVehicle from '@models/IVehicle'
 import useGameVehicles from 'src/hooks/useGameVehicles'
+import stylingStore from '@stores/styling.store'
+import shop_coatings from 'src/shop/styling/graphic_coatings'
+import shop_colors from 'src/shop/styling/graphic_colors'
 
 
 const all_brand_items = [
@@ -95,6 +98,14 @@ function Autosalon() {
     const newDisplayedVehicle = filterListVehicles?.filter(vehicle=>vehicle.is_selected)[0]
     setDisplayedVehicle(newDisplayedVehicle)
   }, [filterListVehicles])
+
+  React.useEffect(()=>{
+    // set vehicle paint coating and color
+    const paint_coating = shop_coatings.filter(coating=>coating.paint_coating_name==='glossy')[0]
+    const paint_color = shop_colors.filter(color=>color.id===15)[0] // gainsboro
+    stylingStore.setGraphicsPaintCoating(paint_coating)
+    stylingStore.setGraphicsPaintColor(paint_color)
+  }, [displayedVehicle])
 
   React.useEffect(()=>{
     if (isBrandsOpened) ref_list_brands_container.current.style.height = '250px'
@@ -169,8 +180,7 @@ function Autosalon() {
     const url = 'http://localhost:3001/api/vehicles/purchaseVehicle'
     const data = {
       user_id: 230990098,
-      vehicle_brand: displayedVehicle.brand,
-      vehicle_model: displayedVehicle.model,
+      vehicle_id: displayedVehicle.id,
     }
     const response = (await axios.post(url, data)).data
     if (response.status === 'ok') {

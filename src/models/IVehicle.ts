@@ -1,4 +1,5 @@
 export default interface IVehicle {
+    id: number
     brand: string
     model: string
     price: number
@@ -16,5 +17,7 @@ export default interface IVehicle {
       wings_rear_id: number
       exhaust_id: number
     }
+    paint_coating_name: string
+    paint_color_hex: string
     garage_slot: number
   }

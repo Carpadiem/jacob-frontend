@@ -1,7 +1,7 @@
-export default interface IBodypart {
+export default interface IShopBodypart {
     id: number
     type: string
     for_vehicle: string
-    name: string
+    present_name: string
     price: number
 }
