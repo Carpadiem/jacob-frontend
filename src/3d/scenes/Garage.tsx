@@ -8,14 +8,14 @@ import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useGLTF, PerspectiveCamera } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
-import { useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 
 type GLTFResult = GLTF & {
   nodes: {
     Plane: THREE.Mesh
   }
   materials: {
-    floor: THREE.MeshStandardMaterial
+    floor: THREE.MeshLambertMaterial
   }
 }
 

@@ -4,6 +4,7 @@ export default interface IVehicle {
     model: string
     price: number
     is_selected: boolean
+    // bodyparts
     bodyparts_ids: {
       bumper_front_id: number
       bumper_rear_id: number
@@ -17,7 +18,10 @@ export default interface IVehicle {
       wings_rear_id: number
       exhaust_id: number
     }
+    // graphics
     paint_coating_name: string
     paint_color_hex: string
+    // accessories
+    glass_tint_id: number
     garage_slot: number
   }

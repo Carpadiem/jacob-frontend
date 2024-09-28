@@ -20,10 +20,12 @@ import { StylingNavList } from './components/styling/StylingNavList'
 import { StylingNavItem } from './components/styling/StylingNavItem'
 import { StylingBodypartButton } from './components/styling/StylingBodypartButton'
 import { StylingGraphicButton } from './components/styling/StylingGraphicButton'
+import { StylingAccessoryButton } from './components/styling/StylingAccessoryButton'
 import { StylingPurchasing } from './components/styling/StylingPurchasing'
 
 import { Canvas } from '@react-three/fiber'
 import { Perf } from 'r3f-perf'
+import { CameraControls, FlyControls, MapControls, ArcballControls, FirstPersonControls } from '@react-three/drei'
 import { EnvExotic } from '@exotic/EnvExotic'
 import { EffectsExotic } from '@exotic/EffectsExotic'
 import { CameraMovementExotic } from '@exotic/CameraMovementExotic'
@@ -59,6 +61,8 @@ import IShopPaintColor from '@models/IShopPaintColor'
 import shop_bodyparts from 'src/shop/styling/bodyparts'
 import shop_coatings from 'src/shop/styling/graphic_coatings'
 import shop_colors from 'src/shop/styling/graphic_colors'
+import shop_glass_tints from 'src/shop/styling/accessory_glass_tint'
+import IShopGlassTint from '@models/IShopGlassTint'
 
 
 
@@ -86,6 +90,10 @@ const Garage = () => {
         else if (word === 'paint_coating') return 'Покрытие краски'
         return ''
     }
+    const translateAccessoryType = (word: string) => {
+        if (word === 'glass_tint') return 'Тонировка'
+        return ''
+    }
 
     // hooks
     const playerVehicles = usePlayerVehicles(230990098)
@@ -97,10 +105,12 @@ const Garage = () => {
     const [selectedBodypartData, setSelectedBodypartData] = React.useState<IShopBodypart>(null!)
     const [selectedPaintCoatingData, setSelectedPaintCoatingData] = React.useState<IShopPaintCoating>(null!)
     const [selectedPaintColorData, setSelectedPaintColorData] = React.useState<IShopPaintColor>(null!)
+    const [selectedGlassTint, setSelectedGlassTint] = React.useState<IShopGlassTint>(null!)
     // modals states
     const [isShowedModalWindow_ConfirmPurchaseBodypart, setIsShowedModalWindow_ConfirmPurchaseBodypart] = React.useState(false)
     const [isShowedModalWindow_ConfirmPurchasePaintCoating, setIsShowedModalWindow_ConfirmPurchasePaintCoating] = React.useState(false)
     const [isShowedModalWindow_ConfirmPurchasePaintColor, setIsShowedModalWindow_ConfirmPurchasePaintColor] = React.useState(false)
+    const [isShowedModalWindow_ConfirmPurchaseGlassTint, setIsShowedModalWindow_ConfirmPurchaseGlassTint] = React.useState(false)
     const [isShowedModalWindow_NotEnoughMoney, setIsShowedModalWindow_NotEnoughMoney] = React.useState(false)
     const [isShowedModalWindow_SuccessPurchase, setIsShowedModalWindow_SuccessPurchase] = React.useState(false)
 
@@ -115,13 +125,8 @@ const Garage = () => {
         stylingStore.setNowDisplayedBodypartsIds(displayedVehicle?.bodyparts_ids)
         stylingStore.setGraphicsPaintCoating(shop_coatings.filter(coating=>coating.paint_coating_name===displayedVehicle?.paint_coating_name)[0])
         stylingStore.setGraphicsPaintColor(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
-
+        stylingStore.setAccessoryGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
     }, [displayedVehicle])
-
-    React.useEffect(()=>{
-        const a = stylingStore.nowDisplayedGraphics.paint_color
-        console.log(a)
-    }, [stylingStore.nowDisplayedGraphics.paint_color])
 
     React.useEffect(()=>{
         const level = stylingStore.menuLevel
@@ -142,6 +147,10 @@ const Garage = () => {
             else if (split_level[1] === 'graphics' && split_level[2] === 'paint_color') {
                 const selected_color_data = shop_colors.filter(shopitem=>shopitem.id===stylingStore.nowDisplayedGraphics.paint_color?.id)[0]
                 setSelectedPaintColorData(selected_color_data)
+            }
+            else if (split_level[1] === 'accessories' && split_level[2] === 'glass_tint') {
+                const selected_glass_tint = shop_glass_tints.filter(shopitem=>shopitem.id===stylingStore.nowDisplayedAccessories.glass_tint?.id)[0]
+                setSelectedGlassTint(selected_glass_tint)
             }
         }
     }, [stylingStore.menuLevel])
@@ -176,6 +185,10 @@ const Garage = () => {
         stylingStore.setGraphicsPaintColor(color) // for physically displaying
         setSelectedPaintColorData(color) // for purchasing frame data(-s)
     }
+    const stylingGlassTintButtonClickHandler = (glass_tint: IShopGlassTint) => {
+        stylingStore.setAccessoryGlassTint(glass_tint)
+        setSelectedGlassTint(glass_tint)
+    }
     const styling_third_level_back_button_click_handler = (to: string) => {
         // set styling menu level
         stylingStore.setMenuLevel(to)
@@ -183,6 +196,7 @@ const Garage = () => {
         stylingStore.setNowDisplayedBodypartsIds(displayedVehicle.bodyparts_ids)
         stylingStore.setGraphicsPaintCoating(shop_coatings.filter(coating=>coating.paint_coating_name===displayedVehicle?.paint_coating_name)[0])
         stylingStore.setGraphicsPaintColor(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
+        stylingStore.setAccessoryGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
     }
     const stylingBodypartPurchaseConfirmedHandler = async () => { 
         // disable confirmation modal window
@@ -244,7 +258,6 @@ const Garage = () => {
             if (response.error === 'NotEnoughPlayerMoney') {
                 // enable not enough modal window
                 setIsShowedModalWindow_NotEnoughMoney(true)
-
                 // установить отображаемую деталь как деталь, которая уже куплена у игрока
                 // а также установить данные детали в selectedBodypartData
                 stylingStore.setGraphicsPaintCoating(shop_coatings.filter(coating=>coating.paint_coating_name===displayedVehicle?.paint_coating_name)[0])
@@ -271,11 +284,37 @@ const Garage = () => {
             if (response.error === 'NotEnoughPlayerMoney') {
                 // enable not enough modal window
                 setIsShowedModalWindow_NotEnoughMoney(true)
-
                 // установить отображаемую деталь как деталь, которая уже куплена у игрока
                 // а также установить данные детали в selectedBodypartData
                 stylingStore.setGraphicsPaintColor(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
                 setSelectedPaintColorData(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
+            }
+        }
+    }
+
+    const stylingGlassTintPurchaseConfirmedHandler = async () => {
+        setIsShowedModalWindow_ConfirmPurchaseGlassTint(false)
+        const url = 'http://localhost:3001/api/vehicles/purchaseGlassTint'
+        const data = {
+            user_id: 230990098,
+            vehicle_slot: displayedVehicle.garage_slot,
+            glass_tint: selectedGlassTint,
+        }
+        const response = (await axios.post(url, data)).data
+        if (response.status === 'ok') {
+            setIsShowedModalWindow_SuccessPurchase(true)
+            const url = `http://localhost:3001/api/vehicles/playerVehicles/${230990098}`
+            await axios.get(url).then((res)=>setDisplayedVehicle(res.data[0]))
+            playerStore.setMoney(response.updated_player_money)
+            styling_third_level_back_button_click_handler('styling.accessories')
+        } else if (response.status === 'error') {
+            if (response.error === 'NotEnoughPlayerMoney') {
+                // enable not enough modal window
+                setIsShowedModalWindow_NotEnoughMoney(true)
+                // установить отображаемую деталь как деталь, которая уже куплена у игрока
+                // а также установить данные детали в selectedBodypartData
+                stylingStore.setAccessoryGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
+                setSelectedGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
             }
         }
     }
@@ -335,6 +374,15 @@ const Garage = () => {
                     buttons={[
                         { text: 'Нет', tcolor: 'white', bcolor: 'rgba(0,0,0,.45)', onClick: ()=>setIsShowedModalWindow_ConfirmPurchasePaintColor(false) },
                         { text: 'Приобрести', tcolor: 'white', bcolor: '#624CFE', onClick: stylingPaintColorPurchaseConfirmedHandler },
+                    ]}
+                />
+            }
+            {
+                isShowedModalWindow_ConfirmPurchaseGlassTint &&
+                <ModalWindow title='Подтвердите действие' subtitle='' text='Хотите приобрести тонировку?'
+                    buttons={[
+                        { text: 'Нет', tcolor: 'white', bcolor: 'rgba(0,0,0,.45)', onClick: ()=>setIsShowedModalWindow_ConfirmPurchaseGlassTint(false) },
+                        { text: 'Приобрести', tcolor: 'white', bcolor: '#624CFE', onClick: stylingGlassTintPurchaseConfirmedHandler },
                     ]}
                 />
             }
@@ -407,7 +455,7 @@ const Garage = () => {
                     <StylingNavList title='Стайлинг' subtitle='Выберите магазин'>
                         <StylingNavItem text='Кузовное ателье' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
                         <StylingNavItem text='Покрасочный цех' onClick={()=>stylingStore.setMenuLevel('styling.graphics')} />
-                        <StylingNavItem text='Аксессуарная лавка' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
+                        <StylingNavItem text='Аксессуарная лавка' onClick={()=>stylingStore.setMenuLevel('styling.accessories')} />
                         <StylingNavItem text='Колесная станция' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
                     </StylingNavList>
                 }
@@ -516,6 +564,41 @@ const Garage = () => {
                         subtitle={ translateGraphicType(stylingStore.menuLevel.split('.')[2]) }
                         price={ selectedPaintColorData?.price }
                         onPurchaseClick={()=>setIsShowedModalWindow_ConfirmPurchasePaintColor(true)}
+                    />
+                }
+
+                {/* ACCESSORIES */}
+                {
+                    stylingStore.menuLevel === 'styling.accessories' &&
+                    <StylingNavList title='Аксессуарная лавка' subtitle='Выберите тип аксессуара' buttonText='Назад' onButtonClick={()=>stylingStore.setMenuLevel('styling')}>
+                        <StylingNavItem text='Тонировка' onClick={()=>stylingStore.setMenuLevel('styling.accessories.glass_tint')} />
+                    </StylingNavList>
+                }
+                {/* ACCESSORIES.GLASS_TINT */}
+                {
+                    stylingStore.menuLevel.includes('accessories') && stylingStore.menuLevel.split('.').length >= 3 &&
+                    <StylingNavList title='Аксессуарная лавка' subtitle={translateAccessoryType(stylingStore.menuLevel.split('.')[2])} buttonText='Назад' onButtonClick={()=>styling_third_level_back_button_click_handler('styling.accessories')}>
+                        {
+                            shop_glass_tints
+                            .map(glass_tint =>
+                                <StylingAccessoryButton
+                                    key={glass_tint.id}
+                                    text={glass_tint.present_name}
+                                    price={glass_tint.price}
+                                    isPurchased={false}
+                                    onClick={()=>stylingGlassTintButtonClickHandler(glass_tint)}
+                                />
+                            )
+                        }
+                    </StylingNavList>
+                }
+                {
+                    stylingStore.menuLevel.includes('accessories') && stylingStore.menuLevel.split('.').length >= 3 &&
+                    <StylingPurchasing
+                        title={ selectedGlassTint?.present_name }
+                        subtitle={ translateAccessoryType(stylingStore.menuLevel.split('.')[2]) }
+                        price={ selectedGlassTint?.price }
+                        onPurchaseClick={()=>setIsShowedModalWindow_ConfirmPurchaseGlassTint(true)}
                     />
                 }
 

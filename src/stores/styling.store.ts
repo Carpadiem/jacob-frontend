@@ -2,11 +2,14 @@ import { makeAutoObservable } from "mobx"
 // models
 import { INowDisplayedBodypartsIds } from "@models/INowDisplayedBodypartsIds"
 import { INowDisplayedGraphics } from "@models/INowDisplayedGraphics"
+import { INowDisplayedAccessories } from '@models/INowDisplayedAccessories'
 import IShopPaintCoating from "@models/IShopPaintCoating"
 import IShopPaintColor from "@models/IShopPaintColor"
 
 import shop_coatings from "src/shop/styling/graphic_coatings"
 import shop_colors from "src/shop/styling/graphic_colors"
+import shop_glass_tints from "src/shop/styling/accessory_glass_tint"
+import IShopGlassTint from "@models/IShopGlassTint"
 
 
 class StylingStore {
@@ -53,6 +56,13 @@ class StylingStore {
     setNowDisplayedGraphics(graphics: INowDisplayedGraphics) { this.nowDisplayedGraphics = graphics }
     setGraphicsPaintCoating(coating: IShopPaintCoating) { this.nowDisplayedGraphics.paint_coating = coating }
     setGraphicsPaintColor(color: IShopPaintColor) { this.nowDisplayedGraphics.paint_color = color }
+
+    // ACCESSORIES
+    nowDisplayedAccessories: INowDisplayedAccessories = {
+        glass_tint: shop_glass_tints.filter(glass_tint=>glass_tint.id === 1)[0]
+    }
+    setNowDisplayedAccessories(accessories: INowDisplayedAccessories) { this.nowDisplayedAccessories = accessories }
+    setAccessoryGlassTint(glass_tint: IShopGlassTint) { this.nowDisplayedAccessories.glass_tint = glass_tint }
 
     menuLevel: string = 'styling'
     setMenuLevel(level: string) { this.menuLevel = level }

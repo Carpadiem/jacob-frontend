@@ -5,7 +5,7 @@ Command: npx gltfjsx@6.2.10 ./mazda_rx7.gltf --types --shadows --keepmaterials -
 
 import * as THREE from 'three'
 import React, { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import { CubeCamera, useGLTF } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 // models
 import IShopBodypart from '@models/IShopBodypart'
@@ -14,6 +14,9 @@ import { observer } from 'mobx-react-lite'
 import stylingStore from '@stores/styling.store'
 import shop_coatings from 'src/shop/styling/graphic_coatings'
 import shop_colors from 'src/shop/styling/graphic_colors'
+import { degToRad } from 'three/src/math/MathUtils'
+import { RectAreaLightHelper } from 'three/examples/jsm/helpers/RectAreaLightHelper'
+import { useFrame, useThree } from '@react-three/fiber'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -489,7 +492,7 @@ type GLTFResult = GLTF & {
     ['door_lf.6']: THREE.MeshStandardMaterial
     // primary: THREE.MeshStandardMaterial
     primary: THREE.MeshPhysicalMaterial
-    ['glass.005']: THREE.MeshStandardMaterial
+    ['glass.005']: THREE.MeshPhysicalMaterial
     ['primary.001']: THREE.MeshStandardMaterial
     ['door_lf.2']: THREE.MeshStandardMaterial
     ['door_lf.3']: THREE.MeshStandardMaterial
@@ -502,7 +505,7 @@ type GLTFResult = GLTF & {
     ['tail_lights0.4']: THREE.MeshStandardMaterial
     ['tail_lights0.5']: THREE.MeshStandardMaterial
     ['right rear light']: THREE.MeshStandardMaterial
-    glass: THREE.MeshStandardMaterial
+    glass: THREE.MeshPhysicalMaterial
     ['tail_lights5.1']: THREE.MeshStandardMaterial
     ['left front light']: THREE.MeshStandardMaterial
     ['tail_lights6.8']: THREE.MeshStandardMaterial
@@ -559,10 +562,24 @@ function Model(props: JSX.IntrinsicElements['group']) {
     materials.primary.color = new THREE.Color(paint_color?.hex)
   }, [stylingStore.nowDisplayedGraphics.paint_color])
 
+  React.useEffect(()=>{
+    const glass_tint = stylingStore.nowDisplayedAccessories.glass_tint
+    materials['glass.005'].opacity = glass_tint.data.opacity
+    materials['glass.005'].specularIntensity = glass_tint.data.specularIntensity
+    materials['glass.005'].ior = glass_tint.data.ior
+    materials['glass.005'].metalness = glass_tint.data.metalness
+    materials['glass.005'].roughness = glass_tint.data.roughness
+    materials['glass.005'].clearcoat = glass_tint.data.clearcoat
+    materials['glass.005'].clearcoatRoughness = glass_tint.data.clearcoatRoughness
+    materials['glass.005'].color = new THREE.Color(glass_tint.data.color_hex) // 05014a
+  }, [stylingStore.nowDisplayedAccessories.glass_tint])
+
+  // React.useEffect(()=>{
+  //   console.log(materials['glass.005'])
+  // }, [])
 
   return (
     <group {...props} dispose={null} position={[0, .734, 0]}>
-      
       {/* wheels */} 
       <group name="wheel_front_right" position={[0.813, -0.176, -1.437]}>
         <mesh name="wheel_1" castShadow receiveShadow geometry={nodes.wheel_1.geometry} material={materials['wheel.0']} />
