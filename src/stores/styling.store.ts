@@ -1,15 +1,25 @@
 import { makeAutoObservable } from "mobx"
 // models
-import { INowDisplayedBodypartsIds } from "@models/INowDisplayedBodypartsIds"
-import { INowDisplayedGraphics } from "@models/INowDisplayedGraphics"
-import { INowDisplayedAccessories } from '@models/INowDisplayedAccessories'
-import IShopPaintCoating from "@models/IShopPaintCoating"
-import IShopPaintColor from "@models/IShopPaintColor"
-
-import shop_coatings from "src/shop/styling/graphic_coatings"
-import shop_colors from "src/shop/styling/graphic_colors"
-import shop_glass_tints from "src/shop/styling/accessory_glass_tint"
-import IShopGlassTint from "@models/IShopGlassTint"
+import IShopBodypartBumperFront from "@models/shop/bodyparts/IShopBumperFront"
+import IShopBodypartBumperRear from "@models/shop/bodyparts/IShopBumperRear"
+import IShopBodypartSkirts from "@models/shop/bodyparts/IShopSkirts"
+import IShopBodypartSpoiler from "@models/shop/bodyparts/IShopSpoiler"
+import IShopBodypartBonnet from "@models/shop/bodyparts/IShopBonnet"
+import IShopBodypartMirrors from "@models/shop/bodyparts/IShopMirrors"
+import IShopBodypartHeadLights from "@models/shop/bodyparts/IShopHeadLights"
+import IShopBodypartTailLights from "@models/shop/bodyparts/IShopTailLights"
+import IShopBodypartWingsFront from "@models/shop/bodyparts/IShopWingsFront"
+import IShopBodypartWingsRear from "@models/shop/bodyparts/IShopWingsRear"
+import IShopBodypartExhaust from "@models/shop/bodyparts/IShopExhaust"
+import IShopPaintCoating from "@models/shop/graphics/IShopPaintCoating"
+import IShopPaintColor from "@models/shop/graphics/IShopPaintColor"
+import IShopGlassTint from "@models/shop/accessories/IShopGlassTint"
+import IShopWheelsAdjust from "@models/shop/wheels/IShopWheelsAdjust"
+// shops
+import shopPaintCoating from "src/shop/graphics/paint_coating"
+import shopPaintColor from "src/shop/graphics/paint_color"
+import shopGlassTint from "src/shop/accessories/glass_tint"
+import IStyling from "@models/IStyling"
 
 
 class StylingStore {
@@ -17,8 +27,9 @@ class StylingStore {
         makeAutoObservable(this)
     }
 
-    // BODYPARTS
-    nowDisplayedBodypartsIds: INowDisplayedBodypartsIds = {
+    // bodyparts
+
+    styling: IStyling = {
         bumper_front_id: 1,
         bumper_rear_id: 1,
         skirts_id: 1,
@@ -30,40 +41,19 @@ class StylingStore {
         wings_front_id: 1,
         wings_rear_id: 1,
         exhaust_id: 1,
+        paint_coating_id: 1,
+        paint_color_id: 15,
+        glass_tint_id: 1,
+        wheels_id: 1,
+        wheels_offset: 0,
+        wheels_alignment: 0,
     }
-    setNowDisplayedBodypartsIds(bodyparts_ids: INowDisplayedBodypartsIds) { this.nowDisplayedBodypartsIds = bodyparts_ids }
-    setBumperFrontId(id: number) { this.nowDisplayedBodypartsIds.bumper_front_id = id }
-    setBumperRearId(id: number) { this.nowDisplayedBodypartsIds.bumper_rear_id = id }
-    setSkirtsId(id: number) { this.nowDisplayedBodypartsIds.skirts_id = id }
-    setSpoilerId(id: number) { this.nowDisplayedBodypartsIds.spoiler_id = id }
-    setBonnetId(id: number) { this.nowDisplayedBodypartsIds.bonnet_id = id }
-    setMirrorsId(id: number) { this.nowDisplayedBodypartsIds.mirrors_id = id }
-    setHeadLightsId(id: number) { this.nowDisplayedBodypartsIds.head_lights_id = id }
-    setTailLightsId(id: number) { this.nowDisplayedBodypartsIds.tail_lights_id = id }
-    setWingsFrontId(id: number) { this.nowDisplayedBodypartsIds.wings_front_id = id }
-    setWingsRearId(id: number) { this.nowDisplayedBodypartsIds.wings_rear_id = id }
-    setExhaustId(id: number) { this.nowDisplayedBodypartsIds.exhaust_id = id }
+    setStyling(styling: IStyling) { this.styling = styling }
+    setStylingItemId(shop_item_type: string, id: number) { this.styling[`${shop_item_type}_id`] = id }
+    setStylingWheelsOffset(value: number) { this.styling.wheels_offset = value }
+    setStylingWheelsAlignment(value: number) { this.styling.wheels_alignment = value }
 
-    // remove
-    // shopBodypartsForVehicle: IBodypart[] = []
-    // setShopBodypartsForVehicle(shop_bodyparts: IBodypart[]) { this.shopBodypartsForVehicle = shop_bodyparts }
-
-    // GRAPHICS
-    nowDisplayedGraphics: INowDisplayedGraphics = {
-        paint_coating: shop_coatings.filter(coating=>coating.paint_coating_name==='glossy')[0],
-        paint_color: shop_colors.filter(color=>color.id===15)[0],
-    }
-    setNowDisplayedGraphics(graphics: INowDisplayedGraphics) { this.nowDisplayedGraphics = graphics }
-    setGraphicsPaintCoating(coating: IShopPaintCoating) { this.nowDisplayedGraphics.paint_coating = coating }
-    setGraphicsPaintColor(color: IShopPaintColor) { this.nowDisplayedGraphics.paint_color = color }
-
-    // ACCESSORIES
-    nowDisplayedAccessories: INowDisplayedAccessories = {
-        glass_tint: shop_glass_tints.filter(glass_tint=>glass_tint.id === 1)[0]
-    }
-    setNowDisplayedAccessories(accessories: INowDisplayedAccessories) { this.nowDisplayedAccessories = accessories }
-    setAccessoryGlassTint(glass_tint: IShopGlassTint) { this.nowDisplayedAccessories.glass_tint = glass_tint }
-
+    // styling ui-menu navigation
     menuLevel: string = 'styling'
     setMenuLevel(level: string) { this.menuLevel = level }
 }

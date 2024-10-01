@@ -1,0 +1,92 @@
+.frame {
+    display: flex;
+    min-height: 50px;
+    background-color: rgba(0,0,0,.5);
+    padding: 20px 20px;
+    cursor: pointer;
+    backdrop-filter: blur(20px);
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    position: relative;
+}
+.title {
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.from_to_container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    /* background-color: red; */
+}
+
+.from_to_text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #9b9b9b;
+}
+
+.flyNumber {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    text-align: center;
+    position: relative;
+    width: min-content;
+    bottom: -5px;
+}
+
+/*********** Baseline, reset styles ***********/
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  /* Removes default focus */
+  input[type="range"]:focus {
+    outline: none;
+  }
+  
+  /******** Chrome, Safari, Opera and Edge Chromium styles ********/
+  /* slider track */
+  input[type="range"]::-webkit-slider-runnable-track {
+    background-color: #3a3a3a;
+    border-radius: 0px;
+    height: 2px;
+  }
+  
+  /* slider thumb */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    margin-top: -6px; /* Centers thumb on the track */
+    background-color: #ffffff;
+    border-radius: 14px;
+    height: 14px;
+    width: 14px;
+  }
+  
+  /*********** Firefox styles ***********/
+  /* slider track */
+  input[type="range"]::-moz-range-track {
+    background-color: #3a3a3a;
+    border-radius: 0px;
+    height: 2px;
+  }
+  
+  /* slider thumb */
+  input[type="range"]::-moz-range-thumb {
+    background-color: #ffffff;
+    border: none; /*Removes extra border that FF applies*/
+    border-radius: 14px;
+    height: 14px;
+    width: 14px;
+  }

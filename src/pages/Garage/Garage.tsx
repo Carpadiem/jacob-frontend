@@ -1,31 +1,21 @@
 import React from 'react'
 import styles from './Garage.module.css'
 // images
-import bg from './images/bg.jpg'
 import styling_card_bg from './images/styling_card_bg.jpg'
 import ArrowUp from './images/arrow_up.svg?react'
-import ArrowLeft from './images/arrow_left.svg?react'
-import SvgDoor from './images/door.svg?react'
-import SvgBrush from './images/brush.svg?react'
-import SvgMusic from './images/music.svg?react'
-import SvgWheel from './images/wheel.svg?react'
 // components
-import { PlayerData } from '@components/PlayerMoney'
-
+import { PlayerData } from '@components/PlayerData'
 import { ModalWindow } from '@components/ModalWindow'
-import { ModalButton } from '@components/ModalButton'
 
 import { CarItem } from './components/CarItem'
 import { StylingNavList } from './components/styling/StylingNavList'
 import { StylingNavItem } from './components/styling/StylingNavItem'
-import { StylingBodypartButton } from './components/styling/StylingBodypartButton'
-import { StylingGraphicButton } from './components/styling/StylingGraphicButton'
-import { StylingAccessoryButton } from './components/styling/StylingAccessoryButton'
+import { ShopItemButton } from './components/styling/ShopItemButton'
+import { StylingWheelsRange } from './components/styling/StylingWheelsRange'
 import { StylingPurchasing } from './components/styling/StylingPurchasing'
 
 import { Canvas } from '@react-three/fiber'
-import { Perf } from 'r3f-perf'
-import { CameraControls, FlyControls, MapControls, ArcballControls, FirstPersonControls } from '@react-three/drei'
+import { CameraControls } from '@react-three/drei'
 import { EnvExotic } from '@exotic/EnvExotic'
 import { EffectsExotic } from '@exotic/EffectsExotic'
 import { CameraMovementExotic } from '@exotic/CameraMovementExotic'
@@ -42,11 +32,9 @@ import NissanSkylineGTRR34 from '@3d/cars/NissanSkylineGTRR34'
 import Porsche911TurboS from '@3d/cars/Porsche911TurboS'
 import ToyotaSupraMK4 from '@3d/cars/ToyotaSupraMK4'
 import VolkswagenGolf from '@3d/cars/VolkswagenGolf'
-import { OrbitControls } from '@react-three/drei'
 // models
 import IVehicle from '@models/IVehicle'
 // hooks
-import useGameVehicles from 'src/hooks/useGameVehicles'
 import usePlayerVehicles from 'src/hooks/usePlayerVehicles'
 // stores
 import { observer } from 'mobx-react-lite'
@@ -54,44 +42,92 @@ import stylingStore from '@stores/styling.store'
 import playerStore from '@stores/player.store'
 // 3d and data
 import axios from 'axios'
-import IShopBodypart from '@models/IShopBodypart'
-import IShopPaintCoating from '@models/IShopPaintCoating'
-import IShopPaintColor from '@models/IShopPaintColor'
 
-import shop_bodyparts from 'src/shop/styling/bodyparts'
-import shop_coatings from 'src/shop/styling/graphic_coatings'
-import shop_colors from 'src/shop/styling/graphic_colors'
-import shop_glass_tints from 'src/shop/styling/accessory_glass_tint'
-import IShopGlassTint from '@models/IShopGlassTint'
+import IShopBumperFront from '@models/shop/bodyparts/IShopBumperFront'
+import IShopExhaust from '@models/shop/bodyparts/IShopExhaust'
+import IShopWingsRear from '@models/shop/bodyparts/IShopWingsRear'
+import IShopBumperRear from '@models/shop/bodyparts/IShopBumperRear'
+import IShopSkirts from '@models/shop/bodyparts/IShopSkirts'
+import IShopSpoiler from '@models/shop/bodyparts/IShopSpoiler'
+import IShopBonnet from '@models/shop/bodyparts/IShopBonnet'
+import IShopMirrors from '@models/shop/bodyparts/IShopMirrors'
+import IShopHeadLights from '@models/shop/bodyparts/IShopHeadLights'
+import IShopTailLights from '@models/shop/bodyparts/IShopTailLights'
+import IShopWingsFront from '@models/shop/bodyparts/IShopWingsFront'
+import IShopPaintCoating from '@models/shop/graphics/IShopPaintCoating'
+import IShopPaintColor from '@models/shop/graphics/IShopPaintColor'
+import IShopGlassTint from '@models/shop/accessories/IShopGlassTint'
+// shops
+import shopPaintCoating from 'src/shop/graphics/paint_coating'
+import shopPaintColor from 'src/shop/graphics/paint_color'
+import shopGlassTints from 'src/shop/accessories/glass_tint'
+import shopBumperFront from 'src/shop/bodyparts/bumper_front'
+import shopSkirts from 'src/shop/bodyparts/skirts'
+import shopBumperRear from 'src/shop/bodyparts/bumper_rear'
+import shopSpoiler from 'src/shop/bodyparts/spoiler'
+import shopBonnet from 'src/shop/bodyparts/bonnet'
+import shopMirrors from 'src/shop/bodyparts/mirrors'
+import shopHeadLights from 'src/shop/bodyparts/head_lights'
+import shopTailLight from 'src/shop/bodyparts/tail_lights'
+import shopWingsFront from 'src/shop/bodyparts/wings_front'
+import shopExhaust from 'src/shop/bodyparts/exhaust'
+import shopWingsRear from 'src/shop/bodyparts/wings_rear'
+import IShopItem from '@models/shop/IShopItem'
+import IShopWheelsAdjust from '@models/shop/wheels/IShopWheelsAdjust'
+import { SceneSettings } from '@components/SceneSettings'
 
+
+const shops: {
+    bumper_front: IShopBumperFront[],
+    bumper_rear: IShopBumperRear[],
+    skirts: IShopSkirts[],
+    spoiler: IShopSpoiler[],
+    bonnet: IShopBonnet[],
+    mirrors: IShopMirrors[],
+    head_lights: IShopHeadLights[],
+    tail_lights: IShopTailLights[],
+    wings_front: IShopWingsFront[],
+    wings_rear: IShopWingsRear[],
+    exhaust: IShopExhaust[],
+    paint_coating: IShopPaintCoating[],
+    paint_color: IShopPaintColor[],
+    glass_tint: IShopGlassTint[],
+} = {
+    bumper_front: shopBumperFront,
+    bumper_rear: shopBumperRear,
+    skirts: shopSkirts,
+    spoiler: shopSpoiler,
+    bonnet: shopBonnet,
+    mirrors: shopMirrors,
+    head_lights: shopHeadLights,
+    tail_lights: shopTailLight,
+    wings_front: shopWingsFront,
+    wings_rear: shopWingsRear,
+    exhaust: shopExhaust,
+    paint_coating: shopPaintCoating,
+    paint_color: shopPaintColor,
+    glass_tint: shopGlassTints,
+}
 
 
 const Garage = () => {
 
-    // vars
-
-    // functions
-    const translateBodypartType = (word: string) => {
-        if (word === 'bumper_front') return 'Передний бампер'
-        else if (word === 'bumper_rear') return 'Задний бампер'
-        else if (word === 'skirts') return 'Боковые юбки'
-        else if (word === 'spoiler') return 'Спойлер'
-        else if (word === 'bonnet') return 'Капот'
-        else if (word === 'mirrors') return 'Боковые зеркала'
-        else if (word === 'head_lights') return 'Передние фары'
-        else if (word === 'tail_lights') return 'Задние огни'
-        else if (word === 'wings_front') return 'Передние крылья'
-        else if (word === 'wings_rear') return 'Задние крылья'
-        else if (word === 'exhaust') return 'Выхлопная труба'
-        return ''
-    }
-    const translateGraphicType = (word: string) => {
-        if (word === 'paint_color') return 'Цвет кузова'
-        else if (word === 'paint_coating') return 'Покрытие краски'
-        return ''
-    }
-    const translateAccessoryType = (word: string) => {
-        if (word === 'glass_tint') return 'Тонировка'
+    // funcs
+    const shop_item_type_translate = (type: string) => {
+        if (type === 'bumper_front') return 'Передний бампер'
+        else if (type === 'bumper_rear') return 'Задний бампер'
+        else if (type === 'skirts') return 'Боковые юбки'
+        else if (type === 'spoiler') return 'Спойлер'
+        else if (type === 'bonnet') return 'Капот'
+        else if (type === 'mirrors') return 'Боковые зеркала'
+        else if (type === 'head_lights') return 'Передние фары'
+        else if (type === 'tail_lights') return 'Задние огни'
+        else if (type === 'wings_front') return 'Передние крылья'
+        else if (type === 'wings_rear') return 'Задние крылья'
+        else if (type === 'exhaust') return 'Выхлопная труба'
+        else if (type === 'paint_coating') return 'Покрытие краски'
+        else if (type === 'paint_color') return 'Цвет кузова'
+        else if (type === 'glass_tint') return 'Тонировка'
         return ''
     }
 
@@ -102,57 +138,66 @@ const Garage = () => {
     const [displayedVehicle, setDisplayedVehicle] = React.useState<IVehicle>(null!)
     const [isVehiclesPanelOpen, setIsVehiclesPanelOpen] = React.useState<boolean>(false)
     const [isStylingOpen, setIsStylingOpen] = React.useState<boolean>(false)
-    const [selectedBodypartData, setSelectedBodypartData] = React.useState<IShopBodypart>(null!)
-    const [selectedPaintCoatingData, setSelectedPaintCoatingData] = React.useState<IShopPaintCoating>(null!)
-    const [selectedPaintColorData, setSelectedPaintColorData] = React.useState<IShopPaintColor>(null!)
-    const [selectedGlassTint, setSelectedGlassTint] = React.useState<IShopGlassTint>(null!)
-    // modals states
-    const [isShowedModalWindow_ConfirmPurchaseBodypart, setIsShowedModalWindow_ConfirmPurchaseBodypart] = React.useState(false)
-    const [isShowedModalWindow_ConfirmPurchasePaintCoating, setIsShowedModalWindow_ConfirmPurchasePaintCoating] = React.useState(false)
-    const [isShowedModalWindow_ConfirmPurchasePaintColor, setIsShowedModalWindow_ConfirmPurchasePaintColor] = React.useState(false)
-    const [isShowedModalWindow_ConfirmPurchaseGlassTint, setIsShowedModalWindow_ConfirmPurchaseGlassTint] = React.useState(false)
-    const [isShowedModalWindow_NotEnoughMoney, setIsShowedModalWindow_NotEnoughMoney] = React.useState(false)
-    const [isShowedModalWindow_SuccessPurchase, setIsShowedModalWindow_SuccessPurchase] = React.useState(false)
+    const [purchaseData, setPurchaseData] = React.useState({
+        title: '',
+        subtitle: '',
+        data: {
+            type: '',
+            id: 0,
+            price: 0,
+        }
+    })
+    const [purchaseWheelsAdjustData, setPurchaseWheelsAdjustData] = React.useState({
+        title: 'Регулировка колес',
+        subtitle: 'Изменение параметров',
+        data: {
+            wheels_offset: 0,
+            wheels_alignment: 0,
+            price: 5000,
+        }
+    })
 
     // effects
-
     React.useEffect(()=>{
         setDisplayedVehicle(playerVehicles[0])
     }, [playerVehicles])
 
     React.useEffect(()=>{
-        // BODYPARTS
-        stylingStore.setNowDisplayedBodypartsIds(displayedVehicle?.bodyparts_ids)
-        stylingStore.setGraphicsPaintCoating(shop_coatings.filter(coating=>coating.paint_coating_name===displayedVehicle?.paint_coating_name)[0])
-        stylingStore.setGraphicsPaintColor(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
-        stylingStore.setAccessoryGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
+        stylingStore.setStyling(displayedVehicle?.styling)
     }, [displayedVehicle])
 
     React.useEffect(()=>{
         const level = stylingStore.menuLevel
         const split_level = level.split('.')
+        const shop_item_type = split_level[2]
 
-        if (split_level.length >= 3) {
-
-            if (split_level[1] === 'bodyparts') {
-                const selectedBodypart = shop_bodyparts
-                .filter(shopitem=>shopitem.type===split_level[2])
-                .filter(shopitem=>shopitem.id === stylingStore.nowDisplayedBodypartsIds[`${split_level[2]}_id`])[0]
-                setSelectedBodypartData(selectedBodypart)
-            }
-            else if (split_level[1] === 'graphics' && split_level[2] === 'paint_coating') {
-                const selected_coating_data = shop_coatings.filter(shopitem=>shopitem.id===stylingStore.nowDisplayedGraphics.paint_coating?.id)[0]
-                setSelectedPaintCoatingData(selected_coating_data)
-            }
-            else if (split_level[1] === 'graphics' && split_level[2] === 'paint_color') {
-                const selected_color_data = shop_colors.filter(shopitem=>shopitem.id===stylingStore.nowDisplayedGraphics.paint_color?.id)[0]
-                setSelectedPaintColorData(selected_color_data)
-            }
-            else if (split_level[1] === 'accessories' && split_level[2] === 'glass_tint') {
-                const selected_glass_tint = shop_glass_tints.filter(shopitem=>shopitem.id===stylingStore.nowDisplayedAccessories.glass_tint?.id)[0]
-                setSelectedGlassTint(selected_glass_tint)
-            }
+        if (split_level.length >= 3 && !level.includes('wheels.adjust')) {
+            const shop_item = shops[shop_item_type].filter(shop_item=>shop_item.id === stylingStore.styling[`${shop_item_type}_id`])[0]
+            setPurchaseData({
+                title: shop_item.name,
+                subtitle: shop_item_type_translate(shop_item_type),
+                data: {
+                    type: shop_item.type,
+                    id: shop_item.id,
+                    price: shop_item.price,
+                }
+            })
         }
+
+        if (level.includes('wheels.adjust')) {
+            setPurchaseWheelsAdjustData({
+                title: purchaseWheelsAdjustData.title,
+                subtitle: purchaseWheelsAdjustData.subtitle,
+                data: {
+                    wheels_offset: stylingStore.styling.wheels_offset,
+                    wheels_alignment: stylingStore.styling.wheels_alignment,
+                    price: purchaseWheelsAdjustData.data.price,
+                }
+            })
+        }
+
+        stylingStore.setStyling(displayedVehicle?.styling)
+
     }, [stylingStore.menuLevel])
 
     // handlers
@@ -163,158 +208,105 @@ const Garage = () => {
         setDisplayedVehicle(vehicle)
         setIsVehiclesPanelOpen(false)
     }
-    const stylingBodypartButtonClickHandler = (bodypart_data: IShopBodypart) => {
-        if (bodypart_data.type === 'bumper_front') stylingStore.setBumperFrontId(bodypart_data.id)
-        else if (bodypart_data.type === 'bumper_rear') stylingStore.setBumperRearId(bodypart_data.id)
-        else if (bodypart_data.type === 'skirts') stylingStore.setSkirtsId(bodypart_data.id)
-        else if (bodypart_data.type === 'spoiler') stylingStore.setSpoilerId(bodypart_data.id)
-        else if (bodypart_data.type === 'bonnet') stylingStore.setBonnetId(bodypart_data.id)
-        else if (bodypart_data.type === 'mirrors') stylingStore.setMirrorsId(bodypart_data.id)
-        else if (bodypart_data.type === 'head_lights') stylingStore.setHeadLightsId(bodypart_data.id)
-        else if (bodypart_data.type === 'tail_lights') stylingStore.setTailLightsId(bodypart_data.id)
-        else if (bodypart_data.type === 'wings_front') stylingStore.setWingsFrontId(bodypart_data.id)
-        else if (bodypart_data.type === 'wings_rear') stylingStore.setWingsRearId(bodypart_data.id)
-        else if (bodypart_data.type === 'exhaust') stylingStore.setExhaustId(bodypart_data.id)
-        setSelectedBodypartData(bodypart_data)
-    }
-    const stylingPaintCoatingButtonClickHandler = (coating: IShopPaintCoating) => {
-        stylingStore.setGraphicsPaintCoating(coating) // for physically displaying
-        setSelectedPaintCoatingData(coating) // for purchasing frame data(-s)
-    }
-    const stylingPaintColorButtonClickHandler = (color: IShopPaintColor) => {
-        stylingStore.setGraphicsPaintColor(color) // for physically displaying
-        setSelectedPaintColorData(color) // for purchasing frame data(-s)
-    }
-    const stylingGlassTintButtonClickHandler = (glass_tint: IShopGlassTint) => {
-        stylingStore.setAccessoryGlassTint(glass_tint)
-        setSelectedGlassTint(glass_tint)
-    }
-    const styling_third_level_back_button_click_handler = (to: string) => {
-        // set styling menu level
-        stylingStore.setMenuLevel(to)
-        // set current displaying bodyparts by id
-        stylingStore.setNowDisplayedBodypartsIds(displayedVehicle.bodyparts_ids)
-        stylingStore.setGraphicsPaintCoating(shop_coatings.filter(coating=>coating.paint_coating_name===displayedVehicle?.paint_coating_name)[0])
-        stylingStore.setGraphicsPaintColor(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
-        stylingStore.setAccessoryGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
-    }
-    const stylingBodypartPurchaseConfirmedHandler = async () => { 
-        // disable confirmation modal window
-        setIsShowedModalWindow_ConfirmPurchaseBodypart(false)
-        // make post request with response
-        // request
-        const url = 'http://localhost:3001/api/vehicles/purchaseBodypart'
-        const data = {
-            user_id: 230990098,
-            vehicle_slot: displayedVehicle.garage_slot,
-            bodypart_data: selectedBodypartData,
+
+    // shop item buttons handlers
+    const shopItemClickHandler = (shop_item: IShopItem) => {
+        stylingStore.setStylingItemId(shop_item.type, shop_item.id)
+        // set purchase data
+        const purchaseData = {
+            title: shop_item.name,
+            subtitle: shop_item_type_translate(shop_item.type),
+            data: {
+                type: shop_item.type,
+                id: shop_item.id,
+                price: shop_item.price
+            }
         }
+        setPurchaseData(purchaseData)
+    }
+    const wheelsRangeOffsetChangeHandler = (rangeValue: number) => {
+        stylingStore.setStylingWheelsOffset(rangeValue)
+    }
+    const wheelsRangeAlignmentChangeHandler = (rangeValue: number) => {
+        stylingStore.setStylingWheelsAlignment(rangeValue)
+    }
+    const navListButtonClickHandler = (to: string) => {
+        stylingStore.setMenuLevel(to)
+    }
+    const navListBack = () => {
+        const level = stylingStore.menuLevel.split('.')
+        level.pop()
+        stylingStore.setMenuLevel(level.join('.'))
+    }
+    const purchaseConfirmClickHandler = async () => {
+        
+        let url;
+        let data;
+
+        if (stylingStore.menuLevel.includes('wheels.adjust')) {
+            url = 'http://localhost:3001/api/vehicles/purchaseStylingWheelsAdjust'
+            data = {
+                user_id: 230990098,
+                vehicle_slot: displayedVehicle?.garage_slot,
+                data: {
+                    wheels_offset: stylingStore.styling.wheels_offset,
+                    wheels_alignment: stylingStore.styling.wheels_alignment,
+                    price: purchaseWheelsAdjustData.data.price
+                }
+            }
+        }
+        else {
+            url = 'http://localhost:3001/api/vehicles/purchaseStylingShopItem'
+            data = {
+                user_id: 230990098,
+                vehicle_slot: displayedVehicle?.garage_slot,
+                data: {
+                    type: purchaseData.data.type,
+                    id: purchaseData.data.id,
+                    price: purchaseData.data.price
+                }
+            }
+        }
+        
         const response = (await axios.post(url, data)).data
-        // check response status of request
+
         if (response.status === 'ok') {
-            // открыть модалку успешного приобретения
-            setIsShowedModalWindow_SuccessPurchase(true)
-            // обновить displayedVehicle (получить снова из базы данных)
-            const url = `http://localhost:3001/api/vehicles/playerVehicles/${230990098}`
-            // обновить displayedVehicle
-            await axios.get(url).then((res)=>setDisplayedVehicle(res.data[0]))
-            // обновить playerStore.money
+            const url = 'http://localhost:3001/api/vehicles/playerVehicles/230990098'
+            const playerVehicles: IVehicle[] = (await axios.get(url)).data
+            setDisplayedVehicle(playerVehicles.filter(vehicle=>vehicle.garage_slot===displayedVehicle?.garage_slot)[0])
             playerStore.setMoney(response.updated_player_money)
-            // имитация нажатия на кнопку назад
-            styling_third_level_back_button_click_handler('styling.bodyparts')
+            navListBack()
         }
         else if (response.status === 'error') {
             if (response.error === 'NotEnoughPlayerMoney') {
-                // enable not enough modal window
-                setIsShowedModalWindow_NotEnoughMoney(true)
+                stylingStore.setStyling(displayedVehicle?.styling)
 
-                // установить отображаемую деталь как деталь, которая уже куплена у игрока
-                // а также установить данные детали в selectedBodypartData
-                stylingStore.setNowDisplayedBodypartsIds(displayedVehicle?.bodyparts_ids)
-                setSelectedBodypartData(
-                    shop_bodyparts
-                    .filter(bodypart=>bodypart.type===stylingStore.menuLevel.split('.')[2])
-                    .filter(bodypart=>bodypart.id===displayedVehicle?.bodyparts_ids[`${stylingStore.menuLevel.split('.')[2]}_id`])[0]
-                )
-            }
-        }
-    }
-    const stylingPaintCoatingPurchaseConfirmedHandler = async () => {
-        setIsShowedModalWindow_ConfirmPurchasePaintCoating(false)
-        const url = 'http://localhost:3001/api/vehicles/purchasePaintCoating'
-        const data = {
-            user_id: 230990098,
-            vehicle_slot: displayedVehicle.garage_slot,
-            paint_coating: selectedPaintCoatingData,
-        }
-        const response = (await axios.post(url, data)).data
-        if (response.status === 'ok') {
-            setIsShowedModalWindow_SuccessPurchase(true)
-            const url = `http://localhost:3001/api/vehicles/playerVehicles/${230990098}`
-            await axios.get(url).then((res)=>setDisplayedVehicle(res.data[0]))
-            playerStore.setMoney(response.updated_player_money)
-            styling_third_level_back_button_click_handler('styling.graphics')
-        } else if (response.status === 'error') {
-            if (response.error === 'NotEnoughPlayerMoney') {
-                // enable not enough modal window
-                setIsShowedModalWindow_NotEnoughMoney(true)
-                // установить отображаемую деталь как деталь, которая уже куплена у игрока
-                // а также установить данные детали в selectedBodypartData
-                stylingStore.setGraphicsPaintCoating(shop_coatings.filter(coating=>coating.paint_coating_name===displayedVehicle?.paint_coating_name)[0])
-                setSelectedPaintCoatingData(shop_coatings.filter(coating=>coating.paint_coating_name===displayedVehicle?.paint_coating_name)[0])
-            }
-        }
-    }
-    const stylingPaintColorPurchaseConfirmedHandler = async () => {
-        setIsShowedModalWindow_ConfirmPurchasePaintColor(false)
-        const url = 'http://localhost:3001/api/vehicles/purchasePaintColor'
-        const data = {
-            user_id: 230990098,
-            vehicle_slot: displayedVehicle.garage_slot,
-            paint_color: selectedPaintColorData,
-        }
-        const response = (await axios.post(url, data)).data
-        if (response.status === 'ok') {
-            setIsShowedModalWindow_SuccessPurchase(true)
-            const url = `http://localhost:3001/api/vehicles/playerVehicles/${230990098}`
-            await axios.get(url).then((res)=>setDisplayedVehicle(res.data[0]))
-            playerStore.setMoney(response.updated_player_money)
-            styling_third_level_back_button_click_handler('styling.graphics')
-        } else if (response.status === 'error') {
-            if (response.error === 'NotEnoughPlayerMoney') {
-                // enable not enough modal window
-                setIsShowedModalWindow_NotEnoughMoney(true)
-                // установить отображаемую деталь как деталь, которая уже куплена у игрока
-                // а также установить данные детали в selectedBodypartData
-                stylingStore.setGraphicsPaintColor(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
-                setSelectedPaintColorData(shop_colors.filter(color=>color.hex===displayedVehicle?.paint_color_hex)[0])
-            }
-        }
-    }
-
-    const stylingGlassTintPurchaseConfirmedHandler = async () => {
-        setIsShowedModalWindow_ConfirmPurchaseGlassTint(false)
-        const url = 'http://localhost:3001/api/vehicles/purchaseGlassTint'
-        const data = {
-            user_id: 230990098,
-            vehicle_slot: displayedVehicle.garage_slot,
-            glass_tint: selectedGlassTint,
-        }
-        const response = (await axios.post(url, data)).data
-        if (response.status === 'ok') {
-            setIsShowedModalWindow_SuccessPurchase(true)
-            const url = `http://localhost:3001/api/vehicles/playerVehicles/${230990098}`
-            await axios.get(url).then((res)=>setDisplayedVehicle(res.data[0]))
-            playerStore.setMoney(response.updated_player_money)
-            styling_third_level_back_button_click_handler('styling.accessories')
-        } else if (response.status === 'error') {
-            if (response.error === 'NotEnoughPlayerMoney') {
-                // enable not enough modal window
-                setIsShowedModalWindow_NotEnoughMoney(true)
-                // установить отображаемую деталь как деталь, которая уже куплена у игрока
-                // а также установить данные детали в selectedBodypartData
-                stylingStore.setAccessoryGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
-                setSelectedGlassTint(shop_glass_tints.filter(glass_tint=>glass_tint.id===displayedVehicle?.glass_tint_id)[0])
+                if (stylingStore.menuLevel.includes('wheels.adjust')) {
+                    const previousWheelsAdjust = {
+                        title: 'Регулировка колес',
+                        subtitle: 'Изменение параметров',
+                        data: {
+                            wheels_offset: stylingStore.styling.wheels_offset,
+                            wheels_alignment: stylingStore.styling.wheels_alignment,
+                            price: 5000,
+                        }
+                    }
+                    setPurchaseWheelsAdjustData(previousWheelsAdjust)
+                }
+                else {
+                    const previousShopItem: IShopItem = shops[`${purchaseData.data.type}`]
+                    .filter((shop_item: IShopItem)=>shop_item.id === displayedVehicle?.styling[`${purchaseData.data.type}_id`])[0]                
+                    setPurchaseData({
+                        title: previousShopItem.name,
+                        subtitle: 'Передний бампер',
+                        data: {
+                            type: previousShopItem.type,
+                            id: previousShopItem.id,
+                            price: previousShopItem.price,
+                        }
+                    })
+                }
+                navListBack()
             }
         }
     }
@@ -332,8 +324,9 @@ const Garage = () => {
                 >
                 <EnvExotic intensity={1} path='3d/hdri/metro_vijzelgracht_1k.hdr' />
                 <EffectsExotic />
-                <CameraMovementExotic />
+                {/* <CameraMovementExotic /> */}
                 <SceneGarage />
+                <CameraControls />
 
                 { displayedVehicle?.brand.toLowerCase() === 'bmw' && displayedVehicle?.model.toLowerCase() === 'm5 f90' && <BMWM5F90 /> }
                 { displayedVehicle?.brand.toLowerCase() === 'dodge' && displayedVehicle?.model.toLowerCase() === 'charger' && <DodgeCharger /> }
@@ -347,62 +340,10 @@ const Garage = () => {
                 { displayedVehicle?.brand.toLowerCase() === 'volkswagen' && displayedVehicle?.model.toLowerCase() === 'golf' && <VolkswagenGolf /> }
             </Canvas>
 
-            {/* player data frame */}
-            <PlayerData />
-
-            {
-                isShowedModalWindow_ConfirmPurchaseBodypart &&
-                <ModalWindow title='Подтвердите действие' subtitle='' text='Хотите приобрести эту запчасть?'
-                    buttons={[
-                        { text: 'Нет', tcolor: 'white', bcolor: 'rgba(0,0,0,.45)', onClick: ()=>setIsShowedModalWindow_ConfirmPurchaseBodypart(false) },
-                        { text: 'Приобрести', tcolor: 'white', bcolor: '#624CFE', onClick: stylingBodypartPurchaseConfirmedHandler },
-                    ]}
-                />
-            }
-            {
-                isShowedModalWindow_ConfirmPurchasePaintCoating &&
-                <ModalWindow title='Подтвердите действие' subtitle='' text='Хотите приобрести новое покрытие?'
-                    buttons={[
-                        { text: 'Нет', tcolor: 'white', bcolor: 'rgba(0,0,0,.45)', onClick: ()=>setIsShowedModalWindow_ConfirmPurchasePaintCoating(false) },
-                        { text: 'Приобрести', tcolor: 'white', bcolor: '#624CFE', onClick: stylingPaintCoatingPurchaseConfirmedHandler },
-                    ]}
-                />
-            }
-            {
-                isShowedModalWindow_ConfirmPurchasePaintColor &&
-                <ModalWindow title='Подтвердите действие' subtitle='' text='Хотите приобрести новый цвет?'
-                    buttons={[
-                        { text: 'Нет', tcolor: 'white', bcolor: 'rgba(0,0,0,.45)', onClick: ()=>setIsShowedModalWindow_ConfirmPurchasePaintColor(false) },
-                        { text: 'Приобрести', tcolor: 'white', bcolor: '#624CFE', onClick: stylingPaintColorPurchaseConfirmedHandler },
-                    ]}
-                />
-            }
-            {
-                isShowedModalWindow_ConfirmPurchaseGlassTint &&
-                <ModalWindow title='Подтвердите действие' subtitle='' text='Хотите приобрести тонировку?'
-                    buttons={[
-                        { text: 'Нет', tcolor: 'white', bcolor: 'rgba(0,0,0,.45)', onClick: ()=>setIsShowedModalWindow_ConfirmPurchaseGlassTint(false) },
-                        { text: 'Приобрести', tcolor: 'white', bcolor: '#624CFE', onClick: stylingGlassTintPurchaseConfirmedHandler },
-                    ]}
-                />
-            }
-            {
-                isShowedModalWindow_NotEnoughMoney &&
-                <ModalWindow title='Недостаточно средств' subtitle='' text='У вас не хватает средст для приобретения этой запчасти.'
-                    buttons={[
-                        { text: 'Понятно', tcolor: 'white', bcolor: 'rgba(0,0,0,.45)', onClick: ()=>setIsShowedModalWindow_NotEnoughMoney(false) },
-                    ]}
-                />
-            }
-            {
-                isShowedModalWindow_SuccessPurchase &&
-                <ModalWindow title='Успешное приобретение' subtitle='' text='Поздравляем с новой покупкой!'
-                    buttons={[
-                        { text: 'Супер', tcolor: 'white', bcolor: '#624CFE', onClick: ()=>setIsShowedModalWindow_SuccessPurchase(false) },
-                    ]}
-                />
-            }
-
+            <div className={styles.top_right_screen}>
+                <PlayerData />
+                <SceneSettings />
+            </div>
 
             {!isStylingOpen &&
             <div className={styles.garage_container}>
@@ -452,17 +393,17 @@ const Garage = () => {
                 
                 {
                     stylingStore.menuLevel === 'styling' &&
-                    <StylingNavList title='Стайлинг' subtitle='Выберите магазин'>
+                    <StylingNavList title='Стайлинг' subtitle='Выберите магазин' buttonText='Назад' onButtonClick={()=>{stylingStore.setMenuLevel('styling'); setIsStylingOpen(!isStylingOpen)}}>
                         <StylingNavItem text='Кузовное ателье' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
                         <StylingNavItem text='Покрасочный цех' onClick={()=>stylingStore.setMenuLevel('styling.graphics')} />
                         <StylingNavItem text='Аксессуарная лавка' onClick={()=>stylingStore.setMenuLevel('styling.accessories')} />
-                        <StylingNavItem text='Колесная станция' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts')} />
+                        <StylingNavItem text='Колесная станция' onClick={()=>stylingStore.setMenuLevel('styling.wheels')} />
                     </StylingNavList>
                 }
                 {/* BODYPARTS */}
                 {
                     stylingStore.menuLevel === 'styling.bodyparts' &&
-                    <StylingNavList title='Кузовное ателье' subtitle='Выберите тип деталей' buttonText='Назад' onButtonClick={()=>stylingStore.setMenuLevel('styling')}>
+                    <StylingNavList title='Кузовное ателье' subtitle='Выберите тип деталей' buttonText='Назад' onButtonClick={navListBack}>
                         <StylingNavItem text='Передние бамперы' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bumper_front')} />
                         <StylingNavItem text='Задние бамперы' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.bumper_rear')} />
                         <StylingNavItem text='Боковые юбки' onClick={()=>stylingStore.setMenuLevel('styling.bodyparts.skirts')} />
@@ -477,134 +418,72 @@ const Garage = () => {
                     </StylingNavList>
                 }
                 {
-                    stylingStore.menuLevel.includes('bodyparts') && stylingStore.menuLevel.split('.').length >= 3 &&
-                    <StylingNavList title='Кузовное ателье' subtitle={translateBodypartType(stylingStore.menuLevel.split('.')[2])} buttonText='Назад' onButtonClick={()=>styling_third_level_back_button_click_handler('styling.bodyparts')}>
-                        {
-                            shop_bodyparts
-                            .filter(bodypart_data => bodypart_data.type===stylingStore.menuLevel.split('.')[2])
-                            .map(bodypart_data =>
-                                <StylingBodypartButton
-                                    key={bodypart_data.id}
-                                    partName={bodypart_data.present_name}
-                                    price={bodypart_data.price}
-                                    isPurchased={bodypart_data.id === displayedVehicle.bodyparts_ids[`${stylingStore.menuLevel.split('.')[2]}_id`]}
-                                    onClick={()=>stylingBodypartButtonClickHandler(bodypart_data)}
-                                />
-                            )
-                        }
-                    </StylingNavList>
-                }
-                {
-                    stylingStore.menuLevel.includes('bodyparts') && stylingStore.menuLevel.split('.').length >= 3 &&
-                    <StylingPurchasing
-                        title={ selectedBodypartData?.present_name }
-                        subtitle={ translateBodypartType(stylingStore.menuLevel.split('.')[2]) }
-                        price={ selectedBodypartData?.price }
-                        onPurchaseClick={()=>setIsShowedModalWindow_ConfirmPurchaseBodypart(true)}
-                    />
-                }
-
-                {/* GRAPHICS */}
-                {
                     stylingStore.menuLevel === 'styling.graphics' &&
-                    <StylingNavList title='Покрасочный цех' subtitle='Выберите тип работ' buttonText='Назад' onButtonClick={()=>stylingStore.setMenuLevel('styling')}>
+                    <StylingNavList title='Покрасочный цех' subtitle='Выберите тип работ' buttonText='Назад' onButtonClick={navListBack}>
                         <StylingNavItem text='Цвет кузова' onClick={()=>stylingStore.setMenuLevel('styling.graphics.paint_color')} />
                         <StylingNavItem text='Покрытие краски' onClick={()=>stylingStore.setMenuLevel('styling.graphics.paint_coating')} />
                     </StylingNavList>
                 }
-                {/* GRAPHICS.PAINT_COATINGS */}
-                {
-                    stylingStore.menuLevel.includes('graphics.paint_coating') && stylingStore.menuLevel.split('.').length >= 3 &&
-                    <StylingNavList title='Покрасочный цех' subtitle={translateGraphicType(stylingStore.menuLevel.split('.')[2])} buttonText='Назад' onButtonClick={()=>styling_third_level_back_button_click_handler('styling.graphics')}>
-                        {
-                            shop_coatings
-                            .map(coating =>
-                                <StylingGraphicButton
-                                    key={coating.id}
-                                    text={coating.present_name}
-                                    price={coating.price}
-                                    isPurchased={false}
-                                    onClick={()=>stylingPaintCoatingButtonClickHandler(coating)}
-                                />
-                            )
-                        }
-                    </StylingNavList>
-                }
-                {
-                    stylingStore.menuLevel.includes('graphics.paint_coating') && stylingStore.menuLevel.split('.').length >= 3 &&
-                    <StylingPurchasing
-                        title={ selectedPaintCoatingData?.present_name }
-                        subtitle={ translateGraphicType(stylingStore.menuLevel.split('.')[2]) }
-                        price={ selectedPaintCoatingData?.price }
-                        onPurchaseClick={()=>setIsShowedModalWindow_ConfirmPurchasePaintCoating(true)}
-                    />
-                }
-                {/* GRAPHICS.PAINT_COLORS */}
-                {
-                    stylingStore.menuLevel.includes('graphics.paint_color') && stylingStore.menuLevel.split('.').length >= 3 &&
-                    <StylingNavList title='Покрасочный цех' subtitle={translateGraphicType(stylingStore.menuLevel.split('.')[2])} buttonText='Назад' onButtonClick={()=>styling_third_level_back_button_click_handler('styling.graphics')}>
-                        {
-                            shop_colors
-                            .map(color =>
-                                <StylingGraphicButton
-                                    key={color.id}
-                                    text={color.present_name}
-                                    price={color.price}
-                                    isPurchased={false}
-                                    onClick={()=>stylingPaintColorButtonClickHandler(color)}
-                                />
-                            )
-                        }
-                    </StylingNavList>
-                }
-                {
-                    stylingStore.menuLevel.includes('graphics.paint_color') && stylingStore.menuLevel.split('.').length >= 3 &&
-                    <StylingPurchasing
-                        title={ selectedPaintColorData?.present_name }
-                        subtitle={ translateGraphicType(stylingStore.menuLevel.split('.')[2]) }
-                        price={ selectedPaintColorData?.price }
-                        onPurchaseClick={()=>setIsShowedModalWindow_ConfirmPurchasePaintColor(true)}
-                    />
-                }
-
-                {/* ACCESSORIES */}
                 {
                     stylingStore.menuLevel === 'styling.accessories' &&
-                    <StylingNavList title='Аксессуарная лавка' subtitle='Выберите тип аксессуара' buttonText='Назад' onButtonClick={()=>stylingStore.setMenuLevel('styling')}>
+                    <StylingNavList title='Аксессуарная лавка' subtitle='Выберите тип аксессуара' buttonText='Назад' onButtonClick={navListBack}>
                         <StylingNavItem text='Тонировка' onClick={()=>stylingStore.setMenuLevel('styling.accessories.glass_tint')} />
                     </StylingNavList>
                 }
-                {/* ACCESSORIES.GLASS_TINT */}
                 {
-                    stylingStore.menuLevel.includes('accessories') && stylingStore.menuLevel.split('.').length >= 3 &&
-                    <StylingNavList title='Аксессуарная лавка' subtitle={translateAccessoryType(stylingStore.menuLevel.split('.')[2])} buttonText='Назад' onButtonClick={()=>styling_third_level_back_button_click_handler('styling.accessories')}>
+                    stylingStore.menuLevel === 'styling.wheels' &&
+                    <StylingNavList title='Колесная станция' subtitle='Выберите тип работ' buttonText='Назад' onButtonClick={navListBack}>
+                        <StylingNavItem text='Регулировка колес' onClick={()=>stylingStore.setMenuLevel('styling.wheels.adjust')} />
+                    </StylingNavList>
+                }
+                {
+                    stylingStore.menuLevel.split('.').length >= 3 &&
+                    stylingStore.menuLevel.split('.')[1] !== 'wheels' &&
+                    <>
+                    <StylingNavList
+                        title='Стайлинг'
+                        subtitle={shop_item_type_translate(stylingStore.menuLevel.split('.')[2])}
+                        buttonText='Назад'
+                        onButtonClick={navListBack}>
                         {
-                            shop_glass_tints
-                            .map(glass_tint =>
-                                <StylingAccessoryButton
-                                    key={glass_tint.id}
-                                    text={glass_tint.present_name}
-                                    price={glass_tint.price}
-                                    isPurchased={false}
-                                    onClick={()=>stylingGlassTintButtonClickHandler(glass_tint)}
+                            shops[stylingStore.menuLevel.split('.')[2]]
+                            .map((shopItem: IShopItem) =>
+                                <ShopItemButton
+                                    key={shopItem.id}
+                                    text={shopItem.name}
+                                    price={shopItem.price}
+                                    onClick={()=>shopItemClickHandler(shopItem)}
                                 />
                             )
                         }
                     </StylingNavList>
+                    <StylingPurchasing
+                        title={purchaseData.title}
+                        subtitle={purchaseData.subtitle}
+                        data={purchaseData.data}
+                        onClickPurchase={purchaseConfirmClickHandler}
+                    />
+                    </>
                 }
                 {
-                    stylingStore.menuLevel.includes('accessories') && stylingStore.menuLevel.split('.').length >= 3 &&
+                    stylingStore.menuLevel.includes('wheels.adjust') &&
+                    <>
+                    <StylingNavList
+                        title='Колесная станция'
+                        subtitle='sub'
+                        buttonText='Назад'
+                        onButtonClick={navListBack}>
+                        <StylingWheelsRange title='Вылет колес' from={0} to={1} step={.01} value={stylingStore.styling.wheels_offset} onChange={(rangeValue: number)=>wheelsRangeOffsetChangeHandler(rangeValue)} />
+                        <StylingWheelsRange title='Развал колес' from={-1} to={1} step={.01} value={stylingStore.styling.wheels_alignment} onChange={(rangeValue: number)=>wheelsRangeAlignmentChangeHandler(rangeValue)} />
+                    </StylingNavList>
                     <StylingPurchasing
-                        title={ selectedGlassTint?.present_name }
-                        subtitle={ translateAccessoryType(stylingStore.menuLevel.split('.')[2]) }
-                        price={ selectedGlassTint?.price }
-                        onPurchaseClick={()=>setIsShowedModalWindow_ConfirmPurchaseGlassTint(true)}
+                        title={purchaseWheelsAdjustData.title}
+                        subtitle={purchaseWheelsAdjustData.subtitle}
+                        data={purchaseWheelsAdjustData.data}
+                        onClickPurchase={purchaseConfirmClickHandler}
                     />
+                    </>
                 }
-
-                <button className={styles.btn_back_to_garage} onClick={()=>{ setIsStylingOpen(false); styling_third_level_back_button_click_handler('styling')}}>
-                    <p>Вернуться в гараж</p>
-                </button>
             </div>
             }
         </div>

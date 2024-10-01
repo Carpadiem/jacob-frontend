@@ -44,8 +44,9 @@ import { ModalButton } from '@components/ModalButton'
 import IVehicle from '@models/IVehicle'
 import useGameVehicles from 'src/hooks/useGameVehicles'
 import stylingStore from '@stores/styling.store'
-import shop_coatings from 'src/shop/styling/graphic_coatings'
-import shop_colors from 'src/shop/styling/graphic_colors'
+
+import shopPaintCoating from 'src/shop/graphics/paint_coating'
+import shopPaintColor from 'src/shop/graphics/paint_color'
 
 
 const all_brand_items = [
@@ -101,10 +102,8 @@ function Autosalon() {
 
   React.useEffect(()=>{
     // set vehicle paint coating and color
-    const paint_coating = shop_coatings.filter(coating=>coating.paint_coating_name==='glossy')[0]
-    const paint_color = shop_colors.filter(color=>color.id===15)[0] // gainsboro
-    stylingStore.setGraphicsPaintCoating(paint_coating)
-    stylingStore.setGraphicsPaintColor(paint_color)
+    stylingStore.setStylingItemId('paint_coating', 1)
+    stylingStore.setStylingItemId('paint_color', 15)
   }, [displayedVehicle])
 
   React.useEffect(()=>{
