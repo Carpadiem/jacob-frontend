@@ -24,6 +24,7 @@ const shopGlassTints: IShopGlassTint[] = [
     {
         id: 1,
         type: 'glass_tint',
+        for_vehicle: '*',
         name: 'Stock',
         price: 1000,
         data: {
@@ -34,6 +35,7 @@ const shopGlassTints: IShopGlassTint[] = [
     {
         id: 2,
         type: 'glass_tint',
+        for_vehicle: '*',
         name: 'Красный',
         price: 1000,
         data: {
@@ -44,6 +46,7 @@ const shopGlassTints: IShopGlassTint[] = [
     {
         id: 3,
         type: 'glass_tint',
+        for_vehicle: '*',
         name: 'Зеленый',
         price: 1000,
         data: {
@@ -54,6 +57,7 @@ const shopGlassTints: IShopGlassTint[] = [
     {
         id: 4,
         type: 'glass_tint',
+        for_vehicle: '*',
         name: 'Синий',
         price: 1000,
         data: {
@@ -64,6 +68,7 @@ const shopGlassTints: IShopGlassTint[] = [
     {
         id: 5,
         type: 'glass_tint',
+        for_vehicle: '*',
         name: 'Желтый',
         price: 1000,
         data: {
@@ -74,6 +79,7 @@ const shopGlassTints: IShopGlassTint[] = [
     {
         id: 6,
         type: 'glass_tint',
+        for_vehicle: '*',
         name: 'Пурпурный',
         price: 1000,
         data: {
@@ -84,6 +90,7 @@ const shopGlassTints: IShopGlassTint[] = [
     {
         id: 7,
         type: 'glass_tint',
+        for_vehicle: '*',
         name: 'Магентовый',
         price: 1000,
         data: {

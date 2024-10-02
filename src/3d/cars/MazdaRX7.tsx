@@ -11,11 +11,14 @@ import { GLTF } from 'three-stdlib'
 // stores
 import { observer } from 'mobx-react-lite'
 import stylingStore from '@stores/styling.store'
-import { useThree } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import shopPaintCoating from 'src/shop/graphics/paint_coating'
 import IShopPaintCoating from '@models/shop/graphics/IShopPaintCoating'
 import shopPaintColor from 'src/shop/graphics/paint_color'
 import shopGlassTints from 'src/shop/accessories/glass_tint'
+import { degToRad } from 'three/src/math/MathUtils'
+import sceneSettingsGarageStore from '@stores/sceneSettingsGarage.store'
+import { hexToRgb } from '@utils/hexToRgb'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -540,9 +543,7 @@ function Model(props: JSX.IntrinsicElements['group']) {
     materials.primary.sheenColor = new THREE.Color('black')
   }
   
-  // vars
-  const { scene } = useThree()
-
+  
   // states
   const [defaultWheelPosition, setDefaultWheelPosition] = React.useState({
     front_right: new THREE.Vector3(0.813, -0.176, -1.437),
@@ -557,7 +558,34 @@ function Model(props: JSX.IntrinsicElements['group']) {
     rear_left: new THREE.Euler(0, Math.PI, 0),
   })
 
-  // GRAPHICS
+  const { scene } = useThree()
+
+  // vars
+  let t = .05
+  let door: THREE.Object3D
+  let start: THREE.Quaternion
+
+  useThree(state=>{
+    door = state.scene.getObjectByName('door_front_left')
+    if (door) start = door.quaternion.clone()
+  })
+
+  const speed = 4.5
+  
+  useFrame(st=>{
+    const state = sceneSettingsGarageStore.isOpen
+    const e = new THREE.Euler( 0, degToRad(-50), 0 )
+    const q = new THREE.Quaternion().setFromEuler( e )
+
+    if (state && door !== undefined) {
+      door.quaternion.slerp(q, THREE.MathUtils.smootherstep(t*speed, 0, 1))
+    } else {
+      door.quaternion.slerp(start, THREE.MathUtils.smoothstep(t*speed, 0, 1))
+    }
+  })
+
+
+  // effects
   React.useEffect(()=>{
     clearCoating()
     const paint_coating_id = stylingStore.styling.paint_coating_id
@@ -571,11 +599,20 @@ function Model(props: JSX.IntrinsicElements['group']) {
     materials.primary.sheenColor = new THREE.Color(paint_coating.data.sheenColor)
   }, [stylingStore.styling.paint_coating_id])
 
+  const [hex, setHex] = React.useState('#000000')
+
   React.useEffect(()=>{
+
+    
     const paint_color_id = stylingStore.styling.paint_color_id
     const paint_color = shopPaintColor.find(color=>color.id===paint_color_id)
-    materials.primary.color = new THREE.Color(paint_color?.hex)
+    setHex(paint_color.hex)
+
   }, [stylingStore.styling.paint_color_id])
+
+  useFrame(()=>{
+    materials.primary.color.lerp(new THREE.Color(hex), THREE.MathUtils.smoothstep(0.125, 0, 1))
+  })
 
   // ACCESSORIES
   React.useEffect(()=>{

@@ -1,0 +1,45 @@
+.buy_frame {
+    height: 80px;
+    background-color: rgba(0, 0, 0, .3);
+    backdrop-filter: blur(40px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+    cursor: pointer;
+}
+
+.left_text_container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.left_text_container p {
+    font-family: 'Montserrat';
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+.left_text_container span {
+    font-family: 'Montserrat';
+    font-size: 24px;
+    font-weight: 400;
+    color: white;
+}
+
+.right_text_container {
+    display: flex;
+    gap: 10px;
+}
+.right_text_container p {
+    font-family: 'Montserrat';
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+.right_text_container span {
+    font-family: 'Montserrat';
+    font-size: 12px;
+    font-weight: 500;
+    color: #33FC76;
+}

@@ -1,0 +1,1 @@
+export { default as FreeSlot } from './FreeSlot'

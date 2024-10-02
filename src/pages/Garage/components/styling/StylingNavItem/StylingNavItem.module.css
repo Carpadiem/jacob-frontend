@@ -6,6 +6,7 @@
     padding: 20px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     cursor: pointer;
     transition: all .3s ease;
 }
@@ -15,6 +16,11 @@
 }
 
 .item_text {
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+}
+.item_subtext {
     color: white;
     font-size: 12px;
     font-weight: 500;

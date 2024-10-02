@@ -6,6 +6,7 @@ const shopPaintCoating: IShopPaintCoating[] = [
         id: 1,
         type: 'paint_coating',
         paint_coating_name: 'glossy',
+        for_vehicle: '*',
         name: 'Глянцевый',
         price: 1000,
         data: {
@@ -22,6 +23,7 @@ const shopPaintCoating: IShopPaintCoating[] = [
         id: 2,
         type: 'paint_coating',
         paint_coating_name: 'metallic',
+        for_vehicle: '*',
         name: 'Металлик',
         price: 1000,
         data: {
@@ -38,6 +40,7 @@ const shopPaintCoating: IShopPaintCoating[] = [
         id: 3,
         type: 'paint_coating',
         paint_coating_name: 'mate',
+        for_vehicle: '*',
         name: 'Матовый',
         price: 1000,
         data: {
@@ -54,6 +57,7 @@ const shopPaintCoating: IShopPaintCoating[] = [
         id: 4,
         type: 'paint_coating',
         paint_coating_name: 'chameleon',
+        for_vehicle: '*',
         name: 'Хамелеон',
         price: 1000,
         data: {
