@@ -17,7 +17,7 @@ import { StylingPurchasing } from './components/styling/StylingPurchasing'
 import { FreeSlot } from './components/FreeSlot'
 import { BuySlot } from './components/BuySlot'
 
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { CameraControls } from '@react-three/drei'
 import { EnvExotic } from '@exotic/EnvExotic'
 import { EffectsExotic } from '@exotic/EffectsExotic'
@@ -43,7 +43,6 @@ import usePlayerVehicles from 'src/hooks/usePlayerVehicles'
 import { observer } from 'mobx-react-lite'
 import stylingStore from '@stores/styling.store'
 import playerStore from '@stores/player.store'
-import sceneSettingsGarageStore from '@stores/sceneSettingsGarage.store'
 // 3d and data
 import axios from 'axios'
 
@@ -78,11 +77,12 @@ import shopExhaust from 'src/shop/bodyparts/exhaust'
 import shopWingsRear from 'src/shop/bodyparts/wings_rear'
 import IShopItem from '@models/shop/IShopItem'
 import IShopWheelsAdjust from '@models/shop/wheels/IShopWheelsAdjust'
-import { SceneSettings } from '@components/SceneSettings'
 // audio
 import LimpBizkitTakeALookAround from '/audio/radio/Limp Bizkit - Take A Look Around.mp3'
-
 import { PaintSpray as VFXPaintSpray } from 'src/VFXComponents/PaintSpray'
+import { ExhaustSmoke as VFXExhaustSmoke } from 'src/VFXComponents/ExhaustSmoke'
+
+import { EscMenu } from '@components/EscMenu'
 
 const shops: {
     bumper_front: IShopBumperFront[],
@@ -115,24 +115,6 @@ const shops: {
     paint_color: shopPaintColor,
     glass_tint: shopGlassTints,
 }
-
-// new features:
-// - add underglow accessory
-// - add wheels shop
-// - add vehicle's wheels paint color and coating changing
-
-// UI/UX:
-// - change modals design: add pictures\images into
-// - add animations
-// - if bodyparts count in shop is 0 - change button desing as Overlaying with text 'No details... :(' (design: ux)
-
-// 3d design, animations, VFX, SFX, actions 
-// - camera position
-// - music\radio (? - Author Content)
-// - vehicle bodyparts action (open bonnet, doors, trunk, etc)
-// - add vehicle sound SFX (engine)
-// - add VFX paint smoke ON vehicle change paint color or coating
-// - add VFX vehicle exhaust smoke
 
 
 const Garage = () => {
@@ -170,6 +152,7 @@ const Garage = () => {
             type: '',
             id: 0,
             price: 0,
+            is_purchased: false,
         }
     })
     const [purchaseWheelsAdjustData, setPurchaseWheelsAdjustData] = React.useState({
@@ -179,11 +162,23 @@ const Garage = () => {
             wheels_offset: 0,
             wheels_alignment: 0,
             price: 5000,
+            is_purchased: false,
         }
     })
     const [isShopModal_Confirm, setIsShopModal_Confirm] = React.useState(false)
+    const [escMenuIsOpen, setEscMenuIsOpen] = React.useState(false)
 
     // effects
+    React.useEffect(()=>{
+        const keypress_handler = (e: React.KeyboardEvent<Document>)=>{
+            if (e.code.toLowerCase() === 'escape') {
+                setEscMenuIsOpen(prev=>!prev)
+            }
+        }
+        document.addEventListener("keyup", (e: any)=>keypress_handler(e))
+        return ()=>document.removeEventListener('keyup', (e: any)=>keypress_handler(e))
+    }, [])
+
     React.useEffect(()=>{
         setDisplayedVehicle(playerVehicles.vehicles[0])
     }, [playerVehicles])
@@ -211,6 +206,7 @@ const Garage = () => {
                         type: shop_item.type,
                         id: shop_item.id,
                         price: shop_item.price,
+                        is_purchased: shop_item.id === displayedVehicle.styling[`${shop_item.type}_id`]
                     }
                 })
             }
@@ -223,6 +219,9 @@ const Garage = () => {
                     wheels_offset: stylingStore.styling.wheels_offset,
                     wheels_alignment: stylingStore.styling.wheels_alignment,
                     price: purchaseWheelsAdjustData.data.price,
+                    is_purchased:
+                        purchaseWheelsAdjustData.data.wheels_alignment === displayedVehicle.styling.wheels_alignment
+                        && purchaseWheelsAdjustData.data.wheels_offset === displayedVehicle.styling.wheels_offset
                 }
             })
         }
@@ -265,7 +264,8 @@ const Garage = () => {
             data: {
                 type: shop_item.type,
                 id: shop_item.id,
-                price: shop_item.price
+                price: shop_item.price,
+                is_purchased: shop_item.id === displayedVehicle.styling[`${shop_item.type}_id`]
             }
         })
 
@@ -339,7 +339,10 @@ const Garage = () => {
                         data: {
                             wheels_offset: stylingStore.styling.wheels_offset,
                             wheels_alignment: stylingStore.styling.wheels_alignment,
-                            price: 5000,
+                            price: purchaseWheelsAdjustData.data.price,
+                            is_purchased:
+                                purchaseWheelsAdjustData.data.wheels_alignment === displayedVehicle.styling.wheels_alignment
+                                && purchaseWheelsAdjustData.data.wheels_offset === displayedVehicle.styling.wheels_offset
                         }
                     }
                     setPurchaseWheelsAdjustData(previousWheelsAdjust)
@@ -355,6 +358,7 @@ const Garage = () => {
                             type: previousShopItem.type,
                             id: previousShopItem.id,
                             price: previousShopItem.price,
+                            is_purchased: previousShopItem.id === displayedVehicle.styling[`${previousShopItem.type}_id`]
                         }
                     })
                 }
@@ -365,6 +369,7 @@ const Garage = () => {
 
     return (
         <div className={styles.page}>
+
             <Canvas
                 className={styles.canvas}
                 shadows
@@ -376,9 +381,9 @@ const Garage = () => {
                 >
                 <EnvExotic intensity={.3} path='3d/hdri/metro_vijzelgracht_1k.hdr' />
                 <EffectsExotic />
-                <CameraMovementExotic />
+                {/* <CameraMovementExotic /> */}
                 <SceneGarage />
-                {/* <CameraControls /> */}
+                <CameraControls />
 
                 { displayedVehicle?.brand.toLowerCase() === 'bmw' && displayedVehicle?.model.toLowerCase() === 'm5 f90' && <BMWM5F90 /> }
                 { displayedVehicle?.brand.toLowerCase() === 'dodge' && displayedVehicle?.model.toLowerCase() === 'charger' && <DodgeCharger /> }
@@ -392,25 +397,10 @@ const Garage = () => {
                 { displayedVehicle?.brand.toLowerCase() === 'volkswagen' && displayedVehicle?.model.toLowerCase() === 'golf' && <VolkswagenGolf /> }
                 
                 <VFXPaintSpray />
+                {/* <VFXExhaustSmoke /> */}
             </Canvas>
 
-
-            <button
-                style={{
-                    position: 'absolute',
-                    left: 150,
-                    top: 200,
-                    border: 'none',
-                    backgroundColor: 'red',
-                    color: 'black',
-                    padding: 20,
-                    width: 200,
-                    height: 40,
-                    zIndex: 50,
-                    cursor: 'pointer',
-                } as React.CSSProperties}
-                onClick={()=>sceneSettingsGarageStore.setIsOpen(!sceneSettingsGarageStore.isOpen)}
-            >State</button>
+            { escMenuIsOpen && <EscMenu /> }
 
             {/* modals */}
             {
@@ -424,19 +414,7 @@ const Garage = () => {
             {/* scene settings, player data */}
             <div className={styles.top_right_screen}>
                 <PlayerData />
-                <SceneSettings />
             </div>
-
-            {/* scene settings doings */}
-            {
-                sceneSettingsGarageStore.isAudioPlay &&
-                <audio
-                    src={LimpBizkitTakeALookAround}
-                    preload='none'
-                    autoPlay
-                    controls={false}
-                />
-            }
 
             {/* styling frame */}
             {!isStylingOpen &&

@@ -11,10 +11,12 @@ interface StylingPurchasingProps {
         type: string
         id: number
         price: number
+        is_purchased: boolean
     } | {
         wheels_offset: number
         wheels_alignment: number
         price: number
+        is_purchased: boolean
     }
     onClickPurchase: ()=>void
 }
@@ -30,7 +32,13 @@ const StylingPurchasing = ({ title, subtitle, data, onClickPurchase }: StylingPu
                     <p className={styles.purchasing_price_currency}>$</p>
                 </div>
             </div>
-            <button className={styles.btn_purchase} onClick={onClickPurchase}><p>Приобрести</p></button>
+            {
+                data.is_purchased
+                ?
+                <button className={styles.btn_already_purchased}><p className={styles.btn_purchase_text}>Уже установлено</p></button>
+                :
+                <button className={styles.btn_purchase} onClick={onClickPurchase}><p className={styles.btn_purchase_text}>Приобрести</p></button>
+            }
         </div>
     )
 }

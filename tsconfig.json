@@ -37,10 +37,10 @@
       "@models/*": ["src/models/*"],
       "@stores/*": ["src/stores/*"],
       "@3d/*": ["src/3d/*"],
-      "@exotic/*": ["src/ExoticComponents/*"]
+      "@exotic/*": ["src/ExoticComponents/*"],
     },
     "types": ["vite-plugin-svgr/client", "node"]
   },
-  "include": ["src"],
+  "include": ["src", "public/assets/vfx/vfx_paint_color.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

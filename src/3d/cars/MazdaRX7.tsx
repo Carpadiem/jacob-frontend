@@ -5,20 +5,20 @@ Command: npx gltfjsx@6.2.10 ./mazda_rx7.gltf --types --shadows --keepmaterials -
 
 import * as THREE from 'three'
 import React, { useRef } from 'react'
-import { CubeCamera, useGLTF } from '@react-three/drei'
+import { CubeCamera, Html, useGLTF } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 // models
 // stores
 import { observer } from 'mobx-react-lite'
 import stylingStore from '@stores/styling.store'
-import { useFrame, useThree } from '@react-three/fiber'
+import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
 import shopPaintCoating from 'src/shop/graphics/paint_coating'
 import IShopPaintCoating from '@models/shop/graphics/IShopPaintCoating'
 import shopPaintColor from 'src/shop/graphics/paint_color'
 import shopGlassTints from 'src/shop/accessories/glass_tint'
 import { degToRad } from 'three/src/math/MathUtils'
-import sceneSettingsGarageStore from '@stores/sceneSettingsGarage.store'
 import { hexToRgb } from '@utils/hexToRgb'
+import { set } from 'mobx'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -542,8 +542,7 @@ function Model(props: JSX.IntrinsicElements['group']) {
     materials.primary.sheenRoughness = 0
     materials.primary.sheenColor = new THREE.Color('black')
   }
-  
-  
+
   // states
   const [defaultWheelPosition, setDefaultWheelPosition] = React.useState({
     front_right: new THREE.Vector3(0.813, -0.176, -1.437),
@@ -561,28 +560,20 @@ function Model(props: JSX.IntrinsicElements['group']) {
   const { scene } = useThree()
 
   // vars
-  let t = .05
-  let door: THREE.Object3D
-  let start: THREE.Quaternion
-
-  useThree(state=>{
-    door = state.scene.getObjectByName('door_front_left')
-    if (door) start = door.quaternion.clone()
-  })
-
-  const speed = 4.5
-  
-  useFrame(st=>{
-    const state = sceneSettingsGarageStore.isOpen
-    const e = new THREE.Euler( 0, degToRad(-50), 0 )
-    const q = new THREE.Quaternion().setFromEuler( e )
-
-    if (state && door !== undefined) {
-      door.quaternion.slerp(q, THREE.MathUtils.smootherstep(t*speed, 0, 1))
-    } else {
-      door.quaternion.slerp(start, THREE.MathUtils.smoothstep(t*speed, 0, 1))
-    }
-  })
+  // let t = 0.225
+  // let door: THREE.Object3D
+  // let start: THREE.Quaternion
+  // useThree(state=>{
+  //   door = state.scene.getObjectByName('door_front_left')
+  //   if (door) start = door.quaternion.clone()
+  // })
+  // useFrame(st=>{
+  //   const state = sceneSettingsGarageStore.isOpen
+  //   const e = new THREE.Euler( 0, degToRad(-50), 0 )
+  //   const q = new THREE.Quaternion().setFromEuler( e )
+  //   if (state && door !== undefined) door.quaternion.slerp(q, THREE.MathUtils.smootherstep(t, 0, 1))
+  //   else door.quaternion.slerp(start, THREE.MathUtils.smoothstep(t, 0, 1))
+  // })
 
 
   // effects
@@ -602,12 +593,9 @@ function Model(props: JSX.IntrinsicElements['group']) {
   const [hex, setHex] = React.useState('#000000')
 
   React.useEffect(()=>{
-
-    
     const paint_color_id = stylingStore.styling.paint_color_id
     const paint_color = shopPaintColor.find(color=>color.id===paint_color_id)
     setHex(paint_color.hex)
-
   }, [stylingStore.styling.paint_color_id])
 
   useFrame(()=>{
@@ -689,6 +677,7 @@ function Model(props: JSX.IntrinsicElements['group']) {
 
   return (
     <group {...props} dispose={null} position={[0, .734, 0]}>
+
       {/* wheels */} 
       <group name="wheel_front_right" position={defaultWheelPosition.front_right} rotation={defaultWheelRotation.front_right}>
         <mesh name="wheel_1" castShadow receiveShadow geometry={nodes.wheel_1.geometry} material={materials['wheel.0']} />

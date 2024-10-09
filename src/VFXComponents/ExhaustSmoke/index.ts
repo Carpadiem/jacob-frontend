@@ -1,0 +1,1 @@
+export { default as ExhaustSmoke } from './ExhaustSmoke'

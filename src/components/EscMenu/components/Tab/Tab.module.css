@@ -1,0 +1,15 @@
+.tab {
+    background-color: rgba(0,0,0,.5);
+    padding: 0 40px;
+    min-height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; 
+    user-select: none;
+}
+.tab_text {
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}

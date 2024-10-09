@@ -1,0 +1,17 @@
+.btn {
+    width: 100%;
+    min-height: 30px;
+    background-color: rgba(0,0,0,.5);
+    border: none;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+}
+
+.btn_text {
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+}

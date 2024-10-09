@@ -1,0 +1,42 @@
+* {
+    user-select: none;
+}
+
+.prop_line_container {
+    width: 100%;
+    min-height: 30px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+p.prop_line_text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #AFAFAF;
+}
+
+.prop_line_values_container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    /* background-color: red; */
+    min-width: 220px;
+    justify-content: space-between;
+}
+
+p.prop_line_current_value_text {
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+}
+
+.arrow {
+    cursor: pointer;
+    box-sizing: content-box;
+    padding: 6px;
+    min-width: 8px;
+    min-height: 8px;
+}

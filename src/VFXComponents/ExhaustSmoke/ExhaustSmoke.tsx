@@ -5,17 +5,16 @@ import * as THREE from 'three'
 import { useFrame, useThree } from '@react-three/fiber';
 import { System } from 'three-nebula';
 import { observer } from 'mobx-react-lite';
-import stylingStore from '@stores/styling.store';
-import shopPaintColor from 'src/shop/graphics/paint_color';
 
-import vfx_paint_color from 'public/assets/vfx/vfx_paint_color'
+import vfx_exhaust_smoke from 'public/assets/vfx/vfx_exhaust_smoke'
+import stylingStore from '@stores/styling.store';
 
 interface ExpiredSystem {
     system: System
     created_timestamp: number
 }
 
-const PaintSpray = () => {
+const ExhaustSmoke = () => {
     
     const { scene } = useThree()
     const renderer = new SpriteRenderer(scene, THREE)
@@ -27,21 +26,11 @@ const PaintSpray = () => {
     
     // effects
     React.useEffect(()=>{
-        const color_id = stylingStore.styling.paint_color_id
-        const as_shop_item = shopPaintColor.filter(color=>color.id===color_id)[0]
-        const hex = as_shop_item.hex
-
-        // const newColorA = darkerHexColor(hex, -60)
-
-        vfx_paint_color.particleSystemState.emitters[0].behaviours.filter(a=>a.type==='Color')[0].properties.colorA = '#050505'
-        vfx_paint_color.particleSystemState.emitters[0].behaviours.filter(a=>a.type==='Color')[0].properties.colorB = hex
-
-        System.fromJSONAsync(vfx_paint_color['particleSystemState'], THREE).then(s=>{
+        System.fromJSONAsync(vfx_exhaust_smoke['particleSystemState'], THREE).then(s=>{
             s.addRenderer(renderer)
             s.emit({ onStart, onEnd, onUpdate })
             setExpiredSystems([...expiredSystems, {system: s, created_timestamp: Date.now()}])
         })
-
     }, [stylingStore.styling.paint_color_id])
     
     React.useEffect(()=>{
@@ -60,4 +49,4 @@ const PaintSpray = () => {
     return <></>
 }
 
-export default observer(PaintSpray)
+export default observer(ExhaustSmoke)

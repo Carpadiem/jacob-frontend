@@ -10,6 +10,17 @@
     cursor: pointer;
     transition: all .3s ease;
 }
+.item_no_details {
+    background-color: rgba(0,0,0,.5);
+    backdrop-filter: blur(20px);
+    width: 100%;
+    height: 50px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+}
 .item:hover {
     padding: 25px;
     background-color: rgba(0,0,0,.6);
@@ -19,9 +30,20 @@
     color: white;
     font-size: 12px;
     font-weight: 500;
+    z-index: 3;
 }
-.item_subtext {
-    color: white;
-    font-size: 12px;
-    font-weight: 500;
+
+.overlaying {
+    /* background-color: rgba(0,0,0,.1); */
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+img.img_overlaying {
+    opacity: .1;
+    position: absolute;
 }

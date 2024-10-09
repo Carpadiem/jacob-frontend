@@ -1,0 +1,48 @@
+.esc_menu_container {
+    background-color: rgba(0,0,0,.5);
+    backdrop-filter: blur(20px);
+    z-index: 999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.containers_frame {
+    /* background-color: red; */
+    width: auto;
+    max-height: 340px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tabs_container {
+    display: flex;
+    gap: 2px;
+}
+
+
+.two_columns {
+    display: flex;
+    gap: 2px;
+}
+
+.column_left {
+    /* background-color: rgba(0,0,0,.5); */
+    min-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.column_right {
+    background-color: rgba(0,0,0,.5);
+    min-width: 640px;
+    padding: 20px;
+}
